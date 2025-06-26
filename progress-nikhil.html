@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Progress Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f7fa;
+      color: #1e293b;
+      height: 100vh;
+      display: flex;
+    }
+
+    .container {
+      display: flex;
+      width: 100%;
+    }
+
+    .sidebar {
+      width: 280px;
+      background: #1e293b;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      padding-top: 20px;
+    }
+
+    .hamburger-menu {
+      background: none;
+      border: none;
+      cursor: pointer;
+      margin-left: auto;
+      margin-right: 20px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .hamburger-line {
+      width: 20px;
+      height: 2px;
+      background: white;
+      margin: 4px 0;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: bold;
+      padding: 0 24px 24px;
+      border-bottom: 1px solid #334155;
+      margin-bottom: 24px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 24px;
+      color: #94a3b8;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 15px;
+      transition: background 0.2s ease, color 0.2s ease;
+      width: 100%;
+      text-align: left;
+    }
+
+    .nav-item:hover {
+      background: #334155;
+      color: white;
+    }
+
+    .nav-item.active {
+      background: #3b82f6;
+      color: white;
+    }
+    .nav-item.settings::before { content: '⚙'; }
+    .nav-item.appearance::before { content: '🎨'; }
+
+    .nav-icon {
+      font-size: 18px;
+      width: 24px;
+      text-align: center;
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 40px;
+      background: #f5f7fa;
+      overflow-y: auto;
+    }
+
+    .header {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 30px;
+    }
+
+    .progress-section {
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e2e8f0;
+      margin-bottom: 40px;
+    }
+
+    .progress-section h2 {
+      font-size: 20px;
+      margin-bottom: 12px;
+    }
+
+    .description {
+      color: #6b7280;
+      font-size: 15px;
+      margin-bottom: 24px;
+    }
+
+    .chart-wrapper {
+      position: relative;
+      width: 100%;
+      min-height: 300px;
+      height: auto;
+    }
+
+    canvas {
+      width: 100% !important;
+      height: auto !important;
+      transition: all 0.3s ease;
+    }.sidebar-bottom {
+            margin-top: auto;
+            border-top: 1px solid #334155;
+            padding-top: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar.collapsed .sidebar-bottom {
+            opacity: 0;
+            height: 0;
+            padding: 0;
+            margin: 0;
+            border: none;
+        }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        flex-direction: row;
+        overflow-x: auto;
+      }
+
+      .main-content {
+        padding: 20px;
+      }
+
+      .progress-section {
+        padding: 20px;
+      }
+
+      .chart-wrapper {
+        min-height: 250px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav class="sidebar" id="sidebar">
+      <button class="hamburger-menu" onclick="toggleSidebar()">
+        <div class="hamburger-line"></div>
+        <div class="hamburger-line"></div>
+        <div class="hamburger-line"></div>
+      </button>
+
+      <div class="logo">CLAT.GPT.1</div>
+
+      <button class="nav-item" onclick="navigateTo('home')"><span class="nav-icon">🏠</span>Home</button>
+      <button class="nav-item" onclick="navigateTo('practice-online')"><span class="nav-icon">📚</span>Practice Online</button>
+      <button class="nav-item" onclick="navigateTo('gk-research')"><span class="nav-icon">🔍</span>GK Research Engine</button>
+      <button class="nav-item" onclick="navigateTo('qt-mentor')"><span class="nav-icon">🤖</span>QT AI Mentor</button>
+      <button class="nav-item" onclick="navigateTo('lexa-chatbot')"><span class="nav-icon">💬</span>Lexa Chatbot</button>
+      <button class="nav-item" onclick="navigateTo('generate-tests')"><span class="nav-icon">📝</span>Generate Tests</button>
+      <button class="nav-item active" onclick="navigateTo('progress')"><span class="nav-icon">📊</span>Progress Tracker</button>
+        <button class="nav-item" onclick="navigateTo('leaderboard')"><span class="nav-icon">🥇</span>Leaderboard</button>
+
+      <div class="sidebar-bottom">
+                <button class="nav-item settings" onclick="navigateTo('settings')">
+                    <span class="nav-text">Settings</span>
+                </button>
+                <button class="nav-item appearance" onclick="navigateTo('appearance')">
+                    <span class="nav-text">Appearance</span>
+                </button>
+
+            </div>
+    </nav>
+
+    <main class="main-content">
+      <div class="header">📊 Progress Tracker</div>
+
+      <section class="progress-section">
+        <h2>Weekly Performance</h2>
+        <p class="description">Visual graphs show your growth by subject and over time. Track correct answers and mistakes for better focus.</p>
+        <div class="chart-wrapper"><canvas id="weeklyChart"></canvas></div>
+      </section>
+
+      <section class="progress-section">
+        <h2>Subject-wise Accuracy</h2>
+        <p class="description">Understand which areas you're strong in and where to improve. Smart data, smarter strategy.</p>
+        <div class="chart-wrapper"><canvas id="subjectChart"></canvas></div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    function navigateTo(page) {
+      const pages = {
+        'home': '2.homepage.html',
+        'practice-online': 'practice-online.html',
+        'gk-research': 'gk-research.html',
+        'qt-mentor': 'qt-mentor.html',
+        'lexa-chatbot': 'lexa-chatbot.html',
+        'generate-tests': 'generate-tests.html',
+        'progress': 'progress.html',
+        'leaderboard': 'leaderboard.html',
+      };
+
+      document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+      if (event && event.target.closest('.nav-item')) event.target.closest('.nav-item').classList.add('active');
+      if (pages[page]) window.location.href = pages[page];
+    }
+
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('collapsed');
+    }
+
+    new Chart(document.getElementById('weeklyChart').getContext('2d'), {
+      type: 'line',
+      data: {
+        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        datasets: [
+          {
+            label: 'Correct Answers',
+            data: [5, 8, 6, 7, 9, 10, 8],
+            borderColor: '#3b82f6',
+            backgroundColor: 'rgba(59,130,246,0.1)',
+            tension: 0.4,
+            pointRadius: 4,
+            pointHoverRadius: 6
+          },
+          {
+            label: 'Mistakes',
+            data: [2, 1, 3, 2, 1, 0, 1],
+            borderColor: '#ef4444',
+            backgroundColor: 'rgba(239,68,68,0.1)',
+            tension: 0.4,
+            pointRadius: 4,
+            pointHoverRadius: 6
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: {
+          mode: 'nearest',
+          axis: 'x',
+          intersect: false
+        },
+        plugins: {
+          legend: { position: 'top' },
+          tooltip: {
+            mode: 'index',
+            intersect: false
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: { stepSize: 1 }
+          }
+        }
+      }
+    });
+
+    new Chart(document.getElementById('subjectChart').getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: ['English', 'GK', 'Legal Aptitude', 'Maths', 'Logical Reasoning'],
+        datasets: [{
+          label: 'Accuracy (%)',
+          data: [85, 70, 90, 65, 78],
+          backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ef4444'],
+          borderRadius: 8,
+          barPercentage: 0.6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+            ticks: {
+              callback: value => `${value}%`  // template string ✅
+
+            }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practice Online - CLAT.GPT.1</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f1f5f9;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            background: white;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: #1e293b;
+            color: white;
+            padding: 24px 0;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .sidebar.collapsed {
+            width: 60px;
+            padding: 24px 0;
+        }
+
+        .hamburger-menu {
+            position: absolute;
+            top: 20px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar.collapsed .hamburger-menu {
+            right: 15px;
+        }
+
+        .hamburger-line {
+            width: 20px;
+            height: 2px;
+            background: white;
+            margin: 2px 0;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .logo {
+            padding: 0 24px 24px;
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            border-bottom: 1px solid #334155;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            overflow: hidden;
+            opacity: 1;
+        }
+
+        .sidebar.collapsed .logo {
+            opacity: 0;
+            height: 0;
+            padding: 0;
+            margin: 0;
+            border: none;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 24px;
+            color: #94a3b8;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-size: 15px;
+            white-space: nowrap;
+            overflow: hidden;
+            position: relative;
+            opacity: 1;
+        }
+
+        .sidebar.collapsed .nav-item {
+            opacity: 0;
+            height: 0;
+            padding: 0;
+            margin: 0;
+            pointer-events: none;
+        }
+
+        .nav-item:hover {
+            background: #334155;
+            color: white;
+        }
+
+        .nav-item.active {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .nav-item::before {
+            content: '';
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .nav-item.home::before { content: '🏠'; }
+        .nav-item.practice::before { content: '📚'; }
+        .nav-item.research::before { content: '🔍'; }
+        .nav-item.mentor::before { content: '🤖'; }
+        .nav-item.chatbot::before { content: '💬'; }
+        .nav-item.tests::before { content: '📝'; }
+        .nav-item.progress::before { content: '📊'; }
+        .nav-item.settings::before { content: '⚙️'; }
+        .nav-item.appearance::before { content: '🎨'; }
+
+        .nav-text {
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            border-top: 1px solid #334155;
+            padding-top: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar.collapsed .sidebar-bottom {
+            opacity: 0;
+            height: 0;
+            padding: 0;
+            margin: 0;
+            border: none;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            background: white;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .timer-container {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+            display: none;
+            z-index: 100;
+        }
+
+        .timer-container.warning {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            animation: pulse 1s infinite;
+        }
+
+        .timer-container.critical {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            animation: pulse 0.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .header {
+            margin-bottom: 40px;
+            animation: slideInFromTop 0.6s ease-out;
+        }
+
+        .greeting {
+            font-size: 36px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: #64748b;
+            margin-bottom: 40px;
+        }
+
+        .practice-setup {
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .form-section {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 32px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 16px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            background: white;
+            color: #374151;
+            cursor: pointer;
+            transition: all 0.2s;
+            outline: none;
+        }
+
+        .form-select:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-select:hover {
+            border-color: #94a3b8;
+        }
+
+        .slider-container {
+            margin-top: 8px;
+        }
+
+        .slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: #e2e8f0;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .slider-value {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .current-value {
+            font-weight: 600;
+            color: #3b82f6;
+            font-size: 16px;
+        }
+
+        .start-button {
+            width: 100%;
+            padding: 16px 24px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .start-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        .start-button:active {
+            transform: translateY(0);
+        }
+
+        .start-button.loading {
+            pointer-events: none;
+        }
+
+        .start-button.loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .form-description {
+            font-size: 14px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+
+        .icon-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 20px;
+            margin: 0 auto 24px;
+            font-size: 32px;
+        }
+
+        .error-message {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 16px 0;
+            display: none;
+        }
+
+        .success-message {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #16a34a;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 16px 0;
+            display: none;
+        }
+
+        /* Practice Interface Styles */
+        .practice-interface {
+            display: none;
+            animation: slideInFromBottom 0.6s ease-out;
+        }
+
+        .practice-header {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 24px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            text-align: center;
+            margin-right: 200px;
+        }
+
+        .practice-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .practice-info {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 16px;
+        }
+
+        .practice-stats {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            font-size: 14px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 600;
+            display: block;
+        }
+
+        .question-container {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 32px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+        }
+
+        .question-number {
+            font-size: 14px;
+            font-weight: 600;
+            color: #10b981;
+            margin-bottom: 16px;
+        }
+
+        .passage {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+            line-height: 1.6;
+            color: #374151;
+        }
+
+        .passage-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 16px;
+        }
+
+        .question {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 16px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option:hover {
+            border-color: #10b981;
+            background: #f0fdf4;
+        }
+
+        .option.selected {
+            border-color: #10b981;
+            background: #dcfce7;
+        }
+
+        .option.correct {
+            border-color: #10b981;
+            background: #dcfce7;
+        }
+
+        .option.incorrect {
+            border-color: #ef4444;
+            background: #fef2f2;
+        }
+
+        .option input[type="radio"] {
+            margin-right: 12px;
+            accent-color: #10b981;
+        }
+
+        .practice-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 32px;
+        }
+
+        .nav-button {
+            padding: 12px 24px;
+            border: 2px solid #10b981;
+            border-radius: 8px;
+            background: white;
+            color: #10b981;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-button:hover {
+            background: #10b981;
+            color: white;
+        }
+
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .check-answer-button {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        .check-answer-button:hover {
+            background: #2563eb;
+            border-color: #2563eb;
+        }
+
+        .explanation {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 16px;
+            display: none;
+        }
+
+        .explanation.show {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .explanation-title {
+            font-weight: 600;
+            color: #0369a1;
+            margin-bottom: 8px;
+        }
+
+        .new-practice-button {
+            padding: 12px 24px;
+            background: #6b7280;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 16px;
+        }
+
+        .new-practice-button:hover {
+            background: #4b5563;
+        }
+
+        /* Animations */
+        @keyframes slideInFromTop {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInFromBottom {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                order: 2;
+            }
+
+            .sidebar.collapsed {
+                width: 100%;
+                height: 60px;
+            }
+
+            .main-content {
+                order: 1;
+                padding: 20px;
+            }
+
+            .timer-container {
+                top: 10px;
+                right: 20px;
+                font-size: 16px;
+                padding: 8px 16px;
+            }
+
+            .practice-header {
+                margin-right: 0;
+            }
+
+            .practice-setup {
+                max-width: 100%;
+            }
+
+            .form-section,
+            .question-container {
+                padding: 24px;
+            }
+
+            .practice-navigation {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .practice-stats {
+                gap: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="sidebar" id="sidebar">
+            <button class="hamburger-menu" id="hamburgerMenu" onclick="toggleSidebar()">
+                <div class="hamburger-line"></div>
+                <div class="hamburger-line"></div>
+                <div class="hamburger-line"></div>
+            </button>
+            
+            <div class="logo">CLAT.GPT.1</div>
+            
+            <button class="nav-item home" onclick="navigateTo('home')">
+                <span class="nav-text">Home</span>
+            </button>
+            <button class="nav-item practice active" onclick="navigateTo('practice-online')">
+                <span class="nav-text">Practice Online</span>
+            </button>
+            <button class="nav-item research" onclick="navigateTo('gk-research')">
+                <span class="nav-text">GK Research Engine</span>
+            </button>
+            <button class="nav-item mentor" onclick="navigateTo('qt-mentor')">
+                <span class="nav-text">QT AI Mentor</span>
+            </button>
+            <button class="nav-item chatbot" onclick="navigateTo('lexa-chatbot')">
+                <span class="nav-text">Lexa Chatbot</span>
+            </button>
+            <button class="nav-item tests" onclick="navigateTo('generate-tests')">
+                <span class="nav-text">Generate Tests</span>
+            </button>
+            <button class="nav-item progress" onclick="navigateTo('progress')">
+                <span class="nav-text">Progress Tracker</span>
+            </button>
+            
+            <div class="sidebar-bottom">
+                <button class="nav-item settings" onclick="navigateTo('settings')">
+                    <span class="nav-text">Settings</span>
+                </button>
+                <button class="nav-item appearance" onclick="navigateTo('appearance')">
+                    <span class="nav-text">Appearance</span>
+                </button>
+
+            
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <!-- Timer -->
+            <div class="timer-container" id="timerContainer">
+                <span id="timerDisplay">00:00</span>
+            </div>
+
+            <!-- Error and Success Messages -->
+            <div id="errorMessage" class="error-message"></div>
+            <div id="successMessage" class="success-message"></div>
+
+            <!-- Practice Setup Form -->
+            <div id="practiceSetup" class="practice-setup">
+                <header class="header">
+                    <h1 class="greeting">Hello Student! 👋</h1>
+                    <p class="page-subtitle">Start practicing with customized questions for your CLAT preparation</p>
+                </header>
+
+                <div class="form-section">
+                    <div class="icon-wrapper">📚</div>
+                    <h2 class="section-title">Practice Mode</h2>
+                    
+                    <form id="practiceForm">
+                        <div class="form-group">
+                            <label class="form-label" for="section">Section</label>
+                            <select class="form-select" id="section" required onchange="updateSubcategories()">
+                                <option value="">Select a section</option>
+                                <option value="english">English</option>
+                                <option value="logical">Logical Reasoning</option>
+                                <option value="legal">Legal Reasoning</option>
+                                <option value="quantitative">Quantitative Analysis</option>
+                                <option value="gk">General Knowledge</option>
+                            </select>
+                            <p class="form-description">Choose the subject area you want to practice</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="subcategory">Subcategory</label>
+                            <select class="form-select" id="subcategory" required disabled>
+                                <option value="">Select a subcategory</option>
+                            </select>
+                            <p class="form-description">Choose the specific topic within the section</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="passages">Number of Passages</label>
+                            <div class="slider-container">
+                                <input type="range" class="slider" id="passages" min="1" max="6" value="3" required>
+                                <div class="slider-value">
+                                    <span id="minPassages">1</span>
+                                    <span class="current-value" id="passageValue">3</span>
+                                    <span id="maxPassages">6</span>
+                                </div>
+                            </div>
+                            <p class="form-description" id="passageDescription">Choose how many passages you want to practice with</p>
+                        </div>
+
+                        <button type="submit" class="start-button" id="startButton">
+                            <span id="buttonText">Start Practice</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Practice Interface -->
+            <div id="practiceInterface" class="practice-interface">
+                <div class="practice-header">
+                    <h2 class="practice-title" id="practiceTitle">Practice Session</h2>
+                    <p class="practice-info" id="practiceInfo">Subcategory • Passages</p>
+                    <div class="practice-stats">
+                        <div class="stat">
+                            <span class="stat-value" id="currentQuestion">1</span>
+                            <span>Current</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value" id="totalQuestions">25</span>
+                            <span>Total</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value" id="correctAnswers">0</span>
+                            <span>Correct</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value" id="accuracy">0%</span>
+                            <span>Accuracy</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-container" id="questionContainer">
+                    <!-- Questions will be dynamically loaded here -->
+                </div>
+
+                <div class="practice-navigation">
+                    <button class="nav-button" id="prevButton" onclick="previousQuestion()" disabled>Previous</button>
+                    <button class="nav-button check-answer-button" id="checkButton" onclick="checkAnswer()">Check Answer</button>
+                    <button class="nav-button" id="nextButton" onclick="nextQuestion()" style="display: none;">Next Question</button>
+                </div>
+
+                <button class="new-practice-button" onclick="startNewPractice()">Start New Practice</button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const subcategoryMap = {
+    // English
+    "main-idea": "Reading Comprehension",
+    "author-s-tone": "Reading Comprehension",
+    "vocab": "Vocabulary",
+    "idioms-mics": "Vocabulary",
+    "sentence-correction": "Grammar",
+    "ordering-sentences": "Para Jumbles",
+    "assumptions-inferences": "Critical Reasoning",
+
+    // Logical
+    "assumptions": "Critical Reasoning",
+    "inferences": "Critical Reasoning",
+    "argument-based": "Critical Reasoning",
+    "agree-disagree": "Critical Reasoning",
+    "strengthen-weaken": "Critical Reasoning",
+    "direct-inference": "Logical Reasoning",
+    "analogy-and-sequences": "Logical Reasoning",
+
+    // Quant
+    "percentage-comparison": "Percentages",
+    "what-percentage-more-less": "Percentages",
+    "discount-profit-loss": "Profit & Loss",
+    "cost-price-selling-price-and-marked-price-calculations": "Profit & Loss",
+
+    // GK
+    "awards-honours": "Awards & Honours",
+    "science-tech": "Science & Technology"
+    // add more as needed...
+};
+
+        let currentPractice = null;
+        let currentQuestionIndex = 0;
+        let userAnswers = {};
+        let correctCount = 0;
+        let totalAnswered = 0;
+        let isAnswerChecked = false;
+        let timerInterval = null;
+        let timeRemaining = 0;
+        let totalTime = 0;
+
+        // Section configurations - Updated to match API
+        const sectionConfig = {
+            english: {
+                maxPassages: 4,
+                timePerQuestion: 60,
+                subcategories: [
+                    'Main idea',
+                    'Author\'s tone',
+                    'Vocab',
+                    'Literary and poetic devices',
+                    'Author-based',
+                    'Source-based',
+                    'Title & Theme',
+                    'Direct inference questions',
+                    'Assumptions & Inferences',
+                    'Idioms & MICS'
+                ]
+            },
+            logical: {
+                maxPassages: 4,
+                timePerQuestion: 60,
+                subcategories: [
+                    'Assumptions',
+                    'Inferences',
+                    'Argument-based',
+                    'Agree & Disagree',
+                    'Strengthen & Weaken',
+                    'Direct Inference',
+                    'Analogy and Sequences',
+                    'Paradox / Contradiction Resolution'
+                ]
+            },
+            legal: {
+                maxPassages: 6,
+                timePerQuestion: 60,
+                subcategories: [] // No subcategories for legal
+            },
+            quantitative: {
+                maxPassages: 2,
+                timePerQuestion: 60,
+                subcategories: [
+                    'Percentage Comparison',
+                    'What percentage more/less',
+                    'Percentage Change',
+                    'Dividing quantities in given ratios',
+                    'Missing values based on ratios',
+                    'Simplification of numbers to derive simplest ratio',
+                    'Simple and weighted averages',
+                    'Cost price, selling price and marked price calculations',
+                    'Discount%, profit% and loss%',
+                    'Basic formula applications of simple and compound interest',
+                    'Area, perimeter, volume and surface area'
+                ]
+            },
+            gk: {
+                maxPassages: 5,
+                timePerQuestion: 90,
+                subcategories: [] // No subcategories for GK
+            }
+        };
+
+        // Message display functions
+        function showMessage(message, type) {
+            hideMessages();
+            const messageEl = document.getElementById(type === 'error' ? 'errorMessage' : 'successMessage');
+            messageEl.textContent = message;
+            messageEl.style.display = 'block';
+            
+            // Auto-hide success messages after 3 seconds
+            if (type === 'success') {
+                setTimeout(() => {
+                    hideMessages();
+                }, 3000);
+            }
+        }
+
+        function hideMessages() {
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+        }
+
+        // Sample questions fallback
+        function generateSampleQuestions(section, subcategory) {
+            const subcategoryName = subcategory.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            return [
+                {
+                    id: "sample-1",
+                    passage: `This is a sample passage for ${section} - ${subcategoryName}. In a real scenario, this would contain relevant content for practicing ${subcategoryName} questions. The passage would provide context and information needed to answer the following questions. This sample demonstrates the format and structure of questions you would encounter in the actual CLAT examination.`,
+                    question: `Sample question for ${subcategoryName}: What is the main topic discussed in this passage?`,
+                    options: [
+                        `${subcategoryName} fundamentals and concepts`,
+                        `${section} overview and methodology`, 
+                        `Practice techniques and strategies`,
+                        `Assessment methods and evaluation`
+                    ],
+                    correct: 0,
+                    explanation: `This is a sample explanation for the ${subcategoryName} question. In a real question, this would explain why the correct answer is right and provide additional context to help understand the concept. The explanation helps reinforce learning and clarifies any misconceptions.`,
+                    passageIndex: 0
+                },
+                {
+                    id: "sample-2", 
+                    passage: `This is a second sample passage for ${section} - ${subcategoryName}. This passage would contain different content to test various aspects of ${subcategoryName} knowledge and skills. It demonstrates how multiple questions can be based on a single passage, testing different cognitive abilities and understanding levels.`,
+                    question: `Another sample question for ${subcategoryName}: Which approach is most effective for solving such problems?`,
+                    options: [
+                        `Systematic analysis and step-by-step reasoning`,
+                        `Random guessing without reading`,
+                        `Partial reading and quick assumptions`, 
+                        `Time rushing without understanding`
+                    ],
+                    correct: 0,
+                    explanation: `Systematic analysis is the most effective approach for ${subcategoryName} questions as it ensures thorough understanding and accurate answers. This method involves careful reading, identifying key information, and logical reasoning to arrive at the correct conclusion.`,
+                    passageIndex: 0
+                }
+            ];
+        }
+
+        // API call function - Fixed to use correct endpoint
+        async function generatePractice(section, subcategory, numPassages) {
+            try {
+                showMessage('Loading practice questions from server...', 'success');
+                
+                console.log('Making API call with:', { section, subcategory, passages: numPassages });
+                
+                // Use the correct API endpoint
+                const response = await fetch("http://127.0.0.1:5000/api/generate-practice", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        section: section,
+                        subcategory: subcategory,
+                        passages: numPassages
+                    })
+                });
+
+                console.log('Response status:', response.status);
+
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.status} ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                console.log('API Response:', data);
+
+                if (!data.success || !data.questions || data.questions.length === 0) {
+                    throw new Error('No questions received from server');
+                }
+
+                hideMessages();
+                return data.questions;
+
+            } catch (error) {
+                console.error("API Error:", error);
+                showMessage(`Server connection failed: ${error.message}. Using sample questions instead.`, 'error');
+                
+                // Return sample questions as fallback
+                return generateSampleQuestions(section, subcategory);
+            }
+        }
+
+        // Update subcategories based on selected section
+        function updateSubcategories() {
+            const sectionSelect = document.getElementById('section');
+            const subcategorySelect = document.getElementById('subcategory');
+            const passagesSlider = document.getElementById('passages');
+            const minPassages = document.getElementById('minPassages');
+            const maxPassages = document.getElementById('maxPassages');
+            const passageValue = document.getElementById('passageValue');
+            
+            const selectedSection = sectionSelect.value;
+            
+            // Clear subcategories
+            subcategorySelect.innerHTML = '<option value="">Select a subcategory</option>';
+            
+            if (selectedSection && sectionConfig[selectedSection]) {
+                const config = sectionConfig[selectedSection];
+                
+                // Enable subcategory dropdown
+                subcategorySelect.disabled = false;
+                
+                // Populate subcategories
+                config.subcategories.forEach(subcategory => {
+                    const option = document.createElement('option');
+                    option.value = subcategory.toLowerCase().replace(/\s+/g, '-');
+                    option.textContent = subcategory;
+                    subcategorySelect.appendChild(option);
+                });
+                
+                // Update passage slider
+                passagesSlider.max = config.maxPassages;
+                passagesSlider.value = Math.min(3, config.maxPassages);
+                maxPassages.textContent = config.maxPassages;
+                passageValue.textContent = passagesSlider.value;
+                
+                // Update description
+                document.getElementById('passageDescription').textContent = 
+                    `Choose how many passages you want to practice with (max ${config.maxPassages} for ${selectedSection})`;
+            } else {
+                subcategorySelect.disabled = true;
+                passagesSlider.max = 6;
+                passagesSlider.value = 3;
+                maxPassages.textContent = '6';
+                passageValue.textContent = '3';
+            }
+        }
+
+        // Timer functions
+        function startTimer(totalSeconds) {
+            timeRemaining = totalSeconds;
+            totalTime = totalSeconds;
+            
+            const timerContainer = document.getElementById('timerContainer');
+            timerContainer.style.display = 'block';
+            timerContainer.className = 'timer-container'; // Reset classes
+            
+            updateTimerDisplay();
+            
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                updateTimerDisplay();
+                
+                // Warning at 25% time remaining
+                if (timeRemaining <= totalTime * 0.25 && timeRemaining > totalTime * 0.1) {
+                    timerContainer.className = 'timer-container warning';
+                }
+                // Critical at 10% time remaining
+                else if (timeRemaining <= totalTime * 0.1) {
+                    timerContainer.className = 'timer-container critical';
+                }
+                
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    handleTimeUp();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            document.getElementById('timerDisplay').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            document.getElementById('timerContainer').style.display = 'none';
+        }
+
+        function handleTimeUp() {
+            showMessage('Time is up! Moving to the next question.', 'error');
+            setTimeout(() => {
+                if (currentQuestionIndex < currentPractice.length - 1) {
+                    nextQuestion();
+                } else {
+                    showMessage('Practice session completed!', 'success');
+                    setTimeout(() => startNewPractice(), 2000);
+                }
+            }, 1500);
+        }
+
+        // Get username from localStorage or use default
+        function getUsername() {
+            return localStorage.getItem('username') || 'Student';
+        }
+
+        // Update greeting with username
+        function updateGreeting() {
+            const username = getUsername();
+            document.querySelector('.greeting').textContent = `Hello ${username}! 👋`;
+        }
+
+        // Display question function
+        function displayQuestion() {
+            if (!currentPractice || currentQuestionIndex >= currentPractice.length) return;
+
+            const question = currentPractice[currentQuestionIndex];
+            const container = document.getElementById('questionContainer');
+
+            container.innerHTML = `
+                <div class="question-number">Question ${currentQuestionIndex + 1} of ${currentPractice.length}</div>
+                <div class="passage">
+                    <div class="passage-title">Passage:</div>
+                    ${question.passage}
+                </div>
+                <div class="question">${question.question}</div>
+                <div class="options">
+                    ${question.options.map((option, index) => `
+                        <label class="option" onclick="selectOption(${index})">
+                            <input type="radio" name="question-${question.id}" value="${index}">
+                            ${String.fromCharCode(65 + index)}. ${option}
+                        </label>
+                    `).join('')}
+                </div>
+                <div class="explanation" id="explanation">
+                    <div class="explanation-title">Explanation:</div>
+                    ${question.explanation || 'No explanation available.'}
+                </div>
+            `;
+
+            // Update UI elements
+            document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
+            document.getElementById('checkButton').style.display = 'block';
+            document.getElementById('nextButton').style.display = 'none';
+            document.getElementById('prevButton').disabled = currentQuestionIndex === 0;
+            isAnswerChecked = false;
+
+            // Start timer
+            const section = document.getElementById('section').value;
+            if (section && sectionConfig[section]) {
+                startTimer(sectionConfig[section].timePerQuestion);
+            }
+        }
+
+        function selectOption(optionIndex) {
+            if (isAnswerChecked) return;
+
+            const question = currentPractice[currentQuestionIndex];
+            userAnswers[question.id] = optionIndex;
+
+            document.querySelectorAll('.option').forEach((option, index) => {
+                option.classList.toggle('selected', index === optionIndex);
+                const radio = option.querySelector('input[type="radio"]');
+                radio.checked = index === optionIndex;
+            });
+        }
+
+        function checkAnswer() {
+            const question = currentPractice[currentQuestionIndex];
+            const userAnswer = userAnswers[question.id];
+
+            if (userAnswer === undefined) {
+                showMessage('Please select an answer first!', 'error');
+                return;
+            }
+
+            stopTimer();
+            isAnswerChecked = true;
+            totalAnswered++;
+
+            // Show correct/incorrect options
+            document.querySelectorAll('.option').forEach((option, index) => {
+                if (index === question.correct) {
+                    option.classList.add('correct');
+                } else if (index === userAnswer && userAnswer !== question.correct) {
+                    option.classList.add('incorrect');
+                }
+                option.style.pointerEvents = 'none';
+            });
+
+            // Update statistics
+            if (userAnswer === question.correct) {
+                correctCount++;
+                showMessage('Correct! Well done!', 'success');
+            } else {
+                showMessage('Incorrect. Check the explanation below.', 'error');
+            }
+            
+            document.getElementById('correctAnswers').textContent = correctCount;
+            const accuracy = totalAnswered > 0 ? Math.round((correctCount / totalAnswered) * 100) : 0;
+            document.getElementById('accuracy').textContent = `${accuracy}%`;
+            
+            // Show explanation and navigation
+            document.getElementById('explanation').classList.add('show');
+            document.getElementById('checkButton').style.display = 'none';
+            if (currentQuestionIndex < currentPractice.length - 1) {
+                document.getElementById('nextButton').style.display = 'block';
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < currentPractice.length - 1) {
+                currentQuestionIndex++;
+                displayQuestion();
+                hideMessages();
+            } else {
+                showMessage('Practice session completed! Great job!', 'success');
+                setTimeout(() => startNewPractice(), 3000);
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                stopTimer();
+                currentQuestionIndex--;
+                displayQuestion();
+                hideMessages();
+            }
+        }
+
+        function startNewPractice() {
+            stopTimer();
+            hideMessages();
+            document.getElementById('practiceInterface').style.display = 'none';
+            document.getElementById('practiceSetup').style.display = 'block';
+            
+            // Reset all variables
+            currentPractice = null;
+            currentQuestionIndex = 0;
+            userAnswers = {};
+            correctCount = 0;
+            totalAnswered = 0;
+
+            // Reset form
+            document.getElementById('practiceForm').reset();
+            document.getElementById('passageValue').textContent = '3';
+            document.getElementById('subcategory').disabled = true;
+            document.getElementById('subcategory').innerHTML = '<option value="">Select a subcategory</option>';
+        }
+
+        // Sidebar toggle functionality
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('collapsed');
+        }
+
+        // Navigation function
+        function navigateTo(page) {
+            const pages = {
+                'home': '2.homepage.html',
+                'practice-online': 'practice-online.html',
+                'gk-research': 'gk-research.html',
+                'qt-mentor': 'qt-mentor.html',
+                'lexa-chatbot': 'lexa-chatbot.html',
+                'generate-tests': 'generate-tests.html',
+                'progress': 'progress.html',
+                'settings': 'settings.html',
+                'appearance': 'appearance.html',
+            };
+
+            if (pages[page]) {
+                window.location.href = pages[page];
+            }
+        }
+
+        // Form submission handler - Fixed to use correct API
+        document.getElementById('practiceForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            
+const section = document.getElementById('section').value;
+const rawSubcategory = document.getElementById('subcategory').value;
+const subcategory = subcategoryMap[rawSubcategory] || rawSubcategory;
+
+            const passages = parseInt(document.getElementById('passages').value);
+
+            if (!section || !subcategory || !passages) {
+                showMessage('Please fill in all fields to start practice.', 'error');
+                return;
+            }
+
+            const startButton = document.getElementById('startButton');
+            const buttonText = document.getElementById('buttonText');
+
+            // Show loading state
+            startButton.classList.add('loading');
+            buttonText.textContent = 'Loading Practice...';
+            startButton.disabled = true;
+
+            try {
+                // Generate practice questions
+                currentPractice = await generatePractice(section, subcategory, passages);
+
+                if (!currentPractice || currentPractice.length === 0) {
+                    throw new Error('No questions available. Please try different settings.');
+                }
+
+                // Hide setup form and show practice interface
+                document.getElementById('practiceSetup').style.display = 'none';
+                document.getElementById('practiceInterface').style.display = 'block';
+
+                // Update practice header
+                const sectionName = section.charAt(0).toUpperCase() + section.slice(1);
+                const subcategoryName = subcategory.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                document.getElementById('practiceTitle').textContent = `${sectionName} Practice`;
+                document.getElementById('practiceInfo').textContent = `${subcategoryName} • ${passages} Passage${passages > 1 ? 's' : ''}`;
+                document.getElementById('totalQuestions').textContent = currentPractice.length;
+
+                // Reset practice state
+                currentQuestionIndex = 0;
+                userAnswers = {};
+                correctCount = 0;
+                totalAnswered = 0;
+                document.getElementById('correctAnswers').textContent = '0';
+                document.getElementById('accuracy').textContent = '0%';
+
+                // Display first question
+                displayQuestion();
+
+            } catch (error) {
+                showMessage(error.message, 'error');
+            } finally {
+                // Reset button state
+                startButton.classList.remove('loading');
+                buttonText.textContent = 'Start Practice';
+                startButton.disabled = false;
+            }
+        });
+
+        // Update slider value display
+        document.getElementById('passages').addEventListener('input', function() {
+            document.getElementById('passageValue').textContent = this.value;
+        });
+
+        // Form input styling
+        const formInputs = document.querySelectorAll('.form-select');
+        formInputs.forEach(input => {
+            input.addEventListener('change', function () {
+                this.style.borderColor = this.value ? '#10b981' : '#e2e8f0';
+            });
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function (e) {
+            // Ctrl+B to toggle sidebar
+            if (e.ctrlKey && e.key === 'b') {
+                e.preventDefault();
+                toggleSidebar();
+            }
+            
+            // Navigation shortcuts during practice
+            if (document.getElementById('practiceInterface').style.display !== 'none') {
+                if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    previousQuestion();
+                } else if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    if (isAnswerChecked) nextQuestion();
+                } else if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    if (!isAnswerChecked) {
+                        checkAnswer();
+                    } else {
+                        nextQuestion();
+                    }
+                }
+                // Number keys to select options
+                else if (e.key >= '1' && e.key <= '4') {
+                    e.preventDefault();
+                    const optionIndex = parseInt(e.key) - 1;
+                    if (!isAnswerChecked) {
+                        selectOption(optionIndex);
+                    }
+                }
+            }
+        });
+
+        // Responsive design check
+        function checkScreenSize() {
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.add('collapsed');
+            }
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', function () {
+            updateGreeting();
+            checkScreenSize();
+            hideMessages();
+            console.log('Practice Online page loaded successfully');
+        });
+
+        window.addEventListener('resize', checkScreenSize);
+    </script>
+</body>
+</html>

@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lexa AI - AI built for CLAT students</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+            flex-shrink: 0;
+            height: 60px;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e293b;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-item {
+            color: #64748b;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+
+        .nav-item:hover {
+            color: #3b82f6;
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn-signup {
+            background: #1e293b;
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+
+        .btn-signup:hover {
+            background: #334155;
+            transform: translateY(-1px);
+        }
+
+        .btn-login {
+            background: #dc2626;
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+
+        .btn-login:hover {
+            background: #b91c1c;
+            transform: translateY(-1px);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 60px);
+        }
+
+        /* Announcement Banner */
+        .announcement {
+            text-align: center;
+            padding: 1rem 0 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .announcement-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(219, 234, 254, 0.8);
+            color: #1e40af;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-weight: 500;
+            font-size: 0.8rem;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .new-badge {
+            background: #3b82f6;
+            color: white;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        /* Hero Section */
+        .hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: center;
+            flex: 1;
+            min-height: 0;
+        }
+
+        .hero-content {
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .hero-title {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #1e293b;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: #64748b;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 0.75rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #64748b;
+            padding: 0.8rem 1.5rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 0.75rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-secondary:hover {
+            border-color: #3b82f6;
+            color: #3b82f6;
+            transform: translateY(-2px);
+        }
+
+        /* Feature Box */
+        .feature-item {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 1rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(226, 232, 240, 0.5);
+        }
+
+        .feature-text {
+            color: #1e293b;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Countdown Box */
+        .countdown-box {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            color: white;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(30, 41, 59, 0.2);
+        }
+
+        .countdown-time {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .countdown-label {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        /* Hero Visual - Cropped Image */
+        .hero-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .hero-image-container {
+            width: 100%;
+            height: 100%;
+            max-height: 500px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 1rem;
+        }
+
+        .hero-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+            filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.1));
+        }
+
+        /* Modal Overlay Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 2rem;
+            width: 90%;
+            max-width: 420px;
+            transform: translateY(30px) scale(0.95);
+            transition: all 0.3s ease;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0) scale(1);
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-subtitle {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #64748b;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+
+        .close-modal:hover {
+            background: rgba(100, 116, 139, 0.1);
+            color: #1e293b;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            color: #374151;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            background: #f9fafb;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-submit {
+            width: 100%;
+            background: #3b82f6;
+            color: white;
+            padding: 0.9rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 1rem;
+        }
+
+        .form-submit:hover:not(:disabled) {
+            background: #2563eb;
+            transform: translateY(-1px);
+        }
+
+        .form-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .form-submit:active {
+            transform: translateY(0);
+        }
+
+        /* Google Sign-In Button */
+        .google-signin-btn {
+            width: 100%;
+            background: white;
+            color: #374151;
+            border: 2px solid #e5e7eb;
+            padding: 0.9rem;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .google-signin-btn:hover:not(:disabled) {
+            background: #f9fafb;
+            border-color: #d1d5db;
+            transform: translateY(-1px);
+        }
+
+        .google-signin-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .google-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e5e7eb;
+        }
+
+        .divider span {
+            padding: 0 1rem;
+            background: white;
+        }
+
+        .form-toggle {
+            text-align: center;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .form-toggle a {
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .form-toggle a:hover {
+            text-decoration: underline;
+        }
+
+        .success-message {
+            background: #dcfce7;
+            color: #166534;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #bbf7d0;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .error-message {
+            background: #fef2f2;
+            color: #dc2626;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #fecaca;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* User Status */
+        .user-status {
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        .user-status.active {
+            display: flex;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: #3b82f6;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            overflow: hidden;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .logout-btn {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+            margin-left: 0.5rem;
+        }
+
+        .logout-btn:hover {
+            background: #b91c1c;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header {
+                padding: 0.5rem 1rem;
+                height: 50px;
+            }
+
+            .nav-menu {
+                display: none;
+            }
+
+            .container {
+                padding: 0 1rem;
+                height: calc(100vh - 50px);
+            }
+
+            .hero {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .hero-title {
+                font-size: 2.2rem;
+                text-align: center;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+                text-align: center;
+            }
+
+            .cta-buttons {
+                justify-content: center;
+            }
+
+            .hero-image-container {
+                max-height: 300px;
+            }
+
+            .announcement {
+                padding: 0.5rem 0;
+            }
+
+            .announcement-badge {
+                font-size: 0.75rem;
+                padding: 0.4rem 0.8rem;
+            }
+
+            .modal {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+
+            .modal-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .auth-buttons {
+                gap: 0.5rem;
+            }
+
+            .btn-signup,
+            .btn-login {
+                padding: 0.5rem 0.8rem;
+                font-size: 0.8rem;
+            }
+
+            .hero-title {
+                font-size: 1.8rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                width: 100%;
+                max-width: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <a href="C:\Users\yashw\Desktop\ClatAI\images\CLAT COMMUNITY ILLUSTRATED LOGO .png" class="logo">Lexa AI</a>
+        
+        <nav class="nav-menu">
+            <a href="#" class="nav-item" onclick="handleNavClick(event)">CLAT research</a>
+            <a href="#" class="nav-item" onclick="handleNavClick(event)">QT expert</a>
+            <a href="#" class="nav-item" onclick="handleNavClick(event)">Newspaper</a>
+            <a href="#" class="nav-item" onclick="handleNavClick(event)">Events</a>
+            <a href="#" class="nav-item" onclick="handleNavClick(event)">Practice</a>
+        </nav>
+
+        <div class="auth-buttons" id="auth-buttons">
+            <button class="btn-signup" onclick="openModal('signup')">SignUp</button>
+            <button class="btn-login" onclick="openModal('login')">Log In</button>
+        </div>
+
+        <div class="user-status" id="user-status">
+            <div class="user-avatar" id="user-avatar"></div>
+            <span id="username-display"></span>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Announcement Banner -->
+        <section class="announcement">
+            <div class="announcement-badge">
+                <span class="new-badge">New!</span>
+                <span>introducing Lexa, your AI chatbot assistant →</span>
+            </div>
+        </section>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">AI built for CLAT students</h1>
+                <p class="hero-subtitle">
+                    Lexa AI is the AI platform that helps you improve, 
+                    stay informed, and manage your prep – at scale.
+                </p>
+
+                <div class="cta-buttons">
+                    <button class="btn-primary" onclick="handleGetStarted()">Get Started</button>
+                    <button class="btn-secondary" onclick="handleWatchDemo()">Watch Demo</button>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-text">• Prepare with daily tasks<br>and streaks</div>
+                </div>
+
+                <div class="countdown-box">
+                    <div class="countdown-time" id="countdown-time">4 months 22 days</div>
+                    <div class="countdown-label">until CLAT 2026</div>
+                </div>
+            </div>
+
+            <div class="hero-visual">
+                <div class="hero-image-container">
+                    <img src="images\CLAT COMMUNITY ILLUSTRATED LOGO .png" 
+                         alt="Lady Justice illustration representing CLAT legal studies" 
+                         class="hero-image">
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal Overlays -->
+    <!-- Sign Up Modal -->
+    <div class="modal-overlay" id="signup-modal">
+        <div class="modal">
+            <button class="close-modal" onclick="closeModal()">&times;</button>
+            <div class="modal-header">
+                <h2 class="modal-title">Join Lexa AI</h2>
+                <p class="modal-subtitle">Start your CLAT preparation journey</p>
+            </div>
+            <div id="signup-message"></div>
+            
+            <!-- Google Sign Up -->
+            <button class="google-signin-btn" id="google-signup-btn" onclick="signInWithGoogle()">
+                <svg class="google-icon" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                <span id="google-signup-text">Continue with Google</span>
+            </button>
+
+            <div class="divider">
+                <span>or</span>
+            </div>
+
+            <!-- Email Sign Up Form -->
+            <form id="signup-form">
+                <div class="form-group">
+                    <label class="form-label" for="signup-name">Full Name</label>
+                    <input type="text" id="signup-name" class="form-input" placeholder="Enter your full name" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="signup-email">Email</label>
+                    <input type="email" id="signup-email" class="form-input" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="signup-password">Password</label>
+                    <input type="password" id="signup-password" class="form-input" placeholder="Create a password (min 6 characters)" required minlength="6">
+                </div>
+                <button type="submit" class="form-submit" id="signup-btn">
+                    <span id="signup-btn-text">Create Account</span>
+                </button>
+            </form>
+            
+            <div class="form-toggle">
+                Already have an account? <a href="#" onclick="switchModal('login')">Sign in</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="login-modal">
+        <div class="modal">
+            <button class="close-modal" onclick="closeModal()">&times;</button>
+            <div class="modal-header">
+                <h2 class="modal-title">Welcome Back</h2>
+                <p class="modal-subtitle">Sign in to continue your preparation</p>
+            </div>
+            <div id="login-message"></div>
+            
+            <!-- Google Sign In -->
+            <button class="google-signin-btn" id="google-login-btn" onclick="signInWithGoogle()">
+                <svg class="google-icon" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                <span id="google-login-text">Continue with Google</span>
+            </button>
+
+            <div class="divider">
+                <span>or</span>
+            </div>
+
+            <!-- Email Login Form -->
+            <form id="login-form">
+                <div class="form-group">
+                    <label class="form-label" for="login-email">Email</label>
+                    <input type="email" id="login-email" class="form-input" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="login-password">Password</label>
+                    <input type="password" id="login-password" class="form-input" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="form-submit" id="login-btn">
+                    <span id="login-btn-text">Sign In</span>
+                </button>
+            </form>
+            
+            <div class="form-toggle">
+                Don't have an account? <a href="#" onclick="switchModal('signup')">Sign up</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <script>
+        // Initialize Supabase
+        const supabaseUrl = 'https://agmdmagahkpuzafnsprx.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFnbWRtYWdhaGtwdXphZm5zcHJ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA2ODgyMjgsImV4cCI6MjA2NjI2NDIyOH0.IFV-zakRlvt1q-ZhF7JTCoSjhEK8Ubu1jmqvJI1xVtY';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        // User state management
+        let currentUser = null;
+
+        // Initialize page state
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Check for existing session
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                currentUser = session.user;
+                updateUserInterface();
+            }
+
+            // Listen for auth changes
+            supabase.auth.onAuthStateChange((event, session) => {
+                if (event === 'SIGNED_IN') {
+                    currentUser = session.user;
+                    updateUserInterface();
+                } else if (event === 'SIGNED_OUT') {
+                    currentUser = null;
+                    updateUserInterface();
+                }
+            });
+
+            updateCountdown();
+        });
+
+        // Google Sign-In function
+        async function signInWithGoogle() {
+            const googleSignupBtn = document.getElementById('google-signup-btn');
+            const googleLoginBtn = document.getElementById('google-login-btn');
+            const googleSignupText = document.getElementById('google-signup-text');
+            const googleLoginText = document.getElementById('google-login-text');
+            
+            // Show loading state
+            if (googleSignupBtn) {
+                googleSignupBtn.disabled = true;
+                googleSignupText.innerHTML = '<span class="loading-spinner"></span>Connecting...';
+            }
+            if (googleLoginBtn) {
+                googleLoginBtn.disabled = true;
+                googleLoginText.innerHTML = '<span class="loading-spinner"></span>Connecting...';
+            }
+
+            try {
+                const { data, error } = await supabase.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: {
+                        redirectTo: window.location.origin + '/2.homepage.html'
+                    }
+                });
+
+                if (error) throw error;
+
+                // The redirect will happen automatically, so we don't need to do anything else here
+            } catch (error) {
+                console.error('Google sign-in error:', error);
+                
+                // Show error message in the appropriate modal
+                const signupModal = document.getElementById('signup-modal');
+                const loginModal = document.getElementById('login-modal');
+                
+                if (signupModal.classList.contains('active')) {
+                    showMessage(document.getElementById('signup-message'), 'Google sign-in failed. Please try again.', 'error');
+                } else if (loginModal.classList.contains('active')) {
+                    showMessage(document.getElementById('login-message'), 'Google sign-in failed. Please try again.', 'error');
+                }
+            } finally {
+                // Reset button states
+                if (googleSignupBtn) {
+                    googleSignupBtn.disabled = false;
+                    googleSignupText.textContent = 'Continue with Google';
+                }
+                if (googleLoginBtn) {
+                    googleLoginBtn.disabled = false;
+                    googleLoginText.textContent = 'Continue with Google';
+                }
+            }
+        }
+
+        // CTA button handlers
+        function handleGetStarted() {
+            if (!currentUser) {
+                openModal('signup');
+            } else {
+                window.location.href = '2.homepage.html';
+            }
+        }
+
+        function handleWatchDemo() {
+            if (!currentUser) {
+                openModal('login');
+            } else {
+                window.location.href = '2.homepage.html';
+            }
+        }
+
+        // Navigation click handler
+        function handleNavClick(e) {
+            e.preventDefault();
+            
+            if (!currentUser) {
+                openModal('login');
+            } else {
+                const navText = e.target.textContent.trim();
+                let redirectUrl = '';
+                
+                switch(navText) {
+                    case 'CLAT research':
+                        redirectUrl = 'lexa-chatbot.html';
+                        break;
+                    case 'QT expert':
+                        redirectUrl = 'qt-mentor.html';
+                        break;
+                    case 'Newspaper':
+                        redirectUrl = 'gk-research.html';
+                        break;
+                    case 'Events':
+                        redirectUrl = '2.homepage.html';
+                        break;
+                    case 'Practice':
+                        redirectUrl = 'practice-online.html';
+                        break;
+                }
+                
+                if (redirectUrl) {
+                    window.location.href = redirectUrl;
+                }
+            }
+        }
+
+        // Modal functions
+        function openModal(type) {
+            const modal = document.getElementById(type + '-modal');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Clear previous messages and reset forms
+            const messageEl = document.getElementById(type + '-message');
+            messageEl.innerHTML = '';
+            const form = document.getElementById(type + '-form');
+            if (form) form.reset();
+        }
+
+        function closeModal() {
+            document.querySelectorAll('.modal-overlay').forEach(modal => {
+                modal.classList.remove('active');
+            });
+            document.body.style.overflow = 'hidden';
+        }
+
+        function switchModal(type) {
+            closeModal();
+            setTimeout(() => openModal(type), 150);
+        }
+
+        // Form handlers
+        document.getElementById('signup-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('signup-name').value.trim();
+            const email = document.getElementById('signup-email').value.trim();
+            const password = document.getElementById('signup-password').value;
+            const messageEl = document.getElementById('signup-message');
+            const submitBtn = document.getElementById('signup-btn');
+            const btnText = document.getElementById('signup-btn-text');
+
+            if (!name || !email || !password) {
+                showMessage(messageEl, 'Please fill in all fields.', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                showMessage(messageEl, 'Password must be at least 6 characters long.', 'error');
+                return;
+            }
+
+            // Show loading state
+            submitBtn.disabled = true;
+            btnText.innerHTML = '<span class="loading-spinner"></span>Creating Account...';
+
+            try {
+                const { data, error } = await supabase.auth.signUp({
+                    email: email,
+                    password: password,
+                    options: {
+                        data: {
+                            full_name: name,
+                            display_name: name
+                        }
+                    }
+                });
+
+                if (error) throw error;
+
+                if (data.user && !data.user.email_confirmed_at) {
+                    showMessage(messageEl, `Welcome ${name}! Please check your email to verify your account, then you can sign in.`, 'success');
+                    // Switch to login modal after a delay
+                    setTimeout(() => {
+                        switchModal('login');
+                    }, 3000);
+                } else {
+                    showMessage(messageEl, `Welcome ${name}! Account created successfully! Redirecting...`, 'success');
+                    setTimeout(() => {
+                        closeModal();
+                        window.location.href = '2.homepage.html';
+                    }, 1500);
+                }
+            } catch (error) {
+                console.error('Signup error:', error);
+                showMessage(messageEl, error.message || 'An error occurred during signup. Please try again.', 'error');
+            } finally {
+                // Reset button state
+                submitBtn.disabled = false;
+                btnText.textContent = 'Create Account';
+            }
+        });
+
+        document.getElementById('login-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+            const messageEl = document.getElementById('login-message');
+            const submitBtn = document.getElementById('login-btn');
+            const btnText = document.getElementById('login-btn-text');
+
+            if (!email || !password) {
+                showMessage(messageEl, 'Please fill in all fields.', 'error');
+                return;
+            }
+
+            // Show loading state
+            submitBtn.disabled = true;
+            btnText.innerHTML = '<span class="loading-spinner"></span>Signing In...';
+
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password,
+                });
+
+                if (error) throw error;
+
+                const userName = data.user?.user_metadata?.full_name || data.user?.user_metadata?.display_name || 'there';
+                showMessage(messageEl, `Welcome back${userName !== 'there' ? ', ' + userName : ''}! Redirecting...`, 'success');
+                
+                setTimeout(() => {
+                    closeModal();
+                    window.location.href = '2.homepage.html';
+                }, 1500);
+            } catch (error) {
+                console.error('Login error:', error);
+                let errorMessage = 'An error occurred during login. Please try again.';
+                
+                if (error.message.includes('Invalid login credentials')) {
+                    errorMessage = 'Invalid email or password. Please check your credentials and try again.';
+                } else if (error.message.includes('Email not confirmed')) {
+                    errorMessage = 'Please check your email and click the confirmation link before signing in.';
+                }
+                
+                showMessage(messageEl, errorMessage, 'error');
+            } finally {
+                // Reset button state
+                submitBtn.disabled = false;
+                btnText.textContent = 'Sign In';
+            }
+        });
+
+        // Helper functions
+        function showMessage(element, message, type) {
+            element.innerHTML = `<div class="${type}-message">${message}</div>`;
+        }
+
+        function updateUserInterface() {
+            const authButtons = document.getElementById('auth-buttons');
+            const userStatus = document.getElementById('user-status');
+            const userAvatar = document.getElementById('user-avatar');
+            const usernameDisplay = document.getElementById('username-display');
+
+            if (currentUser) {
+                // Hide auth buttons, show user status
+                authButtons.style.display = 'none';
+                userStatus.classList.add('active');
+                
+                // Set user info - prioritize full name from metadata
+                const fullName = currentUser.user_metadata?.full_name || currentUser.user_metadata?.display_name;
+                const email = currentUser.email || '';
+                const displayName = fullName || email.split('@')[0] || 'User';
+                const avatarUrl = currentUser.user_metadata?.avatar_url;
+                
+                // Set avatar - use Google profile picture if available, otherwise use initials
+                if (avatarUrl) {
+                    userAvatar.innerHTML = `<img src="${avatarUrl}" alt="${displayName}" />`;
+                } else {
+                    userAvatar.textContent = displayName.charAt(0).toUpperCase();
+                }
+                
+                usernameDisplay.textContent = displayName;
+            } else {
+                // Show auth buttons, hide user status
+                authButtons.style.display = 'flex';
+                userStatus.classList.remove('active');
+            }
+        }
+
+        async function logout() {
+            try {
+                const { error } = await supabase.auth.signOut();
+                if (error) throw error;
+                
+                currentUser = null;
+                updateUserInterface();
+            } catch (error) {
+                console.error('Logout error:', error);
+                alert('Error logging out. Please try again.');
+            }
+        }
+
+        // Close modal when clicking outside
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', function(e) {
+                if (e.target === overlay) {
+                    closeModal();
+                }
+            });
+        });
+
+        // Escape key to close modal
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Dynamic countdown timer
+        function updateCountdown() {
+            const targetDate = new Date('2026-05-10'); // CLAT 2026 estimated date
+            const now = new Date();
+            const difference = targetDate - now;
+
+            if (difference > 0) {
+                const months = Math.floor(difference / (1000 * 60 * 60 * 24 * 30.44));
+                const days = Math.floor((difference % (1000 * 60 * 60 * 24 * 30.44)) / (1000 * 60 * 60 * 24));
+
+                const countdownElement = document.getElementById('countdown-time');
+                if (countdownElement) {
+                    countdownElement.textContent = `${months} months ${days} days`;
+                }
+            }
+        }
+
+        // Update countdown daily
+        setInterval(updateCountdown, 24 * 60 * 60 * 1000);
+
+        // Add smooth hover effects
+        document.querySelectorAll('.feature-item, .countdown-box').forEach(element => {
+            element.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px)';
+                this.style.transition = 'transform 0.2s ease';
+            });
+            
+            element.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Prevent scrolling
+        document.addEventListener('wheel', function(e) {
+            e.preventDefault();
+        }, { passive: false });
+
+        document.addEventListener('keydown', function(e) {
+            // Prevent arrow keys, page up/down, home/end from scrolling
+            if([32, 33, 34, 35, 36, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>

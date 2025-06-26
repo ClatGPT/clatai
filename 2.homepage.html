@@ -1,0 +1,2033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLAT.GPT.1 - Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f1f5f9;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            background: white;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: #1e293b;
+            color: white;
+            padding: 24px 0;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .sidebar.collapsed {
+            width: 60px;
+            padding: 24px 0;
+        }
+
+        .hamburger-menu {
+            position: absolute;
+            top: 20px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar.collapsed .hamburger-menu {
+            right: 15px;
+        }
+
+        .hamburger-line {
+            width: 20px;
+            height: 2px;
+            background: white;
+            margin: 2px 0;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .logo {
+            padding: 0 24px 24px;
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            border-bottom: 1px solid #334155;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            overflow: hidden;
+            opacity: 1;
+        }
+
+        .sidebar.collapsed .logo {
+            opacity: 0;
+            height: 0;
+            padding: 0;
+            margin: 0;
+            border: none;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 24px;
+            color: #94a3b8;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-size: 15px;
+            white-space: nowrap;
+            overflow: hidden;
+            position: relative;
+            opacity: 1;
+        }
+
+        .sidebar.collapsed .nav-item {
+            opacity: 0;
+            height: 0;
+            padding: 0;
+            margin: 0;
+            pointer-events: none;
+        }
+
+        .nav-item:hover {
+            background: #334155;
+            color: white;
+        }
+
+        .nav-item.active {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .nav-item::before {
+            content: '';
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .nav-item.home::before { content: '🏠'; }
+        .nav-item.practice::before { content: '📚'; }
+        .nav-item.research::before { content: '🔍'; }
+        .nav-item.mentor::before { content: '🤖'; }
+        .nav-item.chatbot::before { content: '💬'; }
+        .nav-item.tests::before { content: '📝'; }
+        .nav-item.progress::before { content: '📊'; }
+        .nav-item.settings::before { content: '⚙️'; }
+        .nav-item.appearance::before { content: '🎨'; }
+
+        .nav-text {
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            border-top: 1px solid #334155;
+            padding-top: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar.collapsed .sidebar-bottom {
+            opacity: 0;
+            height: 0;
+            padding: 0;
+            margin: 0;
+            border: none;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            background: white;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            margin-bottom: 40px;
+        }
+
+        .greeting {
+            font-size: 36px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .greeting-text {
+            flex: 1;
+        }
+
+        .streak-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 18px;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+            animation: streakPulse 2s ease-in-out infinite;
+            flex-shrink: 0;
+        }
+
+        @keyframes streakPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .streak-flame {
+            font-size: 20px;
+            animation: flameFlicker 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes flameFlicker {
+            0% { transform: scale(1) rotate(-2deg); }
+            100% { transform: scale(1.1) rotate(2deg); }
+        }
+
+        .search-container {
+            position: relative;
+            margin-bottom: 24px;
+            width: 100%;
+        }
+
+        .search-wrapper {
+            position: relative;
+            width: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 16px 60px 16px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.2s;
+            background: #f8fafc;
+        }
+
+        .search-input:focus {
+            border-color: #3b82f6;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .search-input::placeholder {
+            color: #94a3b8;
+        }
+
+        .send-button {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            background: #3b82f6;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            font-size: 16px;
+        }
+
+        .send-button:hover {
+            background: #2563eb;
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        .send-button:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        .send-button.pulse {
+            animation: pulse 0.3s ease;
+        }
+
+        @keyframes pulse {
+            0% { transform: translateY(-50%) scale(1); }
+            50% { transform: translateY(-50%) scale(1.1); }
+            100% { transform: translateY(-50%) scale(1); }
+        }
+
+        .send-icon {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            height: calc(100vh - 260px);
+        }
+
+        .section {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 32px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 24px;
+        }
+
+        /* Word of the Day Styles */
+        .word-of-day {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .word-of-day:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .word-of-day::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+            opacity: 0;
+        }
+
+        .word-of-day:hover::before {
+            animation: shimmer 0.6s ease;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); opacity: 0; }
+        }
+
+        .word-of-day-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .word-of-day-title {
+            font-size: 14px;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        .word-of-day-icon {
+            font-size: 18px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-5px); }
+            60% { transform: translateY(-3px); }
+        }
+
+        .word-of-day-word {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .word-of-day-pronunciation {
+            font-size: 14px;
+            opacity: 0.8;
+            font-style: italic;
+        }
+
+        .date-info {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-top: 8px;
+        }
+
+        /* Daily Newspaper Styles */
+        .daily-newspaper {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .daily-newspaper:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+        }
+
+        .daily-newspaper::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+            opacity: 0;
+        }
+
+        .daily-newspaper:hover::before {
+            animation: shimmer 0.6s ease;
+        }
+
+        .newspaper-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .newspaper-title {
+            font-size: 14px;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        .newspaper-icon {
+            font-size: 18px;
+            animation: newspaperFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes newspaperFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-3px) rotate(2deg); }
+        }
+
+        .newspaper-name {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .newspaper-date {
+            font-size: 14px;
+            opacity: 0.8;
+            font-style: italic;
+        }
+
+        .newspaper-status {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-top: 4px;
+        }
+
+        .word-loading {
+            opacity: 0.7;
+            font-style: italic;
+        }
+/*show colour krishna kannan*/
+        .word-error {
+            background: linear-gradient(135deg, #00c4f5 0%, #ff0000 100%);
+        }
+
+        /* Overlay Styles */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .overlay-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            transform: scale(0.8) translateY(50px);
+            transition: all 0.3s ease;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .overlay.active .overlay-content {
+            transform: scale(1) translateY(0);
+        }
+
+        /* PDF Overlay Styles */
+        .pdf-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            z-index: 1001;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .pdf-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .pdf-header {
+            background: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .pdf-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .pdf-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .pdf-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pdf-download {
+            background: #10b981;
+            color: white;
+        }
+
+        .pdf-download:hover {
+            background: #059669;
+            transform: translateY(-1px);
+        }
+
+        .pdf-close {
+            background: #ef4444;
+            color: white;
+        }
+
+        .pdf-close:hover {
+            background: #dc2626;
+            transform: translateY(-1px);
+        }
+
+        .pdf-viewer {
+            flex: 1;
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+       .pdf-container {
+    width: 100%;
+    height: 100%;
+    background: white;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: hidden;
+}
+
+.pdf-embed {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 0;
+}
+
+        .pdf-fallback {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #64748b;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .pdf-fallback-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .pdf-fallback h3 {
+            font-size: 24px;
+            margin-bottom: 12px;
+            color: #1e293b;
+        }
+
+        .pdf-fallback p {
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 24px;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 35px;
+            height: 35px;
+            border: none;
+            background: #f1f5f9;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #64748b;
+            transition: all 0.2s ease;
+        }
+
+        .close-button:hover {
+            background: #e2e8f0;
+            color: #1e293b;
+            transform: scale(1.1);
+        }
+
+        .word-detail-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .word-detail-word {
+            font-size: 36px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .word-detail-pronunciation {
+            font-size: 18px;
+            color: #64748b;
+            font-style: italic;
+            margin-bottom: 12px;
+        }
+
+        .word-detail-type {
+            display: inline-block;
+            background: #3b82f6;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .word-detail-meaning {
+            margin-bottom: 25px;
+        }
+
+        .word-detail-meaning h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 12px;
+        }
+
+        .word-detail-meaning p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #374151;
+        }
+
+        .word-detail-example {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .word-detail-example h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .word-detail-example p {
+            font-size: 15px;
+            line-height: 1.5;
+            color: #4b5563;
+            font-style: italic;
+        }
+
+        .todo-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid #e2e8f0;
+            transition: all 0.2s ease;
+            opacity: 1;
+        }
+
+        .todo-item:last-child {
+            border-bottom: none;
+        }
+
+        .todo-item.completed {
+            opacity: 0.6;
+        }
+
+        .todo-item.completed .todo-text {
+            text-decoration: line-through;
+            color: #9ca3af;
+        }
+
+        .todo-left {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+
+        .todo-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #d1d5db;
+            border-radius: 4px;
+            margin-right: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .todo-checkbox.checked {
+            background: #10b981;
+            border-color: #10b981;
+        }
+
+        .todo-checkbox.checked::after {
+            content: '✓';
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .todo-text {
+            color: #374151;
+            font-weight: 500;
+            font-size: 16px;
+            flex: 1;
+        }
+
+        .todo-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .todo-time {
+            color: #6b7280;
+            font-size: 14px;
+            min-width: 80px;
+            text-align: right;
+        }
+
+        .todo-actions {
+            display: flex;
+            gap: 8px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .todo-item:hover .todo-actions {
+            opacity: 1;
+        }
+
+        .todo-btn {
+            width: 24px;
+            height: 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .todo-edit {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .todo-edit:hover {
+            background: #2563eb;
+        }
+
+        .todo-delete {
+            background: #ef4444;
+            color: white;
+        }
+
+        .todo-delete:hover {
+            background: #dc2626;
+        }
+
+        .add-todo-container {
+            margin-bottom: 20px;
+            padding: 16px;
+            background: white;
+            border-radius: 8px;
+            border: 2px dashed #d1d5db;
+            transition: all 0.2s ease;
+        }
+
+        .add-todo-container:hover {
+            border-color: #3b82f6;
+        }
+
+        .add-todo-form {
+            display: none;
+            gap: 12px;
+        }
+
+        .add-todo-form.active {
+            display: flex;
+        }
+
+        .add-todo-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .add-todo-input:focus {
+            border-color: #3b82f6;
+        }
+
+        .add-todo-time {
+            width: 100px;
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .add-todo-btn {
+            padding: 8px 16px;
+            background: #10b981;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s ease;
+        }
+
+        .add-todo-btn:hover {
+            background: #059669;
+        }
+
+        .cancel-btn {
+            padding: 8px 16px;
+            background: #6b7280;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s ease;
+        }
+
+        .cancel-btn:hover {
+            background: #4b5563;
+        }
+
+        .add-todo-trigger {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: #6b7280;
+            cursor: pointer;
+            padding: 12px;
+            transition: color 0.2s ease;
+        }
+
+        .add-todo-trigger:hover {
+            color: #3b82f6;
+        }
+
+        .todo-empty {
+            text-align: center;
+            color: #9ca3af;
+            font-style: italic;
+            padding: 32px 0;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            text-decoration: none;
+            color: #374151;
+            transition: all 0.2s;
+            cursor: pointer;
+            min-height: 120px;
+        }
+
+        .action-btn:hover {
+            border-color: #3b82f6;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+        }
+
+        .action-icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+        }
+
+        .action-text {
+            font-weight: 600;
+            text-align: center;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .gk-research .action-icon { color: #3b82f6; }
+        .qt-mentor .action-icon { color: #10b981; }
+        .online-tests .action-icon { color: #f59e0b; }
+        .generate-tests .action-icon { color: #8b5cf6; }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                order: 2;
+            }
+
+            .sidebar.collapsed {
+                width: 100%;
+                height: 60px;
+            }
+            
+            .content-grid {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+            
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .greeting {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .overlay-content {
+                padding: 30px 20px;
+                margin: 20px;
+            }
+
+            .pdf-header {
+                padding: 15px;
+                flex-direction: column;
+                gap: 12px;
+                align-items: flex-start;
+            }
+
+            .pdf-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .pdf-viewer {
+    flex: 1;
+    padding: 0;
+    background: #f1f5f9;
+}
+
+        }
+        .top-widgets-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.top-widgets-row .word-of-day,
+.top-widgets-row .daily-newspaper {
+    flex: 1;
+    padding: 16px;
+    min-height: 130px;
+    font-size: 14px;
+}
+
+.word-of-day-word,
+.newspaper-name {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.word-of-day-pronunciation,
+.newspaper-date {
+    font-size: 12px;
+    font-style: italic;
+}
+
+.date-info,
+.newspaper-status {
+    font-size: 11px;
+    opacity: 0.8;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="sidebar" id="sidebar">
+            <button class="hamburger-menu" id="hamburgerMenu" onclick="toggleSidebar()">
+                <div class="hamburger-line"></div>
+                <div class="hamburger-line"></div>
+                <div class="hamburger-line"></div>
+            </button>
+            
+            <div class="logo">CLAT.GPT.1</div>
+            
+            <button class="nav-item home active" onclick="navigateTo('home')">
+                <span class="nav-text">Home</span>
+            </button>
+            <button class="nav-item practice" onclick="navigateTo('practice-online')">
+                <span class="nav-text">Practice Online</span>
+            </button>
+            <button class="nav-item research" onclick="navigateTo('gk-research')">
+                <span class="nav-text">GK Research Engine</span>
+            </button>
+            <button class="nav-item mentor" onclick="navigateTo('qt-mentor')">
+                <span class="nav-text">QT AI Mentor</span>
+            </button>
+            <button class="nav-item chatbot" onclick="navigateTo('lexa-chatbot')">
+                <span class="nav-text">Lexa Chatbot</span>
+            </button>
+            <button class="nav-item tests" onclick="navigateTo('generate-tests')">
+                <span class="nav-text">Generate Tests</span>
+            </button>
+            <button class="nav-item progress" onclick="navigateTo('progress')">
+                <span class="nav-text">Progress Tracker</span>
+            </button>
+            
+            <div class="sidebar-bottom">
+                <button class="nav-item settings" onclick="navigateTo('settings')">
+                    <span class="nav-text">Settings</span>
+                </button>
+                <button class="nav-item appearance" onclick="navigateTo('appearance')">
+                    <span class="nav-text">Appearance</span>
+                </button>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <header class="header">
+                <h1 class="greeting" id="greetingText">
+                    <span class="greeting-text">Good evening, User 👋</span>
+                    <div class="streak-indicator">
+                        <span class="streak-flame">🔥</span>
+                        <span id="streakCount">7</span>
+                    </div>
+                </h1>
+                
+                <div class="search-container">
+                    <div class="search-wrapper">
+                        <input type="text" class="search-input" placeholder="Ask Lexa anything..." id="lexaInput" />
+                        <button class="send-button" id="sendButton" onclick="sendToLexa()">
+                            <svg class="send-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-grid">
+                <section class="section">
+                    <div class="top-widgets-row">
+  <div class="word-of-day" onclick="openWordOverlay()">
+    <div class="word-of-day-header">
+      <span class="word-of-day-title">Word of the Day</span>
+      <span class="word-of-day-icon">📚</span>
+    </div>
+    <div class="word-of-day-word" id="currentWord">Loading...</div>
+    <div class="word-of-day-pronunciation" id="currentPronunciation">Loading pronunciation...</div>
+    <div class="date-info" id="dateInfo">Day 1 of 365</div>
+  </div>
+
+  <div class="daily-newspaper" onclick="openNewspaperOverlay()">
+    <div class="newspaper-header">
+      <span class="newspaper-title">Daily Highlighted Newspaper</span>
+      <span class="newspaper-icon">📰</span>
+    </div>
+    <div class="newspaper-name" id="newspaperName">CLAT Daily</div>
+    <div class="newspaper-date" id="newspaperDate">Loading...</div>
+    <div class="newspaper-status" id="newspaperStatus">Checking for today's edition...</div>
+  </div>
+</div>
+
+
+                    
+
+                    <h2 class="section-title">To-do list</h2>
+                    
+                    <div class="add-todo-container">
+                        <div class="add-todo-trigger" onclick="showAddTodoForm()">
+                            <span>➕</span>
+                            <span>Add new task</span>
+                        </div>
+                        <div class="add-todo-form" id="addTodoForm">
+                            <input type="text" class="add-todo-input" id="todoInput" placeholder="Enter task..." />
+                            <input type="text" class="add-todo-time" id="todoTime" placeholder="Time/Note" />
+                            <button class="add-todo-btn" onclick="addTodo()">Add</button>
+                            <button class="cancel-btn" onclick="hideAddTodoForm()">Cancel</button>
+                        </div>
+                    </div>
+
+                    <div id="todoList">
+                        <div class="todo-item" data-id="1">
+                            <div class="todo-left">
+                                <div class="todo-checkbox" onclick="toggleTodo(1)"></div>
+                                <span class="todo-text">Daily Quiz Reminder</span>
+                            </div>
+                            <div class="todo-right">
+                                <span class="todo-time">9:00 AM</span>
+                                <div class="todo-actions">
+                                    <button class="todo-btn todo-edit" onclick="editTodo(1)" title="Edit">✏️</button>
+                                    <button class="todo-btn todo-delete" onclick="deleteTodo(1)" title="Delete">🗑️</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="todo-item" data-id="2">
+                            <div class="todo-left">
+                                <div class="todo-checkbox" onclick="toggleTodo(2)"></div>
+                                <span class="todo-text">Read the newspaper</span>
+                            </div>
+                            <div class="todo-right">
+                                <span class="todo-time">76-100</span>
+                                <div class="todo-actions">
+                                    <button class="todo-btn todo-edit" onclick="editTodo(2)" title="Edit">✏️</button>
+                                    <button class="todo-btn todo-delete" onclick="deleteTodo(2)" title="Delete">🗑️</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">Quick actions</h2>
+                    <div class="quick-actions">
+                        <button class="action-btn gk-research" onclick="navigateTo('gk-research')">
+                            <div class="action-icon">🔍</div>
+                            <div class="action-text">GK Research<br>Engine</div>
+                        </button>
+                        <button class="action-btn qt-mentor" onclick="navigateTo('qt-mentor')">
+                            <div class="action-icon">📈</div>
+                            <div class="action-text">QT AI<br>Mentor</div>
+                        </button>
+                        <button class="action-btn online-tests" onclick="navigateTo('practice-online')">
+                            <div class="action-icon">📋</div>
+                            <div class="action-text">Online<br>Sectional Tests</div>
+                        </button>
+                        <button class="action-btn generate-tests" onclick="navigateTo('generate-tests')">
+                            <div class="action-icon">⚡</div>
+                            <div class="action-text">Generate<br>Tests</div>
+                        </button>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Word of the Day Overlay -->
+    <div class="overlay" id="wordOverlay">
+        <div class="overlay-content">
+            <button class="close-button" onclick="closeWordOverlay()">✕</button>
+            <div class="word-detail-header">
+                <div class="word-detail-word" id="overlayWord">Loading...</div>
+                <div class="word-detail-pronunciation" id="overlayPronunciation">Loading...</div>
+                <span class="word-detail-type">Word</span>
+            </div>
+            <div class="word-detail-meaning">
+                <h3>Meaning</h3>
+                <p id="overlayMeaning">Loading meaning...</p>
+            </div>
+            <div class="word-detail-example">
+                <h3>Usage Context</h3>
+                <p id="overlayExample">Perfect for CLAT vocabulary building and legal terminology mastery.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Daily Newspaper PDF Overlay -->
+    <div class="pdf-overlay" id="newspaperOverlay">
+        <div class="pdf-header">
+            <div class="pdf-title">
+                <span>📰</span>
+                <span id="pdfTitle">CLAT Daily - Today's Edition</span>
+            </div>
+            <div class="pdf-controls">
+                <button class="pdf-btn pdf-download" onclick="downloadNewspaper()">
+                    <span>⬇️</span>
+                    <span>Download PDF</span>
+                </button>
+                <button class="pdf-btn pdf-close" onclick="closeNewspaperOverlay()">
+                    <span>✕</span>
+                    <span>Close</span>
+                </button>
+            </div>
+        </div>
+        <div class="pdf-viewer">
+            <div class="pdf-container">
+                <iframe class="pdf-embed" id="pdfEmbed" src="" title="Daily Newspaper PDF"></iframe>
+                <div class="pdf-fallback" id="pdfFallback" style="display: none;">
+                    <div class="pdf-fallback-icon">📰</div>
+                    <h3>Today's Newspaper</h3>
+                    <p>The daily newspaper is currently being prepared. Please check back later or download the PDF directly.</p>
+                    <button class="pdf-btn pdf-download" onclick="downloadNewspaper()">
+                        <span>⬇️</span>
+                        <span>Download PDF</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <script>
+        // Initialize Supabase
+        const supabaseUrl = 'https://agmdmagahkpuzafnsprx.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFnbWRtYWdhaGtwdXphZm5zcHJ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA2ODgyMjgsImV4cCI6MjA2NjI2NDIyOH0.IFV-zakRlvt1q-ZhF7JTCoSjhEK8Ubu1jmqvJI1xVtY';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        // Global variables
+        let currentUser = null;
+        let currentWordData = null;
+        let currentNewspaperData = null;
+
+        // Calculate day of year (1-365, ignoring leap years)
+        function getDayOfYear() {
+            const now = new Date();
+            const start = new Date(now.getFullYear(), 0, 1); // January 1st
+            const diff = now - start;
+            const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24)) + 1; // +1 because we want 1-365, not 0-364
+            
+            // For non-leap years, ensure we don't go beyond 365
+            return Math.min(dayOfYear, 365);
+        }
+
+        // Format date for display
+        function formatDate(date) {
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            return date.toLocaleDateString('en-US', options);
+        }
+
+        // Format date to ddmmyy format for filename
+        function formatDateForFilename(date) {
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = String(date.getFullYear()).slice(-2);
+            return `${day}${month}${year}`;
+        }
+
+        // Get current user and word of the day on page load
+        document.addEventListener('DOMContentLoaded', async function() {
+            await initializePage();
+        });
+
+        async function initializePage() {
+            try {
+                console.log('🚀 Initializing page...');
+                
+                // Check for existing session
+                const { data: { session } } = await supabase.auth.getSession();
+                if (session) {
+                    currentUser = session.user;
+                    console.log('✅ User session found:', currentUser.email);
+                } else {
+                    console.log('⚠️ No active session - using guest mode');
+                    // Don't redirect, allow guest access for now
+                }
+
+                // Update greeting with user info
+                updateGreeting();
+                
+                // Initialize newspaper date
+                updateNewspaperDate();
+                
+                // Fetch and display word of the day
+                await fetchWordOfTheDay();
+                
+                // Fetch newspaper data
+                await fetchNewspaperData();
+                
+                // Initialize other components
+                initializeTodos();
+                
+            } catch (error) {
+                console.error('❌ Error initializing page:', error);
+                // Fallback to default behavior
+                updateGreeting();
+                setFallbackWord();
+                updateNewspaperDate();
+                setFallbackNewspaper();
+            }
+        }
+
+        // Get display name from Supabase user
+function getDisplayName() {
+    if (!currentUser) return 'student';
+
+    // Priority: full_name > display_name > email prefix
+    const fullName = currentUser.user_metadata?.full_name;
+    const displayName = currentUser.user_metadata?.display_name;
+    const email = currentUser.email;
+    
+    const finalName = fullName || displayName || (email ? email.split('@')[0] : 'User');
+
+    // Store in localStorage as $username for access in all pages
+    localStorage.setItem('$username', finalName);
+    console.log('✅ $username set in localStorage:', finalName);
+
+    return finalName;
+}
+
+        // Update newspaper date display
+        function updateNewspaperDate() {
+            const today = new Date();
+            const formattedDate = formatDate(today);
+            document.getElementById('newspaperDate').textContent = formattedDate;
+        }
+
+        // Check if file exists in Supabase storage
+        async function checkFileExists(filename) {
+    try {
+        const { data, error } = await supabase
+            .storage
+            .from('news-pdf')
+            .download(filename);
+
+        return data !== null; // ✅ file exists
+    } catch (err) {
+        console.log(`❌ File not found: ${filename}`);
+        return false;
+    }
+}
+
+
+        // Get public URL for file in Supabase storage
+        function getPublicUrl(filename) {
+            const { data } = supabase.storage
+                .from('news-pdf')
+                .getPublicUrl(filename);
+            
+            return data.publicUrl.replace(/\/{2,}/g, '/').replace('https://', 'https:/');
+        }
+
+        // Fetch newspaper data from Supabase storage bucket
+        async function fetchNewspaperData() {
+            try {
+                console.log('📰 Fetching newspaper from news-pdf bucket...');
+                
+                // Update status
+                document.getElementById('newspaperStatus').textContent = 'Checking for today\'s edition...';
+                
+                let currentDate = new Date();
+                let daysChecked = 0;
+                const maxDaysToCheck = 7; // Check up to 7 days back
+                
+                while (daysChecked < maxDaysToCheck) {
+                    const filename = formatDateForFilename(currentDate) + '.pdf';
+                    console.log(`📅 Checking for file: ${filename}`);
+                    
+                    const fileExists = await checkFileExists(filename);
+                    
+                    if (fileExists) {
+                        console.log(`✅ Found newspaper: ${filename}`);
+                        
+                        const publicUrl = getPublicUrl(filename);
+                        const displayDate = formatDate(currentDate);
+                        
+                        currentNewspaperData = {
+                            filename: filename,
+                            pdf_url: publicUrl,
+                            date: currentDate,
+                            displayDate: displayDate,
+                            isToday: daysChecked === 0
+                        };
+                        
+                        // Update UI
+                        updateNewspaperDisplay();
+                        return;
+                    }
+                    
+                    // Move to previous day
+                    currentDate.setDate(currentDate.getDate() - 1);
+                    daysChecked++;
+                }
+                
+                // No newspaper found in the last 7 days
+                console.log('⚠️ No newspaper found in the last 7 days');
+                setFallbackNewspaper();
+                
+            } catch (error) {
+                console.error('❌ Error fetching newspaper:', error);
+                setFallbackNewspaper();
+            }
+        }
+
+        // Update newspaper display with found data
+        function updateNewspaperDisplay() {
+            if (!currentNewspaperData) return;
+            
+            const statusElement = document.getElementById('newspaperStatus');
+            const titleElement = document.getElementById('pdfTitle');
+            
+            if (currentNewspaperData.isToday) {
+                statusElement.textContent = 'Today\'s edition available';
+                titleElement.textContent = `CLAT Daily - ${currentNewspaperData.displayDate}`;
+            } else {
+                const daysAgo = Math.floor((new Date() - currentNewspaperData.date) / (1000 * 60 * 60 * 24));
+                statusElement.textContent = `Latest edition (${daysAgo} day${daysAgo > 1 ? 's' : ''} ago)`;
+                titleElement.textContent = `CLAT Daily - ${currentNewspaperData.displayDate}`;
+            }
+            
+            console.log('✅ Newspaper display updated');
+        }
+
+        // Set fallback newspaper data
+        function setFallbackNewspaper() {
+            const today = new Date();
+            currentNewspaperData = {
+                filename: '250625.pdf',
+                pdf_url: null,
+                date: today,
+                displayDate: formatDate(today),
+                isToday: false
+            };
+            
+            document.getElementById('newspaperStatus').textContent = 'No recent editions available';
+            console.log('🔄 Set fallback newspaper data');
+        }
+
+        // Fetch word of the day from Supabase based on current date
+        async function fetchWordOfTheDay() {
+            try {
+                const dayOfYear = getDayOfYear();
+                console.log(`📅 Fetching word for day ${dayOfYear} of 365`);
+
+                // Update date info immediately
+                document.getElementById('dateInfo').textContent = `Day ${dayOfYear} of 365`;
+
+                // Fetch word from word-pdf table where day matches current day of year
+                const { data, error } = await supabase
+                    .from('word-pdf')
+                    .select('day, word, pronunciation, meaning')
+                    .eq('day', dayOfYear)
+                    .single();
+
+                if (error) {
+                    console.error('❌ Error fetching word for day', dayOfYear, ':', error.message);
+                    
+                    // Try to get a random word as fallback
+                    console.log('🔄 Trying to get any available word...');
+                    const { data: fallbackData, error: fallbackError } = await supabase
+                        .from('word-pdf')
+                        .select('day, word, pronunciation, meaning')
+                        .limit(1)
+                        .single();
+                    
+                    if (fallbackError) {
+                        console.error('❌ No words available in database:', fallbackError.message);
+                        throw new Error('No words found in database');
+                    }
+                    
+                    console.log('✅ Using fallback word:', fallbackData);
+                    currentWordData = fallbackData;
+                } else {
+                    console.log('✅ Word found for today:', data);
+                    currentWordData = data;
+                }
+
+                updateWordDisplay();
+                
+            } catch (error) {
+                console.error('❌ Error fetching word of the day:', error);
+                setFallbackWord();
+            }
+        }
+
+        // Update word display with fetched data
+        function updateWordDisplay() {
+            if (!currentWordData) {
+                setFallbackWord();
+                return;
+            }
+
+            const wordElement = document.getElementById('currentWord');
+            const pronunciationElement = document.getElementById('currentPronunciation');
+            
+            wordElement.textContent = currentWordData.word || 'Word not available';
+            pronunciationElement.textContent = currentWordData.pronunciation || 'Pronunciation not available';
+            
+            // Remove loading classes
+            wordElement.classList.remove('word-loading');
+            pronunciationElement.classList.remove('word-loading');
+            
+            console.log('✅ Word display updated:', currentWordData.word);
+        }
+
+        // Set fallback word if Supabase fetch fails
+        function setFallbackWord() {
+            console.log('🔄 Setting fallback word...');
+            
+            const fallbackWords = [
+                {
+                    day: getDayOfYear(),
+                    word: "Perspicacious",
+                    pronunciation: "/ˌpɜːrspɪˈkeɪʃəs/",
+                    meaning: "Having a ready insight into and understanding of things; showing acute mental discernment and keen practical sense."
+                },
+                {
+                    day: getDayOfYear(),
+                    word: "Sagacious", 
+                    pronunciation: "/səˈɡeɪʃəs/",
+                    meaning: "Having or showing keen mental discernment and good judgment; wise."
+                },
+                {
+                    day: getDayOfYear(),
+                    word: "Erudite",
+                    pronunciation: "/ˈerʊdaɪt/",
+                    meaning: "Having or showing great knowledge or learning; scholarly."
+                }
+            ];
+
+            // Use day of year to pick consistent fallback word
+            const dayOfYear = getDayOfYear();
+            currentWordData = fallbackWords[dayOfYear % fallbackWords.length];
+            updateWordDisplay();
+            
+            // Add error styling
+            const wordOfDayElement = document.querySelector('.word-of-day');
+            wordOfDayElement.classList.add('word-error');
+        }
+
+        // Streak functionality
+        function getStreak() {
+            const streak = localStorage.getItem('dailyStreak');
+            const lastVisit = localStorage.getItem('lastVisitDate');
+            const today = new Date().toDateString();
+            
+            if (lastVisit === today) {
+                return parseInt(streak) || 1;
+            } else {
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                
+                if (lastVisit === yesterday.toDateString()) {
+                    const newStreak = (parseInt(streak) || 0) + 1;
+                    localStorage.setItem('dailyStreak', newStreak);
+                    localStorage.setItem('lastVisitDate', today);
+                    return newStreak;
+                } else {
+                    localStorage.setItem('dailyStreak', '1');
+                    localStorage.setItem('lastVisitDate', today);
+                    return 1;
+                }
+            }
+        }
+
+        // Dynamic greeting based on time of day
+        function getTimeBasedGreeting() {
+            const hour = new Date().getHours();
+            
+            if (hour >= 5 && hour < 12) {
+                return 'Good morning';
+            } else if (hour >= 12 && hour < 17) {
+                return 'Good afternoon';
+            } else if (hour >= 17 && hour < 22) {
+                return 'Good evening';
+            } else {
+                return 'Good night';
+            }
+        }
+
+        // Update greeting and streak
+        function updateGreeting() {
+            const displayName = getDisplayName();
+            const timeGreeting = getTimeBasedGreeting();
+            const streak = getStreak();
+            
+            const greetingElement = document.querySelector('.greeting-text');
+            const streakElement = document.getElementById('streakCount');
+            
+            greetingElement.textContent = `${timeGreeting}, ${displayName} 👋`;
+            streakElement.textContent = streak;
+            
+            console.log('✅ Greeting updated:', `${timeGreeting}, ${displayName}`);
+        }
+
+        // Word of the Day overlay functions
+        function openWordOverlay() {
+            if (!currentWordData) {
+                alert('Word data is still loading. Please try again in a moment.');
+                return;
+            }
+            
+            document.getElementById('overlayWord').textContent = currentWordData.word || 'Word';
+            document.getElementById('overlayPronunciation').textContent = currentWordData.pronunciation || '';
+            document.getElementById('overlayMeaning').textContent = currentWordData.meaning || 'Meaning not available';
+            
+            document.getElementById('wordOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeWordOverlay() {
+            document.getElementById('wordOverlay').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Newspaper overlay functions
+        function openNewspaperOverlay() {
+            console.log('📰 Opening newspaper overlay...');
+            
+            if (!currentNewspaperData || !currentNewspaperData.pdf_url) {
+                alert('No newspaper is currently available. Please check back later.');
+                return;
+            }
+            
+            const pdfEmbed = document.getElementById('pdfEmbed');
+            const pdfFallback = document.getElementById('pdfFallback');
+            
+            // Try to load the PDF
+            pdfEmbed.src = currentNewspaperData.pdf_url;
+            pdfEmbed.style.display = 'block';
+            pdfFallback.style.display = 'none';
+            
+            // Handle PDF load errors
+            pdfEmbed.onerror = function() {
+                console.log('⚠️ PDF failed to load, showing fallback');
+                pdfEmbed.style.display = 'none';
+                pdfFallback.style.display = 'flex';
+            };
+            
+            document.getElementById('newspaperOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeNewspaperOverlay() {
+            document.getElementById('newspaperOverlay').classList.remove('active');
+            document.body.style.overflow = 'auto';
+            
+            // Clear the PDF src to stop loading
+            document.getElementById('pdfEmbed').src = '';
+        }
+
+        function downloadNewspaper() {
+            if (!currentNewspaperData || !currentNewspaperData.pdf_url) {
+                alert('PDF is not available for download at the moment.');
+                return;
+            }
+            
+            console.log('⬇️ Downloading newspaper PDF...');
+            
+            // Create a temporary link element and trigger download
+            const link = document.createElement('a');
+            link.href = currentNewspaperData.pdf_url;
+            link.download = currentNewspaperData.filename || 'clat-daily.pdf';
+            link.target = '_blank';
+            
+            // Append to body, click, and remove
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Sidebar toggle functionality
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('collapsed');
+        }
+
+        // Navigation function
+        function navigateTo(page) {
+            const pages = {
+                'home': '2.homepage.html',
+                'practice-online': 'practice-online.html',
+                'gk-research': 'gk-research.html',
+                'qt-mentor': 'qt-mentor.html',
+                'lexa-chatbot': 'lexa-chatbot.html',
+                'generate-tests': 'generate-tests.html',
+                'progress': 'progress.html',
+                'settings': 'settings.html',
+                'appearance': 'appearance.html',
+            };
+
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
+
+            if (pages[page]) {
+                window.location.href = pages[page];
+            }
+        }
+
+        // Function to redirect to Lexa Chatbot with query
+        function redirectToLexaWithQuery(query) {
+            const encodedQuery = encodeURIComponent(query);
+            window.location.href = `lexa-chatbot.html?message=${encodedQuery}`;
+        }
+
+        // Send to Lexa function
+        function sendToLexa() {
+            const query = document.getElementById('lexaInput').value.trim();
+            if (query) {
+                const sendButton = document.getElementById('sendButton');
+                sendButton.classList.add('pulse');
+                
+                setTimeout(() => {
+                    sendButton.classList.remove('pulse');
+                }, 300);
+                
+                redirectToLexaWithQuery(query);
+            }
+        }
+
+        // Enhanced search functionality
+        document.getElementById('lexaInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                sendToLexa();
+            }
+        });
+
+        // Search input focus/blur effects
+        document.getElementById('lexaInput').addEventListener('focus', function() {
+            this.style.borderColor = '#3b82f6';
+            this.style.backgroundColor = 'white';
+        });
+
+        document.getElementById('lexaInput').addEventListener('blur', function() {
+            if (!this.value) {
+                this.style.borderColor = '#e2e8f0';
+                this.style.backgroundColor = '#f8fafc';
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Ctrl + B for sidebar toggle
+            if (e.ctrlKey && e.key === 'b') {
+                e.preventDefault();
+                toggleSidebar();
+            }
+            
+            // Escape key to close overlays
+            if (e.key === 'Escape') {
+                closeWordOverlay();
+                closeNewspaperOverlay();
+                hideAddTodoForm();
+            }
+        });
+
+        // Auto-collapse sidebar on mobile
+        function checkScreenSize() {
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.add('collapsed');
+            }
+        }
+
+        // Check screen size on load and resize
+        window.addEventListener('load', checkScreenSize);
+        window.addEventListener('resize', checkScreenSize);
+
+        // Add input validation
+        document.getElementById('lexaInput').addEventListener('input', function() {
+            const sendButton = document.getElementById('sendButton');
+            if (this.value.trim()) {
+                sendButton.style.opacity = '1';
+                sendButton.style.cursor = 'pointer';
+            } else {
+                sendButton.style.opacity = '0.7';
+            }
+        });
+
+        // Todo list functionality
+        let todoIdCounter = 3;
+        let todos = [
+            { id: 1, text: 'Daily Quiz Reminder', time: '9:00 AM', completed: false },
+            { id: 2, text: 'Revise IPC Sections', time: '76-100', completed: false }
+        ];
+
+        function initializeTodos() {
+            const todoInput = document.getElementById('todoInput');
+            const todoTimeInput = document.getElementById('todoTime');
+            
+            todoInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    addTodo();
+                }
+            });
+            
+            todoTimeInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    addTodo();
+                }
+            });
+        }
+
+        function showAddTodoForm() {
+            const form = document.getElementById('addTodoForm');
+            const trigger = document.querySelector('.add-todo-trigger');
+            form.classList.add('active');
+            trigger.style.display = 'none';
+            document.getElementById('todoInput').focus();
+        }
+
+        function hideAddTodoForm() {
+            const form = document.getElementById('addTodoForm');
+            const trigger = document.querySelector('.add-todo-trigger');
+            form.classList.remove('active');
+            trigger.style.display = 'flex';
+            document.getElementById('todoInput').value = '';
+            document.getElementById('todoTime').value = '';
+        }
+
+        function addTodo() {
+            const input = document.getElementById('todoInput');
+            const timeInput = document.getElementById('todoTime');
+            const text = input.value.trim();
+            const time = timeInput.value.trim() || 'No time set';
+
+            if (text) {
+                const newTodo = {
+                    id: todoIdCounter++,
+                    text: text,
+                    time: time,
+                    completed: false
+                };
+                todos.push(newTodo);
+                renderTodos();
+                hideAddTodoForm();
+            }
+        }
+
+        function toggleTodo(id) {
+            const todo = todos.find(t => t.id === id);
+            if (todo) {
+                todo.completed = !todo.completed;
+                renderTodos();
+            }
+        }
+
+        function editTodo(id) {
+            const todo = todos.find(t => t.id === id);
+            if (todo) {
+                const newText = prompt('Edit task:', todo.text);
+                if (newText !== null && newText.trim()) {
+                    todo.text = newText.trim();
+                    const newTime = prompt('Edit time/note:', todo.time);
+                    if (newTime !== null) {
+                        todo.time = newTime.trim() || 'No time set';
+                    }
+                    renderTodos();
+                }
+            }
+        }
+
+        function deleteTodo(id) {
+            if (confirm('Are you sure you want to delete this task?')) {
+                todos = todos.filter(t => t.id !== id);
+                renderTodos();
+            }
+        }
+
+        function renderTodos() {
+            const todoList = document.getElementById('todoList');
+            
+            if (todos.length === 0) {
+                todoList.innerHTML = '<div class="todo-empty">No tasks yet. Add your first task above!</div>';
+                return;
+            }
+
+            todoList.innerHTML = todos.map(todo => `
+                <div class="todo-item ${todo.completed ? 'completed' : ''}" data-id="${todo.id}">
+                    <div class="todo-left">
+                        <div class="todo-checkbox ${todo.completed ? 'checked' : ''}" onclick="toggleTodo(${todo.id})"></div>
+                        <span class="todo-text">${todo.text}</span>
+                    </div>
+                    <div class="todo-right">
+                        <span class="todo-time">${todo.time}</span>
+                        <div class="todo-actions">
+                            <button class="todo-btn todo-edit" onclick="editTodo(${todo.id})" title="Edit">✏️</button>
+                            <button class="todo-btn todo-delete" onclick="deleteTodo(${todo.id})" title="Delete">🗑️</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Close overlays when clicking outside
+        document.getElementById('wordOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeWordOverlay();
+            }
+        });
+
+        document.getElementById('newspaperOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeNewspaperOverlay();
+            }
+        });
+
+        // Navigate to settings page on double-click
+        function goToSettings() {
+            window.location.href = 'settings.html';
+        }
+
+        // Optional: Add double-click on greeting to go to settings
+        document.getElementById('greetingText').addEventListener('dblclick', goToSettings);
+    </script>
+</body>
+</html>

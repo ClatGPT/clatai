@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - CLAT.GPT.1</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f1f5f9;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            background: white;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: #1e293b;
+            color: white;
+            padding: 24px 0;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .sidebar.collapsed {
+            width: 60px;
+            padding: 24px 0;
+        }
+
+        .hamburger-menu {
+            position: absolute;
+            top: 20px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar.collapsed .hamburger-menu {
+            right: 15px;
+        }
+
+        .hamburger-line {
+            width: 20px;
+            height: 2px;
+            background: white;
+            margin: 2px 0;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .logo {
+            padding: 0 24px 24px;
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            border-bottom: 1px solid #334155;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            overflow: hidden;
+            opacity: 1;
+        }
+
+        .sidebar.collapsed .logo {
+            opacity: 0;
+            height: 0;
+            padding: 0;
+            margin: 0;
+            border: none;
+        }
+
+        .exam-timer {
+            padding: 0 24px;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+            opacity: 1;
+        }
+
+        .sidebar.collapsed .exam-timer {
+            opacity: 0;
+            height: 0;
+            padding: 0;
+            margin: 0;
+        }
+
+        .timer-display {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 14px;
+            animation: pulse 2s infinite;
+        }
+
+        .timer-display.warning {
+            animation: fastPulse 1s infinite;
+        }
+
+        .timer-display.expired {
+            background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);
+            animation: none;
+        }
+
+        .timer-label {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-bottom: 4px;
+        }
+
+        .timer-time {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        @keyframes fastPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 24px;
+            color: #94a3b8;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-size: 15px;
+            white-space: nowrap;
+            overflow: hidden;
+            position: relative;
+            opacity: 1;
+        }
+
+        .sidebar.collapsed .nav-item {
+            opacity: 0;
+            height: 0;
+            padding: 0;
+            margin: 0;
+            pointer-events: none;
+        }
+
+        .nav-item:hover {
+            background: #334155;
+            color: white;
+        }
+
+        .nav-item.active {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .nav-item::before {
+            content: '';
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .nav-item.home::before { content: '🏠'; }
+        .nav-item.practice::before { content: '📚'; }
+        .nav-item.research::before { content: '🔍'; }
+        .nav-item.mentor::before { content: '🤖'; }
+        .nav-item.chatbot::before { content: '💬'; }
+        .nav-item.tests::before { content: '📝'; }
+        .nav-item.progress::before { content: '📊'; }
+        .nav-item.settings::before { content: '⚙️'; }
+        .nav-item.appearance::before { content: '🎨'; }
+
+        .nav-text {
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            border-top: 1px solid #334155;
+            padding-top: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar.collapsed .sidebar-bottom {
+            opacity: 0;
+            height: 0;
+            padding: 0;
+            margin: 0;
+            border: none;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            background: white;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            margin-bottom: 40px;
+            animation: slideInFromTop 0.6s ease-out;
+        }
+
+        .greeting {
+            font-size: 36px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: #64748b;
+            margin-bottom: 40px;
+        }
+
+        .settings-container {
+            max-width: 800px;
+            margin: 0 auto;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .settings-section {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 32px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-description {
+            font-size: 16px;
+            color: #64748b;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 16px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            background: white;
+            color: #374151;
+            transition: all 0.2s;
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-input:hover {
+            border-color: #94a3b8;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            background: white;
+            color: #374151;
+            cursor: pointer;
+            transition: all 0.2s;
+            outline: none;
+        }
+
+        .form-select:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .timer-inputs {
+            display: flex;
+            gap: 16px;
+            align-items: end;
+        }
+
+        .timer-input-group {
+            flex: 1;
+        }
+
+        .timer-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            background: white;
+            color: #374151;
+            text-align: center;
+            transition: all 0.2s;
+            outline: none;
+        }
+
+        .timer-input:focus {
+            border-color: #ef4444;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+        }
+
+        .action-button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-right: 12px;
+            margin-bottom: 12px;
+        }
+
+        .action-button.primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+        }
+
+        .action-button.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        .action-button.secondary {
+            background: #f1f5f9;
+            color: #64748b;
+            border: 2px solid #e2e8f0;
+        }
+
+        .action-button.secondary:hover {
+            background: #e2e8f0;
+            color: #374151;
+        }
+
+        .action-button.danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+
+        .action-button.danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
+        }
+
+        .action-button.success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        .action-button.success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        .current-info {
+            background: #dbeafe;
+            border: 1px solid #93c5fd;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .current-info-title {
+            font-weight: 600;
+            color: #1e40af;
+            margin-bottom: 4px;
+        }
+
+        .current-info-value {
+            color: #1e40af;
+            font-size: 18px;
+        }
+
+        .timer-status {
+            background: #fef3c7;
+            border: 1px solid #fbbf24;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 16px;
+            text-align: center;
+        }
+
+        .timer-status.active {
+            background: #dcfce7;
+            border-color: #10b981;
+        }
+
+        .timer-status.expired {
+            background: #fef2f2;
+            border-color: #ef4444;
+        }
+
+        .timer-status-text {
+            font-weight: 600;
+            color: #92400e;
+        }
+
+        .timer-status.active .timer-status-text {
+            color: #059669;
+        }
+
+        .timer-status.expired .timer-status-text {
+            color: #dc2626;
+        }
+
+        .success-message {
+            background: #dcfce7;
+            border: 1px solid #10b981;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 16px;
+            color: #059669;
+            font-weight: 600;
+            text-align: center;
+            display: none;
+            animation: slideInFromBottom 0.5s ease-out;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .logout-section {
+            border-top: 2px solid #ef4444;
+        }
+
+        .logout-section .section-title {
+            color: #dc2626;
+        }
+
+        /* Animations */
+        @keyframes slideInFromTop {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInFromBottom {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                order: 2;
+            }
+
+            .sidebar.collapsed {
+                width: 100%;
+                height: 60px;
+            }
+
+            .main-content {
+                order: 1;
+                padding: 20px;
+            }
+
+            .settings-container {
+                max-width: 100%;
+            }
+
+            .settings-section {
+                padding: 24px;
+            }
+
+            .timer-inputs {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .action-button {
+                width: 100%;
+                margin-right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="sidebar" id="sidebar">
+            <button class="hamburger-menu" id="hamburgerMenu" onclick="toggleSidebar()">
+                <div class="hamburger-line"></div>
+                <div class="hamburger-line"></div>
+                <div class="hamburger-line"></div>
+            </button>
+            
+            <div class="logo">CLAT.GPT.1</div>
+            
+            <!-- Exam Timer Display -->
+            <div class="exam-timer" id="examTimerDisplay" style="display: none;">
+                <div class="timer-display" id="timerDisplay">
+                    <div class="timer-label">Exam Countdown</div>
+                    <div class="timer-time" id="timerTime">0d 00h 00m</div>
+                </div>
+            </div>
+            
+            <button class="nav-item home" onclick="navigateTo('home')">
+                <span class="nav-text">Home</span>
+            </button>
+            <button class="nav-item practice" onclick="navigateTo('practice-online')">
+                <span class="nav-text">Practice Online</span>
+            </button>
+            <button class="nav-item research" onclick="navigateTo('gk-research')">
+                <span class="nav-text">GK Research Engine</span>
+            </button>
+            <button class="nav-item mentor" onclick="navigateTo('qt-mentor')">
+                <span class="nav-text">QT AI Mentor</span>
+            </button>
+            <button class="nav-item chatbot" onclick="navigateTo('lexa-chatbot')">
+                <span class="nav-text">Lexa Chatbot</span>
+            </button>
+            <button class="nav-item tests" onclick="navigateTo('generate-tests')">
+                <span class="nav-text">Generate Tests</span>
+            </button>
+            <button class="nav-item progress" onclick="navigateTo('progress')">
+                <span class="nav-text">Progress Tracker</span>
+            </button>
+            
+            <div class="sidebar-bottom">
+                <button class="nav-item settings active" onclick="navigateTo('settings')">
+                    <span class="nav-text">Settings</span>
+                </button>
+                <button class="nav-item appearance" onclick="navigateTo('appearance')">
+                    <span class="nav-text">Appearance</span>
+                </button>
+
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <header class="header">
+                <h1 class="greeting">Settings ⚙️</h1>
+                <p class="page-subtitle">Customize your CLAT.GPT.1 experience</p>
+            </header>
+
+            <div class="settings-container">
+                <!-- Profile Settings -->
+                <div class="settings-section">
+                    <h2 class="section-title">
+                        👤 Profile Settings
+                    </h2>
+                    <p class="section-description">Update your personal information and preferences</p>
+                    
+                    <div class="current-info">
+                        <div class="current-info-title">Current Name:</div>
+                        <div class="current-info-value" id="currentName">Student</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="newName">New Name</label>
+                        <input type="text" class="form-input" id="newName" placeholder="Enter your new name" maxlength="50">
+                    </div>
+                    
+                    <button class="action-button primary" onclick="changeName()">Update Name</button>
+                    
+                    <div class="success-message" id="nameSuccessMessage">
+                        ✅ Name updated successfully!
+                    </div>
+                </div>
+
+                <!-- Exam Timer Settings -->
+                <div class="settings-section">
+                    <h2 class="section-title">
+                        ⏰ Exam Countdown Settings
+                    </h2>
+                    <p class="section-description">Set your exam date to start the countdown timer</p>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="examDate">Exam Date</label>
+                        <input type="date" class="form-input" id="examDate" min="">
+                    </div>
+                    
+                    
+                    
+                    <div style="margin-top: 24px;">
+                        <button class="action-button success" onclick="setExamDate()">Set Exam Date</button>
+                        <button class="action-button danger" onclick="clearExamDate()">Clear Exam Date</button>
+                    </div>
+                    
+                    <div class="timer-status" id="timerStatus">
+                        <div class="timer-status-text">No exam date set</div>
+                    </div>
+                    
+                    <div class="success-message" id="timerSuccessMessage">
+                        📅 Exam date set successfully!
+                    </div>
+                </div>
+
+                <!-- Logout Section -->
+                <div class="settings-section logout-section">
+                    <h2 class="section-title">
+                        🚪 Account Actions
+                    </h2>
+                    <p class="section-description">Sign out of your account or reset your session</p>
+                    
+                    <button class="action-button danger" onclick="logout()">Logout</button>
+                    <button class="action-button secondary" onclick="resetSession()">Reset Session</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let examTimer = null;
+        let timerEndTime = null;
+        let timerPaused = false;
+        let pausedTimeRemaining = 0;
+
+        // Get username from localStorage or use default
+        function getUsername() {
+            return localStorage.getItem('username') || 'Student';
+        }
+
+        // Update current name display
+        function updateCurrentName() {
+            const username = getUsername();
+            document.getElementById('currentName').textContent = username;
+        }
+
+        // Change name functionality
+        function changeName() {
+            const newName = document.getElementById('newName').value.trim();
+            
+            if (!newName) {
+                alert('Please enter a valid name');
+                return;
+            }
+            
+            if (newName.length < 2) {
+                alert('Name must be at least 2 characters long');
+                return;
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('username', newName);
+            
+            // Update display
+            updateCurrentName();
+            
+            // Clear input
+            document.getElementById('newName').value = '';
+            
+            // Show success message
+            const successMessage = document.getElementById('nameSuccessMessage');
+            successMessage.classList.add('show');
+            setTimeout(() => {
+                successMessage.classList.remove('show');
+            }, 3000);
+        }
+
+        // Timer functionality
+        function setExamDate() {
+            const examDate = document.getElementById('examDate').value;
+            
+            if (!examDate) {
+                alert('Please select an exam date');
+                return;
+            }
+            
+            // Set exam time to 9:00 AM by default
+            const examDateTime = new Date(`${examDate}T09:00:00`);
+            const now = new Date();
+            
+            if (examDateTime <= now) {
+                alert('Please select a future date');
+                return;
+            }
+            
+            // Stop existing timer
+            if (examTimer) {
+                clearInterval(examTimer);
+            }
+            
+            // Save exam date to localStorage
+            localStorage.setItem('examDateTime', examDateTime.getTime());
+            
+            // Start countdown
+            startExamCountdown();
+            
+            // Update status
+            updateTimerStatus('active', `Exam countdown started for ${examDateTime.toLocaleDateString()}`);
+            
+            // Show success message
+            showTimerSuccess();
+        }
+
+        function clearExamDate() {
+            if (examTimer) {
+                clearInterval(examTimer);
+                examTimer = null;
+            }
+            
+            // Clear from localStorage
+            localStorage.removeItem('examDateTime');
+            
+            // Hide timer display
+            document.getElementById('examTimerDisplay').style.display = 'none';
+            
+            // Update status
+            updateTimerStatus('stopped', 'Exam countdown cleared');
+            
+            // Clear form
+            document.getElementById('examDate').value = '';
+        }
+
+        function startExamCountdown() {
+            const examDateTime = localStorage.getItem('examDateTime');
+            if (!examDateTime) return;
+            
+            const examDate = new Date(parseInt(examDateTime));
+            
+            // Show timer display
+            document.getElementById('examTimerDisplay').style.display = 'block';
+            
+            // Update immediately first
+            updateCountdownDisplay(examDate);
+            
+            examTimer = setInterval(() => {
+                updateCountdownDisplay(examDate);
+            }, 60000); // Update every minute
+        }
+
+        function updateCountdownDisplay(examDate) {
+            const now = new Date().getTime();
+            const timeLeft = examDate.getTime() - now;
+            
+            if (timeLeft <= 0) {
+                // Exam date reached
+                clearInterval(examTimer);
+                examTimer = null;
+                document.getElementById('timerTime').textContent = 'EXAM DAY!';
+                document.getElementById('timerDisplay').classList.add('expired');
+                updateTimerStatus('expired', 'Today is your exam day! Good luck!');
+                
+                // Show alert
+                alert('🎯 Today is your CLAT exam day! Good luck!');
+                
+                return;
+            }
+            
+            // Calculate time components
+            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            
+            // Format and display
+            const timeString = `${days}d ${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m`;
+            document.getElementById('timerTime').textContent = timeString;
+            
+            // Add warning class if less than 7 days
+            const timerDisplay = document.getElementById('timerDisplay');
+            if (days < 7) {
+                timerDisplay.classList.add('warning');
+            } else {
+                timerDisplay.classList.remove('warning');
+            }
+        }
+
+        function updateTimerStatus(status, message) {
+            const statusElement = document.getElementById('timerStatus');
+            statusElement.className = `timer-status ${status}`;
+            statusElement.querySelector('.timer-status-text').textContent = message;
+        }
+
+        function showTimerSuccess() {
+            const successMessage = document.getElementById('timerSuccessMessage');
+            successMessage.classList.add('show');
+            setTimeout(() => {
+                successMessage.classList.remove('show');
+            }, 3000);
+        }
+
+        // Logout functionality
+        function logout() {
+            if (confirm('Are you sure you want to logout? Any active timers will be stopped.')) {
+                // Stop timer
+                stopTimer();
+                
+                // Clear session data (keep username)
+                const username = localStorage.getItem('username');
+                localStorage.clear();
+                if (username) {
+                    localStorage.setItem('username', username);
+                }
+                
+                // Redirect to login or home
+                alert('You have been logged out successfully!');
+                window.location.href = '2.homepage.html';
+            }
+        }
+
+        function resetSession() {
+            if (confirm('Reset your current session? This will stop timers and clear temporary data.')) {
+                // Stop timer
+                stopTimer();
+                
+                // Clear session-specific data
+                localStorage.removeItem('examTimerEnd');
+                localStorage.removeItem('timerPaused');
+                localStorage.removeItem('pausedTimeRemaining');
+                
+                alert('Session reset successfully!');
+                location.reload();
+            }
+        }
+
+        // Sidebar toggle functionality
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('collapsed');
+        }
+
+        // Navigation function
+        function navigateTo(page) {
+            const pages = {
+                'home': '2.homepage.html',
+                'practice-online': 'practice-online.html',
+                'gk-research': 'gk-research.html',
+                'qt-mentor': 'qt-mentor.html',
+                'lexa-chatbot': 'lexa-chatbot.html',
+                'generate-tests': 'generate-tests.html',
+                'progress': 'progress.html',
+                'settings': 'settings.html',
+                'appearance': 'appearance.html',
+            };
+
+            if (pages[page]) {
+                window.location.href = pages[page];
+            }
+        }
+
+        function restoreTimer() {
+            const savedExamDateTime = localStorage.getItem('examDateTime');
+            
+            if (savedExamDateTime) {
+                const examDate = new Date(parseInt(savedExamDateTime));
+                const now = new Date();
+                
+                if (examDate > now) {
+                    startExamCountdown();
+                    updateTimerStatus('active', `Exam countdown restored: ${examDate.toLocaleDateString()}`);
+                    
+                    // Set form value
+                    const dateStr = examDate.toISOString().split('T')[0];
+                    document.getElementById('examDate').value = dateStr;
+                } else {
+                    // Exam date has passed
+                    localStorage.removeItem('examDateTime');
+                    updateTimerStatus('expired', 'Exam date has passed');
+                }
+            }
+        }
+
+        // Set minimum date to today
+        function setMinDate() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('examDate').setAttribute('min', today);
+        }
+
+        // Initialize page
+        window.addEventListener('load', function() {
+            updateCurrentName();
+            setMinDate();
+            restoreTimer();
+            checkScreenSize();
+        });
+
+        window.addEventListener('resize', checkScreenSize);
+
+        // Handle page visibility change to maintain timer accuracy
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden && examTimer && !timerPaused) {
+                // Page became visible, restart countdown to sync
+                clearInterval(examTimer);
+                startCountdown();
+            }
+        });
+    </script>
+</body>
+</html>

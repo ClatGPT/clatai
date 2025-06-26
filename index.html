@@ -1,0 +1,17 @@
+<input id="msg" placeholder="Ask something..." />
+<button onclick="sendMsg()">Send</button>
+<div id="output"></div>
+
+<script>
+  async function sendMsg() {
+    const input = document.getElementById("msg").value;
+    const res = await fetch("http://localhost:3000/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: input })
+    });
+    const data = await res.json();
+    document.getElementById("output").innerHTML += `<p><b>You:</b> ${input}</p>`;
+    document.getElementById("output").innerHTML += `<p><b>Bot:</b> ${data.reply}</p>`;
+  }
+</script>

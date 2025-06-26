@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - CLAT.GPT.1</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f1f5f9;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            background: white;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: #1e293b;
+            color: white;
+            padding: 24px 0;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .sidebar.collapsed {
+            width: 60px;
+            padding: 24px 0;
+        }
+
+        .hamburger-menu {
+            position: absolute;
+            top: 20px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger-line {
+            width: 20px;
+            height: 2px;
+            background: white;
+            margin: 2px 0;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .logo {
+            padding: 0 24px 24px;
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            border-bottom: 1px solid #334155;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            overflow: hidden;
+            opacity: 1;
+        }
+
+        .sidebar.collapsed .logo {
+            opacity: 0;
+            height: 0;
+            padding: 0;
+            margin: 0;
+            border: none;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 24px;
+            color: #94a3b8;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-size: 15px;
+            white-space: nowrap;
+            overflow: hidden;
+            position: relative;
+            opacity: 1;
+        }
+
+        .sidebar.collapsed .nav-item {
+            opacity: 0;
+            height: 0;
+            padding: 0;
+            margin: 0;
+            pointer-events: none;
+        }
+
+        .nav-item:hover {
+            background: #334155;
+            color: white;
+        }
+
+        .nav-item.active {
+            background: #dc2626;
+            color: white;
+        }
+
+        .nav-item::before {
+            content: '';
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .nav-item.admin::before { content: '👨‍💼'; }
+        .nav-item.home::before { content: '🏠'; }
+        .nav-item.practice::before { content: '📚'; }
+        .nav-item.research::before { content: '🔍'; }
+        .nav-item.mentor::before { content: '🤖'; }
+        .nav-item.chatbot::before { content: '💬'; }
+        .nav-item.tests::before { content: '📝'; }
+        .nav-item.progress::before { content: '📊'; }
+        .nav-item.settings::before { content: '⚙️'; }
+        .nav-item.appearance::before { content: '🎨'; }
+
+        .nav-text {
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            border-top: 1px solid #334155;
+            padding-top: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar.collapsed .sidebar-bottom {
+            opacity: 0;
+            height: 0;
+            padding: 0;
+            margin: 0;
+            border: none;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            overflow-y: auto;
+        }
+
+        .header {
+            padding: 24px 40px;
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+            animation: slideInFromTop 0.6s ease-out;
+        }
+
+        .greeting {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .admin-content {
+            padding: 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .admin-section {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 32px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .admin-section:hover {
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .section-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 16px;
+            font-size: 24px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .section-description {
+            color: #64748b;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .upload-area {
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            padding: 40px 20px;
+            text-align: center;
+            background: white;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .upload-area:hover {
+            border-color: #dc2626;
+            background: #fef2f2;
+        }
+
+        .upload-area.dragover {
+            border-color: #dc2626;
+            background: #fef2f2;
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            color: #94a3b8;
+        }
+
+        .upload-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .upload-subtext {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .file-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 16px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            background: white;
+            color: #374151;
+            transition: all 0.2s;
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: #dc2626;
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #374151;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            border-color: #dc2626;
+            color: #dc2626;
+        }
+
+        .uploaded-files {
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 16px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .file-item:last-child {
+            border-bottom: none;
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .file-icon {
+            width: 32px;
+            height: 32px;
+            background: #fef2f2;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #dc2626;
+        }
+
+        .file-details {
+            flex: 1;
+        }
+
+        .file-name {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 2px;
+        }
+
+        .file-size {
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+            border-radius: 6px;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-processing {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-error {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: #10b981;
+        }
+
+        .notification.error {
+            background: #ef4444;
+        }
+
+        .notification.info {
+            background: #3b82f6;
+        }
+
+        .storage-info {
+            background: #e0f2fe;
+            border: 1px solid #0284c7;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+            color: #0c4a6e;
+        }
+
+        .storage-info h4 {
+            margin-bottom: 8px;
+            color: #0c4a6e;
+        }
+
+        .storage-info code {
+            background: #0284c7;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        /* Animations */
+        @keyframes slideInFromTop {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .processing {
+            animation: pulse 2s infinite;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .admin-content {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                order: 2;
+            }
+
+            .sidebar.collapsed {
+                width: 100%;
+                height: 60px;
+            }
+
+            .main-content {
+                order: 1;
+            }
+
+            .admin-content {
+                padding: 20px;
+            }
+
+            .admin-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="sidebar" id="sidebar">
+            <button class="hamburger-menu" id="hamburgerMenu" onclick="toggleSidebar()">
+                <div class="hamburger-line"></div>
+                <div class="hamburger-line"></div>
+                <div class="hamburger-line"></div>
+            </button>
+            
+            <div class="logo">CLAT.GPT.1 Admin</div>
+            
+            <button class="nav-item admin active" onclick="navigateTo('admin')">
+                <span class="nav-text">Admin Panel</span>
+            </button>
+            <button class="nav-item home" onclick="navigateTo('home')">
+                <span class="nav-text">Home</span>
+            </button>
+            <button class="nav-item practice" onclick="navigateTo('practice-online')">
+                <span class="nav-text">Practice Online</span>
+            </button>
+            <button class="nav-item research" onclick="navigateTo('gk-research')">
+                <span class="nav-text">GK Research Engine</span>
+            </button>
+            <button class="nav-item mentor" onclick="navigateTo('qt-mentor')">
+                <span class="nav-text">QT AI Mentor</span>
+            </button>
+            <button class="nav-item chatbot" onclick="navigateTo('lexa-chatbot')">
+                <span class="nav-text">Lexa Chatbot</span>
+            </button>
+            <button class="nav-item tests" onclick="navigateTo('generate-tests')">
+                <span class="nav-text">Generate Tests</span>
+            </button>
+            <button class="nav-item progress" onclick="navigateTo('progress')">
+                <span class="nav-text">Progress Tracker</span>
+            </button>
+            
+            <div class="sidebar-bottom">
+                <button class="nav-item settings" onclick="navigateTo('settings')">
+                    <span class="nav-text">Settings</span>
+                </button>
+                <button class="nav-item appearance" onclick="navigateTo('appearance')">
+                    <span class="nav-text">Appearance</span>
+                </button>
+
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <header class="header">
+                <h1 class="greeting">Admin Panel 👨‍💼</h1>
+                <p class="page-subtitle">Manage Word of the Day and Daily News files in Supabase Storage</p>
+            </header>
+
+            <div class="admin-content">
+                <!-- Storage Info -->
+                <div class="admin-section full-width">
+                    <div class="storage-info">
+                        <h4>📦 Storage Configuration</h4>
+                        <p>Files are stored directly in Supabase Storage buckets:</p>
+                        <div style="background: white; padding: 12px; border-radius: 6px; margin-top: 8px; font-family: monospace; font-size: 12px;">
+                            <div>• Words: <code>words-pdf</code> bucket</div>
+                            <div>• News: <code>news-pdf</code> bucket (format: ddmmyy.pdf)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Word of the Day Management -->
+                <div class="admin-section">
+                    <div class="section-header">
+                        <div class="section-icon">📚</div>
+                        <div>
+                            <div class="section-title">Word of the Day</div>
+                        </div>
+                    </div>
+                    <p class="section-description">
+                        Upload PDF files containing 365 words for each year. Files will be stored in the <code>words-pdf</code> storage bucket.
+                    </p>
+                    
+                    <div class="upload-area" onclick="document.getElementById('wordFile').click()" ondrop="handleDrop(event, 'word')" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
+                        <input type="file" id="wordFile" class="file-input" accept=".pdf" onchange="handleFileSelect(event, 'word')" multiple>
+                        <div class="upload-icon">📄</div>
+                        <div class="upload-text">Drop PDF files here or click to browse</div>
+                        <div class="upload-subtext">Supports PDF files up to 50MB</div>
+                    </div>
+
+                    <div class="uploaded-files" id="wordFiles" style="display: none;">
+                        <h4 style="margin-bottom: 12px; color: #374151;">Selected Files</h4>
+                        <div id="wordFilesList"></div>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="uploadWordFiles()">
+                        📤 Upload Word Files
+                    </button>
+                </div>
+
+                <!-- Daily Newspapers Management -->
+                <div class="admin-section">
+                    <div class="section-header">
+                        <div class="section-icon">📰</div>
+                        <div>
+                            <div class="section-title">Daily Newspapers</div>
+                        </div>
+                    </div>
+                    <p class="section-description">
+                        Upload daily newspaper PDFs for current affairs and general knowledge. Files will be automatically renamed to <code>ddmmyy.pdf</code> format and stored in the <code>news-pdf</code> storage bucket.
+                    </p>
+                    
+                    <div class="upload-area" onclick="document.getElementById('newspaperFile').click()" ondrop="handleDrop(event, 'newspaper')" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
+                        <input type="file" id="newspaperFile" class="file-input" accept=".pdf" onchange="handleFileSelect(event, 'newspaper')" multiple>
+                        <div class="upload-icon">📰</div>
+                        <div class="upload-text">Drop newspaper PDFs here or click to browse</div>
+                        <div class="upload-subtext">Files will be renamed to ddmmyy.pdf format • Supports PDF files up to 100MB</div>
+                    </div>
+
+                    <div class="uploaded-files" id="newspaperFiles" style="display: none;">
+                        <h4 style="margin-bottom: 12px; color: #374151;">Selected Files</h4>
+                        <div id="newspaperFilesList"></div>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="uploadNewspaperFiles()">
+                        📤 Upload Newspapers
+                    </button>
+                </div>
+
+                <!-- Storage Statistics -->
+                <div class="admin-section">
+                    <div class="section-header">
+                        <div class="section-icon">📊</div>
+                        <div>
+                            <div class="section-title">Storage Statistics</div>
+                        </div>
+                    </div>
+                    <p class="section-description">
+                        Overview of files stored in each bucket.
+                    </p>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div style="text-align: center; padding: 16px; background: white; border-radius: 8px;">
+                            <div style="font-size: 24px; font-weight: 600; color: #dc2626;" id="wordCount">0</div>
+                            <div style="font-size: 12px; color: #6b7280;">Word Files</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: white; border-radius: 8px;">
+                            <div style="font-size: 24px; font-weight: 600; color: #dc2626;" id="newspaperCount">0</div>
+                            <div style="font-size: 12px; color: #6b7280;">News Files</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: white; border-radius: 8px;">
+                            <div style="font-size: 24px; font-weight: 600; color: #dc2626;" id="totalFiles">0</div>
+                            <div style="font-size: 12px; color: #6b7280;">Total Files</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: white; border-radius: 8px;">
+                            <div style="font-size: 24px; font-weight: 600; color: #dc2626;" id="uploadCounter">0</div>
+                            <div style="font-size: 12px; color: #6b7280;">Upload Counter</div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="loadStatistics()" style="margin-top: 16px;">
+                        🔄 Refresh Statistics
+                    </button>
+                </div>
+
+                <!-- Storage Management -->
+                <div class="admin-section">
+                    <div class="section-header">
+                        <div class="section-icon">🗂️</div>
+                        <div>
+                            <div class="section-title">Storage Management</div>
+                        </div>
+                    </div>
+                    <p class="section-description">
+                        Manage storage buckets and perform maintenance operations.
+                    </p>
+
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>Words Bucket:</span>
+                            <span class="status-indicator status-success" id="wordsBucketStatus">✅ Active</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>News Bucket:</span>
+                            <span class="status-indicator status-success" id="newsBucketStatus">✅ Active</span>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 12px; margin-top: 16px;">
+                        <button class="btn btn-primary" onclick="testStorageConnection()">
+                            🔗 Test Storage
+                        </button>
+                        <button class="btn btn-secondary" onclick="clearAllBuckets()">
+                            🗑️ Clear All
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Recent Files -->
+                <div class="admin-section full-width">
+                    <div class="section-header">
+                        <div class="section-icon">📋</div>
+                        <div>
+                            <div class="section-title">Recent Files</div>
+                        </div>
+                    </div>
+                    <p class="section-description">
+                        View and manage recently uploaded files across all storage buckets.
+                    </p>
+
+                    <div id="recentFiles" style="background: white; border-radius: 8px; padding: 16px; border: 1px solid #e2e8f0;">
+                        <div style="text-align: center; color: #6b7280; padding: 20px;">
+                            Loading recent files...
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 12px; margin-top: 16px;">
+                        <button class="btn btn-primary" onclick="loadRecentFiles()">
+                            🔄 Refresh List
+                        </button>
+                        <button class="btn btn-secondary" onclick="downloadAllFiles()">
+                            📥 Download All URLs
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Supabase configuration
+        const SUPABASE_URL = 'https://agmdmagahkpuzafnsprx.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFnbWRtYWdhaGtwdXphZm5zcHJ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA2ODgyMjgsImV4cCI6MjA2NjI2NDIyOH0.IFV-zakRlvt1q-ZhF7JTCoSjhEK8Ubu1jmqvJI1xVtY';
+        
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Storage bucket names
+        const BUCKETS = {
+            word: 'words-pdf',
+            newspaper: 'news-pdf'
+        };
+
+        let uploadedFiles = {
+            word: [],
+            newspaper: []
+        };
+
+        let uploadCounter = parseInt(localStorage.getItem('uploadCounter') || '0');
+
+        // Initialize the application
+        window.addEventListener('load', function() {
+            checkScreenSize();
+            testStorageConnection();
+            loadStatistics();
+            loadRecentFiles();
+        });
+
+        // Generate date format ddmmyy
+        function generateDateFileName() {
+            const today = new Date();
+            const day = String(today.getDate()).padStart(2, '0');
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const year = String(today.getFullYear()).slice(-2);
+            return `${day}${month}${year}.pdf`;
+        }
+
+        // Test Supabase Storage connection
+        async function testStorageConnection() {
+            try {
+                // Test each bucket
+                const bucketTests = await Promise.allSettled([
+                    supabase.storage.from(BUCKETS.word).list('', { limit: 1 }),
+                    supabase.storage.from(BUCKETS.newspaper).list('', { limit: 1 })
+                ]);
+
+                let allSuccess = true;
+                bucketTests.forEach((result, index) => {
+                    const bucketName = Object.keys(BUCKETS)[index];
+                    const statusElement = document.getElementById(`${bucketName}sBucketStatus`);
+                    
+                    if (result.status === 'fulfilled' && !result.value.error) {
+                        statusElement.textContent = '✅ Active';
+                        statusElement.className = 'status-indicator status-success';
+                    } else {
+                        statusElement.textContent = '❌ Error';
+                        statusElement.className = 'status-indicator status-error';
+                        allSuccess = false;
+                    }
+                });
+
+                if (allSuccess) {
+                    showNotification('All storage buckets are accessible!', 'success');
+                } else {
+                    showNotification('Some storage buckets have issues. Check bucket permissions.', 'error');
+                }
+            } catch (error) {
+                console.error('Storage connection test failed:', error);
+                showNotification('Storage connection test failed', 'error');
+            }
+        }
+
+        // Notification system
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.classList.add('show'), 100);
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => document.body.removeChild(notification), 300);
+            }, 4000);
+        }
+
+        // Sidebar toggle functionality
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('collapsed');
+        }
+
+        // Navigation function
+        function navigateTo(page) {
+            const pages = {
+                'admin': 'admin.html',
+                'home': '2.homepage.html',
+                'practice-online': 'practice-online.html',
+                'gk-research': 'gk-research.html',
+                'qt-mentor': 'qt-mentor.html',
+                'lexa-chatbot': 'lexa-chatbot.html',
+                'generate-tests': 'generate-tests.html',
+                'progress': 'progress.html',
+                'settings': 'settings.html',
+                'appearance': 'appearance.html',
+            };
+
+            if (pages[page]) {
+                window.location.href = pages[page];
+            }
+        }
+
+        // Drag and drop functionality
+        function handleDragOver(event) {
+            event.preventDefault();
+            event.currentTarget.classList.add('dragover');
+        }
+
+        function handleDragLeave(event) {
+            event.currentTarget.classList.remove('dragover');
+        }
+
+        function handleDrop(event, type) {
+            event.preventDefault();
+            event.currentTarget.classList.remove('dragover');
+            
+            const files = Array.from(event.dataTransfer.files);
+            const validFiles = files.filter(file => file.type === 'application/pdf');
+            
+            if (validFiles.length !== files.length) {
+                showNotification('Only PDF files are allowed!', 'error');
+            }
+            
+            if (validFiles.length > 0) {
+                addFilesToList(validFiles, type);
+            }
+        }
+
+        function handleFileSelect(event, type) {
+            const files = Array.from(event.target.files);
+            addFilesToList(files, type);
+        }
+
+        function addFilesToList(files, type) {
+            uploadedFiles[type] = [...uploadedFiles[type], ...files];
+            displayUploadedFiles(type);
+        }
+
+        function displayUploadedFiles(type) {
+            const container = document.getElementById(`${type}Files`);
+            const filesList = document.getElementById(`${type}FilesList`);
+            
+            if (uploadedFiles[type].length === 0) {
+                container.style.display = 'none';
+                return;
+            }
+            
+            container.style.display = 'block';
+            filesList.innerHTML = '';
+            
+            uploadedFiles[type].forEach((file, index) => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                
+                let displayName = file.name;
+                if (type === 'newspaper') {
+                    displayName = `${file.name} → ${generateDateFileName()}`;
+                }
+                
+                fileItem.innerHTML = `
+                    <div class="file-info">
+                        <div class="file-icon">📄</div>
+                        <div class="file-details">
+                            <div class="file-name">${displayName}</div>
+                            <div class="file-size">${formatFileSize(file.size)}</div>
+                        </div>
+                    </div>
+                    <div class="file-actions">
+                        <button class="btn btn-secondary btn-small" onclick="removeFile('${type}', ${index})">
+                            🗑️ Remove
+                        </button>
+                    </div>
+                `;
+                filesList.appendChild(fileItem);
+            });
+        }
+
+        function removeFile(type, index) {
+            uploadedFiles[type].splice(index, 1);
+            displayUploadedFiles(type);
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function incrementUploadCounter() {
+            uploadCounter++;
+            localStorage.setItem('uploadCounter', uploadCounter.toString());
+            document.getElementById('uploadCounter').textContent = uploadCounter;
+        }
+
+        // Upload functions for storage only
+        async function uploadWordFiles() {
+            if (uploadedFiles.word.length === 0) {
+                showNotification('Please select PDF files to upload.', 'error');
+                return;
+            }
+            
+            const btn = event.target;
+            btn.innerHTML = '⏳ Uploading...';
+            btn.disabled = true;
+            
+            try {
+                let successCount = 0;
+                for (const file of uploadedFiles.word) {
+                    const fileName = `${Date.now()}_${file.name}`;
+                    const { data, error } = await supabase.storage
+                        .from(BUCKETS.word)
+                        .upload(fileName, file);
+                    
+                    if (error) {
+                        console.error('Upload error:', error);
+                        throw new Error(`Failed to upload ${file.name}: ${error.message}`);
+                    }
+                    
+                    successCount++;
+                    incrementUploadCounter();
+                }
+                
+                showNotification(`Successfully uploaded ${successCount} word files to storage!`, 'success');
+                uploadedFiles.word = [];
+                displayUploadedFiles('word');
+                loadStatistics();
+                loadRecentFiles();
+                
+            } catch (error) {
+                console.error('Upload error:', error);
+                showNotification(error.message, 'error');
+            } finally {
+                btn.innerHTML = '📤 Upload Word Files';
+                btn.disabled = false;
+            }
+        }
+
+        async function uploadNewspaperFiles() {
+            if (uploadedFiles.newspaper.length === 0) {
+                showNotification('Please select PDF files to upload.', 'error');
+                return;
+            }
+            
+            const btn = event.target;
+            btn.innerHTML = '⏳ Uploading...';
+            btn.disabled = true;
+            
+            try {
+                let successCount = 0;
+                for (const file of uploadedFiles.newspaper) {
+                    const fileName = generateDateFileName();
+                    const { data, error } = await supabase.storage
+                        .from(BUCKETS.newspaper)
+                        .upload(fileName, file, {
+                            upsert: true // Allow overwriting if file with same date exists
+                        });
+                    
+                    if (error) {
+                        console.error('Upload error:', error);
+                        throw new Error(`Failed to upload ${file.name}: ${error.message}`);
+                    }
+                    
+                    successCount++;
+                    incrementUploadCounter();
+                }
+                
+                showNotification(`Successfully uploaded ${successCount} newspaper files to storage with ddmmyy.pdf format!`, 'success');
+                uploadedFiles.newspaper = [];
+                displayUploadedFiles('newspaper');
+                loadStatistics();
+                loadRecentFiles();
+                
+            } catch (error) {
+                console.error('Upload error:', error);
+                showNotification(error.message, 'error');
+            } finally {
+                btn.innerHTML = '📤 Upload Newspapers';
+                btn.disabled = false;
+            }
+        }
+
+        async function loadStatistics() {
+            try {
+                // Get file counts from each bucket
+                const [wordFiles, newsFiles] = await Promise.allSettled([
+                    supabase.storage.from(BUCKETS.word).list(''),
+                    supabase.storage.from(BUCKETS.newspaper).list('')
+                ]);
+
+                let wordCount = 0, newsCount = 0;
+
+                if (wordFiles.status === 'fulfilled' && wordFiles.value.data) {
+                    wordCount = wordFiles.value.data.filter(file => file.name !== '.emptyFolderPlaceholder').length;
+                }
+
+                if (newsFiles.status === 'fulfilled' && newsFiles.value.data) {
+                    newsCount = newsFiles.value.data.filter(file => file.name !== '.emptyFolderPlaceholder').length;
+                }
+
+                // Update UI
+                document.getElementById('wordCount').textContent = wordCount;
+                document.getElementById('newspaperCount').textContent = newsCount;
+                document.getElementById('totalFiles').textContent = wordCount + newsCount;
+                document.getElementById('uploadCounter').textContent = uploadCounter;
+
+            } catch (error) {
+                console.error('Error loading statistics:', error);
+                showNotification('Error loading statistics', 'error');
+            }
+        }
+
+        async function loadRecentFiles() {
+            const container = document.getElementById('recentFiles');
+            
+            try {
+                // Get recent files from all buckets
+                const [wordFiles, newsFiles] = await Promise.allSettled([
+                    supabase.storage.from(BUCKETS.word).list('', { limit: 10, sortBy: { column: 'created_at', order: 'desc' } }),
+                    supabase.storage.from(BUCKETS.newspaper).list('', { limit: 10, sortBy: { column: 'created_at', order: 'desc' } })
+                ]);
+
+                const allFiles = [];
+
+                if (wordFiles.status === 'fulfilled' && wordFiles.value.data) {
+                    allFiles.push(...wordFiles.value.data
+                        .filter(file => file.name !== '.emptyFolderPlaceholder')
+                        .map(f => ({ ...f, type: 'Word', bucket: BUCKETS.word })));
+                }
+
+                if (newsFiles.status === 'fulfilled' && newsFiles.value.data) {
+                    allFiles.push(...newsFiles.value.data
+                        .filter(file => file.name !== '.emptyFolderPlaceholder')
+                        .map(f => ({ ...f, type: 'News', bucket: BUCKETS.newspaper })));
+                }
+
+                // Sort by creation date
+                const sortedFiles = allFiles
+                    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+                    .slice(0, 15);
+
+                if (sortedFiles.length === 0) {
+                    container.innerHTML = '<div style="text-align: center; color: #6b7280; padding: 20px;">No files found in storage.</div>';
+                    return;
+                }
+
+                container.innerHTML = sortedFiles.map(file => {
+                    const { data: urlData } = supabase.storage.from(file.bucket).getPublicUrl(file.name);
+                    
+                    return `
+                        <div class="file-item">
+                            <div class="file-info">
+                                <div class="file-icon">${file.type === 'Word' ? '📚' : '📰'}</div>
+                                <div class="file-details">
+                                    <div class="file-name">${file.name}</div>
+                                    <div class="file-size">${file.type} • ${new Date(file.created_at).toLocaleDateString()} • ${formatFileSize(file.metadata?.size || 0)}</div>
+                                </div>
+                            </div>
+                            <div class="file-actions">
+                                <button class="btn btn-secondary btn-small" onclick="window.open('${urlData.publicUrl}', '_blank')">
+                                    👁️ View
+                                </button>
+                                <button class="btn btn-secondary btn-small" onclick="downloadFile('${file.bucket}', '${file.name}')">
+                                    📥 Download
+                                </button>
+                                <button class="btn btn-secondary btn-small" onclick="deleteStorageFile('${file.bucket}', '${file.name}')">
+                                    🗑️ Delete
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+            } catch (error) {
+                console.error('Error loading recent files:', error);
+                container.innerHTML = '<div style="text-align: center; color: #ef4444; padding: 20px;">Error loading files from storage.</div>';
+            }
+        }
+
+        async function deleteStorageFile(bucket, fileName) {
+            if (!confirm(`Are you sure you want to delete "${fileName}"?`)) return;
+            
+            try {
+                const { error } = await supabase.storage
+                    .from(bucket)
+                    .remove([fileName]);
+                
+                if (error) throw error;
+                
+                showNotification('File deleted successfully!', 'success');
+                loadStatistics();
+                loadRecentFiles();
+                
+            } catch (error) {
+                console.error('Delete error:', error);
+                showNotification('Error deleting file: ' + error.message, 'error');
+            }
+        }
+
+        async function downloadFile(bucket, fileName) {
+            try {
+                const { data, error } = await supabase.storage
+                    .from(bucket)
+                    .download(fileName);
+                
+                if (error) throw error;
+                
+                // Create download link
+                const url = URL.createObjectURL(data);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileName;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                showNotification('File downloaded successfully!', 'success');
+                
+            } catch (error) {
+                console.error('Download error:', error);
+                showNotification('Error downloading file: ' + error.message, 'error');
+            }
+        }
+
+        async function clearAllBuckets() {
+            if (!confirm('Are you sure you want to delete ALL files from ALL buckets? This action cannot be undone!')) return;
+            
+            try {
+                // Get all files from all buckets
+                const [wordFiles, newsFiles] = await Promise.all([
+                    supabase.storage.from(BUCKETS.word).list(''),
+                    supabase.storage.from(BUCKETS.newspaper).list('')
+                ]);
+
+                const deletePromises = [];
+
+                if (wordFiles.data) {
+                    const filesToDelete = wordFiles.data
+                        .filter(file => file.name !== '.emptyFolderPlaceholder')
+                        .map(file => file.name);
+                    if (filesToDelete.length > 0) {
+                        deletePromises.push(supabase.storage.from(BUCKETS.word).remove(filesToDelete));
+                    }
+                }
+
+                if (newsFiles.data) {
+                    const filesToDelete = newsFiles.data
+                        .filter(file => file.name !== '.emptyFolderPlaceholder')
+                        .map(file => file.name);
+                    if (filesToDelete.length > 0) {
+                        deletePromises.push(supabase.storage.from(BUCKETS.newspaper).remove(filesToDelete));
+                    }
+                }
+
+                await Promise.all(deletePromises);
+                
+                showNotification('All files deleted successfully!', 'success');
+                loadStatistics();
+                loadRecentFiles();
+                
+            } catch (error) {
+                console.error('Clear all error:', error);
+                showNotification('Error clearing buckets: ' + error.message, 'error');
+            }
+        }
+
+        async function downloadAllFiles() {
+            try {
+                // Get all files from all buckets
+                const [wordFiles, newsFiles] = await Promise.all([
+                    supabase.storage.from(BUCKETS.word).list(''),
+                    supabase.storage.from(BUCKETS.newspaper).list('')
+                ]);
+
+                const allUrls = [];
+
+                if (wordFiles.data) {
+                    wordFiles.data
+                        .filter(file => file.name !== '.emptyFolderPlaceholder')
+                        .forEach(file => {
+                            const { data: urlData } = supabase.storage.from(BUCKETS.word).getPublicUrl(file.name);
+                            allUrls.push(`Word: ${file.name} - ${urlData.publicUrl}`);
+                        });
+                }
+
+                if (newsFiles.data) {
+                    newsFiles.data
+                        .filter(file => file.name !== '.emptyFolderPlaceholder')
+                        .forEach(file => {
+                            const { data: urlData } = supabase.storage.from(BUCKETS.newspaper).getPublicUrl(file.name);
+                            allUrls.push(`News: ${file.name} - ${urlData.publicUrl}`);
+                        });
+                }
+
+                if (allUrls.length === 0) {
+                    showNotification('No files found to download', 'info');
+                    return;
+                }
+
+                // Create and download text file with all URLs
+                const blob = new Blob([allUrls.join('\n')], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `all_file_urls_${new Date().toISOString().split('T')[0]}.txt`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                showNotification(`Downloaded URLs for ${allUrls.length} files!`, 'success');
+
+            } catch (error) {
+                console.error('Download all URLs error:', error);
+                showNotification('Error generating download list: ' + error.message, 'error');
+            }
+        }
+
+        function checkScreenSize() {
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.add('collapsed');
+            }
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'b') {
+                e.preventDefault();
+                toggleSidebar();
+            }
+        });
+
+        window.addEventListener('resize', checkScreenSize);
+    </script>
+</body>
+</html>

@@ -962,7 +962,9 @@
             gk: {
                 maxPassages: 5,
                 timePerQuestion: 90,
-                subcategories: [] // No subcategories for GK
+                subcategories: [
+                    'General GK'
+                ] // Only one subcategory for GK
             }
         };
 
@@ -1083,10 +1085,13 @@
             if (selectedSection && sectionConfig[selectedSection]) {
                 const config = sectionConfig[selectedSection];
                 
-                // Special handling for legal section
+                // Special handling for legal and gk section
                 if (selectedSection === 'legal') {
                     subcategorySelect.disabled = true;
                     subcategorySelect.innerHTML = '<option value="general-legal" selected>General Legal</option>';
+                } else if (selectedSection === 'gk') {
+                    subcategorySelect.disabled = true;
+                    subcategorySelect.innerHTML = '<option value="general-gk" selected>General GK</option>';
                 } else {
                     // Enable subcategory dropdown
                     subcategorySelect.disabled = false;
@@ -1362,6 +1367,10 @@ const passages = parseInt(document.getElementById('passages').value);
             // If legal, force subcategory to 'general-legal'
             if (section === 'legal') {
                 subcategory = 'general-legal';
+            }
+            // If gk, force subcategory to 'general-gk'
+            if (section === 'gk') {
+                subcategory = 'general-gk';
             }
 
             if (!section || !subcategory || !passages) {

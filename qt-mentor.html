@@ -14,8 +14,8 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #f1f5f9;
-            height: 100vh;
-            overflow: hidden;
+            min-height: 100vh;
+            overflow-y: auto;
         }
 
         .container {
@@ -626,6 +626,169 @@
                 flex-direction: column;
             }
         }
+
+        .topic-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+            margin-bottom: 16px;
+        }
+        .topic-group {
+            margin-bottom: 0;
+        }
+        .topic-group-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #3b82f6;
+            margin-bottom: 12px;
+            margin-top: 8px;
+        }
+        .subtopic-row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .subtopic-card {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e0e7ef 100%);
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 24px 20px;
+            min-width: 160px;
+            min-height: 80px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.04);
+            transition: all 0.2s, box-shadow 0.3s;
+            outline: none;
+        }
+        .subtopic-card:hover, .subtopic-card:focus {
+            border-color: #3b82f6;
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            box-shadow: 0 4px 16px rgba(59,130,246,0.10);
+        }
+        .subtopic-card.selected {
+            border-color: #10b981;
+            background: linear-gradient(135deg, #bbf7d0 0%, #6ee7b7 100%);
+            color: #065f46;
+            box-shadow: 0 6px 24px rgba(16,185,129,0.12);
+        }
+        .subtopic-icon {
+            font-size: 28px;
+            margin-right: 8px;
+        }
+        @media (max-width: 900px) {
+            .subtopic-row {
+                flex-direction: column;
+                gap: 12px;
+            }
+            .subtopic-card {
+                min-width: 100%;
+            }
+        }
+        .practice-setup {
+            max-width: 600px;
+            margin: 40px auto 0;
+            animation: fadeIn 0.8s ease-out;
+        }
+        .form-section {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 32px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 24px rgba(59,130,246,0.07);
+        }
+        .icon-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+            border-radius: 20px;
+            margin: 0 auto 24px;
+            font-size: 40px;
+        }
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 24px;
+        }
+        .form-label {
+            display: block;
+            font-size: 16px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+        .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            background: white;
+            color: #374151;
+            cursor: pointer;
+            transition: all 0.2s;
+            outline: none;
+        }
+        .form-select:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        .form-select:hover {
+            border-color: #94a3b8;
+        }
+        .form-description {
+            font-size: 14px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+        .start-button {
+            width: 100%;
+            padding: 16px 24px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+        .start-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+        }
+        .start-button:active {
+            transform: translateY(0);
+        }
+        .start-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        @media (max-width: 768px) {
+            .practice-setup {
+                max-width: 100%;
+            }
+            .form-section {
+                padding: 24px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -680,115 +843,45 @@
             </header>
 
             <div class="content-area">
-                <!-- Topic Selector -->
-                <div class="topic-selector">
-                    <div class="selector-header">
-                        <h2 class="selector-title">Select Topic</h2>
-                    </div>
-                    
-                    <div class="topic-list" id="topicList">
-                        <div class="topic-category">
-                            <div class="category-title">Data Interpretation</div>
-                            <div class="topic-item" data-topic="tables" onclick="selectTopic(this)">
-                                <div class="topic-icon">📊</div>
-                                <div class="topic-info">
-                                    <div class="topic-name">Tables</div>
-                                    <div class="topic-desc">Data analysis from tables</div>
-                                </div>
+                <!-- Practice Setup Form (Modern Card UI) -->
+                <div id="mentorSetup" class="practice-setup" style="max-width:600px;margin:40px auto 0;">
+                    <div class="form-section">
+                        <div class="icon-wrapper" style="background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%); font-size: 40px;">🧮</div>
+                        <h2 class="section-title">QT Mentor Mode</h2>
+                        <form id="mentorForm">
+                            <div class="form-group">
+                                <label class="form-label" for="topicSelect">Topic</label>
+                                <select class="form-select" id="topicSelect" required>
+                                    <option value="">Select a topic</option>
+                                    <option value="data-interpretation">Data Interpretation</option>
+                                    <option value="mathematics">Mathematics</option>
+                                    <option value="advanced-topics">Advanced Topics</option>
+                                </select>
+                                <p class="form-description">Choose the main topic area you want to practice</p>
                             </div>
-                            <div class="topic-item" data-topic="bar-charts" onclick="selectTopic(this)">
-                                <div class="topic-icon">📈</div>
-                                <div class="topic-info">
-                                    <div class="topic-name">Bar Charts</div>
-                                    <div class="topic-desc">Comparative data analysis</div>
-                                </div>
+                            <div class="form-group">
+                                <label class="form-label" for="subtopicSelect">Subtopic</label>
+                                <select class="form-select" id="subtopicSelect" required disabled>
+                                    <option value="">Select a subtopic</option>
+                                </select>
+                                <p class="form-description">Choose the specific subtopic within the topic</p>
                             </div>
-                            <div class="topic-item" data-topic="line-graphs" onclick="selectTopic(this)">
-                                <div class="topic-icon">📉</div>
-                                <div class="topic-info">
-                                    <div class="topic-name">Line Graphs</div>
-                                    <div class="topic-desc">Trend analysis</div>
-                                </div>
-                            </div>
-                            <div class="topic-item" data-topic="pie-charts" onclick="selectTopic(this)">
-                                <div class="topic-icon">🥧</div>
-                                <div class="topic-info">
-                                    <div class="topic-name">Pie Charts</div>
-                                    <div class="topic-desc">Percentage distribution</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="topic-category">
-                            <div class="category-title">Mathematics</div>
-                            <div class="topic-item" data-topic="percentages" onclick="selectTopic(this)">
-                                <div class="topic-icon">%</div>
-                                <div class="topic-info">
-                                    <div class="topic-name">Percentages</div>
-                                    <div class="topic-desc">Percentage calculations</div>
-                                </div>
-                            </div>
-                            <div class="topic-item" data-topic="ratios" onclick="selectTopic(this)">
-                                <div class="topic-icon">⚖</div>
-                                <div class="topic-info">
-                                    <div class="topic-name">Ratios & Proportions</div>
-                                    <div class="topic-desc">Comparative relationships</div>
-                                </div>
-                            </div>
-                            <div class="topic-item" data-topic="averages" onclick="selectTopic(this)">
-                                <div class="topic-icon">📊</div>
-                                <div class="topic-info">
-                                    <div class="topic-name">Averages</div>
-                                    <div class="topic-desc">Mean, median, mode</div>
-                                </div>
-                            </div>
-                            <div class="topic-item" data-topic="profit-loss" onclick="selectTopic(this)">
-                                <div class="topic-icon">💰</div>
-                                <div class="topic-info">
-                                    <div class="topic-name">Profit & Loss</div>
-                                    <div class="topic-desc">Business mathematics</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="topic-category">
-                            <div class="category-title">Advanced Topics</div>
-                            <div class="topic-item" data-topic="compound-interest" onclick="selectTopic(this)">
-                                <div class="topic-icon">🏦</div>
-                                <div class="topic-info">
-                                    <div class="topic-name">Compound Interest</div>
-                                    <div class="topic-desc">Interest calculations</div>
-                                </div>
-                            </div>
-                            <div class="topic-item" data-topic="time-work" onclick="selectTopic(this)">
-                                <div class="topic-icon">⏰</div>
-                                <div class="topic-info">
-                                    <div class="topic-name">Time & Work</div>
-                                    <div class="topic-desc">Work rate problems</div>
-                                </div>
-                            </div>
-                            <div class="topic-item" data-topic="speed-distance" onclick="selectTopic(this)">
-                                <div class="topic-icon">🚗</div>
-                                <div class="topic-info">
-                                    <div class="topic-name">Speed & Distance</div>
-                                    <div class="topic-desc">Motion problems</div>
-                                </div>
-                            </div>
-                        </div>
+                            <button type="submit" class="start-button" id="mentorStartButton" disabled>
+                                <span id="mentorButtonText">Start Practicing</span>
+                            </button>
+                        </form>
                     </div>
                 </div>
 
-                <!-- Question Area -->
-                <div class="question-area">
+                <!-- Question Area (hidden until topic selected) -->
+                <div class="question-area" id="mentorQuestionArea" style="display:none;">
                     <div class="question-header">
                         <h2 class="question-title" id="questionTitle">QT AI Mentor</h2>
-                        <button class="generate-btn" id="generateBtn" onclick="generateQuestion()" disabled>
-                            Start Practicing
+                        <button class="generate-btn" id="generateBtn" onclick="generateQuestion()">
+                            Generate New Set
                         </button>
                     </div>
-
                     <div class="question-content">
-                        <!-- Welcome Screen -->
                         <div class="welcome-screen" id="welcomeScreen">
                             <div class="welcome-icon">🤖</div>
                             <div class="welcome-title">Welcome to QT AI Mentor!</div>
@@ -797,8 +890,6 @@
                                 I'll provide step-by-step solutions, useful tricks, and help you avoid common errors.
                             </div>
                         </div>  
-
-                        <!-- Question Container -->
                         <div class="question-container" id="questionContainer">
                             <!-- Dynamic content will be loaded here -->
                         </div>
@@ -810,8 +901,88 @@
 
     <script>
         let currentTopic = null;
+        let currentSubtopic = null;
         let quizData = [];
         let userAnswers = [];
+
+        // Subtopic map
+        const subtopicMap = {
+            'data-interpretation': [
+                { value: 'tables', label: 'Tables' },
+                { value: 'bar-charts', label: 'Bar Charts' },
+                { value: 'line-graphs', label: 'Line Graphs' },
+                { value: 'pie-charts', label: 'Pie Charts' }
+            ],
+            'mathematics': [
+                { value: 'percentages', label: 'Percentages' },
+                { value: 'ratios', label: 'Ratios & Proportions' },
+                { value: 'averages', label: 'Averages' },
+                { value: 'profit-loss', label: 'Profit & Loss' }
+            ],
+            'advanced-topics': [
+                { value: 'compound-interest', label: 'Compound Interest' },
+                { value: 'time-work', label: 'Time & Work' },
+                { value: 'speed-distance', label: 'Speed & Distance' }
+            ]
+        };
+
+        // Hide old topic selector and graphical grid if present
+        document.addEventListener('DOMContentLoaded', function() {
+            const oldSelector = document.querySelector('.topic-selector');
+            if (oldSelector) oldSelector.style.display = 'none';
+            const oldGrid = document.querySelector('.topic-grid');
+            if (oldGrid) oldGrid.style.display = 'none';
+
+            // Dropdown logic
+            const topicSelect = document.getElementById('topicSelect');
+            const subtopicSelect = document.getElementById('subtopicSelect');
+            const startBtn = document.getElementById('mentorStartButton');
+
+            topicSelect.addEventListener('change', function() {
+                const selected = this.value;
+                subtopicSelect.innerHTML = '<option value="">Select a subtopic</option>';
+                if (subtopicMap[selected]) {
+                    subtopicMap[selected].forEach(sub => {
+                        const opt = document.createElement('option');
+                        opt.value = sub.value;
+                        opt.textContent = sub.label;
+                        subtopicSelect.appendChild(opt);
+                    });
+                    subtopicSelect.disabled = false;
+                } else {
+                    subtopicSelect.disabled = true;
+                }
+                startBtn.disabled = true;
+            });
+
+            subtopicSelect.addEventListener('change', function() {
+                startBtn.disabled = !(topicSelect.value && subtopicSelect.value);
+            });
+        });
+
+        // Form submission handler for mentor
+        document.addEventListener('DOMContentLoaded', function() {
+            const mentorForm = document.getElementById('mentorForm');
+            const mentorSetup = document.getElementById('mentorSetup');
+            const mentorQuestionArea = document.getElementById('mentorQuestionArea');
+            const mentorStartButton = document.getElementById('mentorStartButton');
+            const mentorButtonText = document.getElementById('mentorButtonText');
+            const topicSelect = document.getElementById('topicSelect');
+            const subtopicSelect = document.getElementById('subtopicSelect');
+
+            mentorForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const topic = topicSelect.value;
+                const subtopic = subtopicSelect.value;
+                if (!topic || !subtopic) return;
+                currentTopic = topic;
+                currentSubtopic = subtopic;
+                mentorSetup.style.display = 'none';
+                mentorQuestionArea.style.display = 'block';
+                document.getElementById('questionTitle').textContent = subtopicSelect.options[subtopicSelect.selectedIndex].text.trim();
+                generateQuestion();
+            });
+        });
 
         function getUsername() {
             return localStorage.getItem('username') || 'Student';
@@ -857,7 +1028,7 @@
         }
 
         async function generateQuestion() {
-            if (!currentTopic) return;
+            if (!currentSubtopic) return;
 
             const generateBtn = document.getElementById('generateBtn');
             const questionContainer = document.getElementById('questionContainer');
@@ -881,7 +1052,7 @@
                 const response = await fetch("/qt/generate-question", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ topic: currentTopic })
+                    body: JSON.stringify({ topic: currentSubtopic })
                 });
 
                 if (!response.ok) {
@@ -1066,9 +1237,6 @@
                                 </div>
                             `).join('')}
                         </div>
-                        <button class="action-btn primary" onclick="checkAnswer(${index})" id="check-${index}">
-                            Check Answer
-                        </button>
                         <div class="answer-result" id="answer-${index}"></div>
                     </div>
                 `;
@@ -1076,8 +1244,7 @@
 
             html += `
                     <div class="action-buttons">
-                        <button class="action-btn" onclick="generateQuestion()">🔁 Generate New Set</button>
-                        <button class="action-btn" onclick="checkAllAnswers()">📝 Check All Answers</button>
+                        <button class="action-btn primary" onclick="submitAllAnswers()">📝 Submit All Answers</button>
                     </div>
                 </div>
             `;
@@ -1102,15 +1269,22 @@
             if (selectedEl) selectedEl.classList.add('selected');
         }
 
-        function checkAnswer(questionIndex) {
+        function submitAllAnswers() {
+            for (let i = 0; i < quizData.length; i++) {
+                checkAnswer(i, true);
+            }
+        }
+
+        function checkAnswer(questionIndex, showAlways = false) {
             const question = quizData[questionIndex];
             const userSelected = userAnswers[questionIndex];
             const resultEl = document.getElementById(`answer-${questionIndex}`);
-            const checkBtn = document.getElementById(`check-${questionIndex}`);
 
-            if (userSelected === null) {
-                resultEl.innerHTML = `<p style="color: #ef4444; font-weight: 600;">❗ Please select an option first.</p>`;
-                resultEl.classList.add('show');
+            if (userSelected === null || userSelected === undefined) {
+                if (showAlways) {
+                    resultEl.innerHTML = `<p style="color: #ef4444; font-weight: 600;">❗ No answer selected.</p>`;
+                    resultEl.classList.add('show');
+                }
                 return;
             }
 
@@ -1119,7 +1293,6 @@
                 const optEl = document.getElementById(`q-${questionIndex}-opt-${i}`);
                 if (optEl) {
                     optEl.style.pointerEvents = 'none';
-                    
                     if (i === question.correct) {
                         optEl.classList.add('correct');
                     } else if (i === userSelected && userSelected !== question.correct) {
@@ -1142,21 +1315,6 @@
                 </div>
             `;
             resultEl.classList.add('show');
-            
-            // Disable check button
-            if (checkBtn) {
-                checkBtn.disabled = true;
-                checkBtn.textContent = 'Answered';
-            }
-        }
-
-        function checkAllAnswers() {
-            for (let i = 0; i < quizData.length; i++) {
-                const resultEl = document.getElementById(`answer-${i}`);
-                if (resultEl && !resultEl.classList.contains('show')) {
-                    checkAnswer(i);
-                }
-            }
         }
 
         // Keyboard shortcuts

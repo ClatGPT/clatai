@@ -1464,47 +1464,12 @@ function getDisplayName() {
         // Fetch newspaper data from Supabase storage bucket
         async function fetchNewspaperData() {
             try {
-                console.log('📰 Fetching newspaper from news-pdf bucket...');
+                console.log('📰 Fetching newspaper...');
                 
                 // Update status
-                document.getElementById('newspaperStatus').textContent = 'Checking for today\'s edition...';
+                document.getElementById('newspaperStatus').textContent = 'Daily newspaper coming soon...';
                 
-                let currentDate = new Date();
-                let daysChecked = 0;
-                const maxDaysToCheck = 7; // Check up to 7 days back
-                
-                while (daysChecked < maxDaysToCheck) {
-                    const filename = formatDateForFilename(currentDate) + '.pdf';
-                    console.log(`📅 Checking for file: ${filename}`);
-                    
-                    const fileExists = await checkFileExists(filename);
-                    
-                    if (fileExists) {
-                        console.log(`✅ Found newspaper: ${filename}`);
-                        
-                        const publicUrl = getPublicUrl(filename);
-                        const displayDate = formatDate(currentDate);
-                        
-                        currentNewspaperData = {
-                            filename: filename,
-                            pdf_url: publicUrl,
-                            date: currentDate,
-                            displayDate: displayDate,
-                            isToday: daysChecked === 0
-                        };
-                        
-                        // Update UI
-                        updateNewspaperDisplay();
-                        return;
-                    }
-                    
-                    // Move to previous day
-                    currentDate.setDate(currentDate.getDate() - 1);
-                    daysChecked++;
-                }
-                
-                // No newspaper found in the last 7 days
-                console.log('⚠️ No newspaper found in the last 7 days');
+                // Set fallback newspaper data for now
                 setFallbackNewspaper();
                 
             } catch (error) {
@@ -1536,14 +1501,14 @@ function getDisplayName() {
         function setFallbackNewspaper() {
             const today = new Date();
             currentNewspaperData = {
-                filename: '250625.pdf',
+                filename: null,
                 pdf_url: null,
                 date: today,
                 displayDate: formatDate(today),
                 isToday: false
             };
             
-            document.getElementById('newspaperStatus').textContent = 'No recent editions available';
+            document.getElementById('newspaperStatus').textContent = 'Daily newspaper coming soon...';
             console.log('🔄 Set fallback newspaper data');
         }
 
@@ -1729,27 +1694,34 @@ function getDisplayName() {
             console.log('📰 Opening newspaper overlay...');
             
             if (!currentNewspaperData || !currentNewspaperData.pdf_url) {
-                alert('No newspaper is currently available. Please check back later.');
+                // Show a message instead of trying to open PDF
+                const overlay = document.getElementById('newspaperOverlay');
+                const pdfEmbed = document.getElementById('pdfEmbed');
+                const pdfTitle = document.getElementById('pdfTitle');
+                
+                // Hide the PDF embed and show message
+                pdfEmbed.style.display = 'none';
+                pdfTitle.textContent = 'Daily Newspaper';
+                
+                // Show the message div
+                const messageDiv = overlay.querySelector('p');
+                if (messageDiv) {
+                    messageDiv.textContent = 'Our daily newspaper feature is coming soon! This will include curated CLAT-relevant news, current affairs, and practice questions. Stay tuned for updates.';
+                }
+                
+                overlay.classList.add('active');
                 return;
             }
             
+            // If PDF exists, show it
             const pdfEmbed = document.getElementById('pdfEmbed');
-            const pdfFallback = document.getElementById('pdfFallback');
+            const pdfTitle = document.getElementById('pdfTitle');
             
-            // Try to load the PDF
-            pdfEmbed.src = currentNewspaperData.pdf_url;
             pdfEmbed.style.display = 'block';
-            pdfFallback.style.display = 'none';
-            
-            // Handle PDF load errors
-            pdfEmbed.onerror = function() {
-                console.log('⚠️ PDF failed to load, showing fallback');
-                pdfEmbed.style.display = 'none';
-                pdfFallback.style.display = 'flex';
-            };
+            pdfEmbed.src = currentNewspaperData.pdf_url;
+            pdfTitle.textContent = `CLAT Daily - ${currentNewspaperData.displayDate}`;
             
             document.getElementById('newspaperOverlay').classList.add('active');
-            document.body.style.overflow = 'hidden';
         }
 
         function closeNewspaperOverlay() {
@@ -1762,19 +1734,15 @@ function getDisplayName() {
 
         function downloadNewspaper() {
             if (!currentNewspaperData || !currentNewspaperData.pdf_url) {
-                alert('PDF is not available for download at the moment.');
+                alert('Daily newspaper feature is coming soon! This will include downloadable PDFs with CLAT-relevant content.');
                 return;
             }
             
             console.log('⬇️ Downloading newspaper PDF...');
             
-            // Create a temporary link element and trigger download
             const link = document.createElement('a');
             link.href = currentNewspaperData.pdf_url;
             link.download = currentNewspaperData.filename || 'clat-daily.pdf';
-            link.target = '_blank';
-            
-            // Append to body, click, and remove
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);

@@ -943,24 +943,24 @@ Structure:
 (B) Option 2 text
 (C) Option 3 text
 (D) Option 4 text
-Answer: (A)
+Answer: (D)
 Explanation: Explanation text here.
 
 Follow this format exactly.
 """,
     
-    "Awards & Honours": """
-You are a CLAT Awards & Honours test generator.
-Generate a passage of 300-400 words about awards, honours, and recognitions.
+    "Ratios": """
+You are a CLAT Ratios test generator.
+Generate a passage of 300-400 words with ratio and proportion problems and scenarios.
 
 Then add the heading: **MCQs**
 
-Create 5 multiple-choice questions (numbered 1 to 5) testing awards and honours knowledge.
+Create 5 multiple-choice questions (numbered 1 to 5) testing ratio and proportion calculations.
 Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
 
 After each question, include:
 Answer: (correct option)
-Explanation: short explanation of the award or honour.
+Explanation: short explanation of the ratio calculation.
 
 Structure:
 1. Question text here?
@@ -969,6 +969,56 @@ Structure:
 (C) Option 3 text
 (D) Option 4 text
 Answer: (B)
+Explanation: Explanation text here.
+
+Follow this format exactly.
+""",
+    
+    "Averages": """
+You are a CLAT Averages test generator.
+Generate a passage of 300-400 words with average problems and scenarios.
+
+Then add the heading: **MCQs**
+
+Create 5 multiple-choice questions (numbered 1 to 5) testing average calculations.
+Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
+
+After each question, include:
+Answer: (correct option)
+Explanation: short explanation of the average calculation.
+
+Structure:
+1. Question text here?
+(A) Option 1 text
+(B) Option 2 text
+(C) Option 3 text
+(D) Option 4 text
+Answer: (C)
+Explanation: Explanation text here.
+
+Follow this format exactly.
+""",
+    
+    "Compound Interest": """
+You are a CLAT Compound Interest test generator.
+Generate a passage of 300-400 words with compound interest problems and banking scenarios.
+
+Then add the heading: **MCQs**
+
+Create 5 multiple-choice questions (numbered 1 to 5) testing compound interest calculations.
+Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
+
+After each question, include:
+Answer: (correct option)
+Explanation: short explanation of the compound interest calculation.
+
+Structure:
+1. Question text here?
+(A) Option 1 text
+(B) Option 2 text
+(C) Option 3 text
+(D) Option 4 text
+Answer: (D)
 Explanation: Explanation text here.
 
 Follow this format exactly.
@@ -1606,11 +1656,15 @@ def generate_practice():
         if not section or not subcategory:
             return jsonify({"error": "Section and subcategory are required"}), 400
 
-        topic_name = subcategory.replace("-", " ").title()
+        # Use the mapping to convert frontend subcategory to backend topic
+        topic_name = SUBCATEGORY_MAPPINGS.get(subcategory)
+        if not topic_name:
+            return jsonify({"error": f"Unsupported subcategory: {subcategory}"}), 400
+
         if topic_name not in SECTIONAL_PROMPTS:
             return jsonify({"error": f"Unsupported topic: {topic_name}"}), 400
 
-        print(f"[API] Generating practice for {topic_name} with {passages} passages")
+        print(f"[API] Generating practice for {topic_name} (subcategory: {subcategory}) with {passages} passages")
 
         generated = generate_study_material(topic_name, passages)
         if not generated:

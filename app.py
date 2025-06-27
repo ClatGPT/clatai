@@ -10,6 +10,7 @@ from fpdf import FPDF
 from io import BytesIO
 import tempfile
 from flask import send_from_directory
+from dotenv import load_dotenv
 
 app = Flask(__name__)
 CORS(app)
@@ -19,9 +20,13 @@ PORT = int(os.environ.get('PORT', 5000))
 DEBUG = os.environ.get('FLASK_ENV') == 'development'
 
 # Groq API configuration
+load_dotenv()
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
 MODEL = "meta-llama/llama-4-scout-17b-16e-instruct"
+
+# Startup check for API key
+print(f"GROQ_API_KEY loaded: {'Yes' if GROQ_API_KEY else 'No'}")
 
 headers = {
     "Authorization": f"Bearer {GROQ_API_KEY}",
@@ -1104,6 +1109,9 @@ QT_TOPIC_MAPPING = {
                                                               
 def call_groq_api(messages, temperature=0.7, max_tokens=4000):
     """Generic function to call Groq API"""
+    if not GROQ_API_KEY:
+        print("[ERROR] GROQ_API_KEY is not set. Cannot call Groq API.")
+        return None
     payload = {
         "model": MODEL,
         "messages": messages,
@@ -1121,6 +1129,8 @@ def call_groq_api(messages, temperature=0.7, max_tokens=4000):
         
     except requests.exceptions.RequestException as e:
         print(f"Error calling Groq API: {e}")
+        if hasattr(e, 'response') and e.response is not None:
+            print(f"Groq API response: {e.response.text}")
         return None
     except KeyError as e:
         print(f"Error parsing Groq API response: {e}")
@@ -1340,38 +1350,27 @@ def gk_study_assistant():
     try:
         data = request.get_json()
         user_message = data.get('message', '').strip()
-
         if not user_message:
             return jsonify({'error': 'Message is empty'}), 400
-
+        if not GROQ_API_KEY:
+            return jsonify({'error': 'GROQ_API_KEY is not set on the server. Please contact admin.'}), 500
         print(f"Study Assistant Request: {user_message[:100]}...")
-
-        assistant_prompt = """You are a CLAT study assistant. 
-Your job is to:
-- Explain topics in simple, structured, academic style
-- Summarize passages or documents clearly
-- Help students understand, take notes, or break down complex issues
-Do NOT generate questions unless explicitly asked.
-"""
-
+        assistant_prompt = """You are a CLAT study assistant. \nYour job is to:\n- Explain topics in simple, structured, academic style\n- Summarize passages or documents clearly\n- Help students understand, take notes, or break down complex issues\nDo NOT generate questions unless explicitly asked.\n"""
         messages = [
             {"role": "system", "content": assistant_prompt},
             {"role": "user", "content": user_message}
         ]
-
         response = call_groq_api(messages)
         if response is None:
-            return jsonify({'error': 'Failed to generate assistant response'}), 500
-
+            return jsonify({'error': 'Failed to generate assistant response. Please check GROQ_API_KEY and Groq API status.'}), 500
         return jsonify({
             'response': response,
             'service': 'gk_assistant',
             'timestamp': datetime.now().isoformat()
         })
-
     except Exception as e:
         print(f"Study assistant error: {e}")
-        return jsonify({'error': 'Internal server error'}), 500
+        return jsonify({'error': 'Internal server error', 'details': str(e)}), 500
 
 @app.route('/gk/topics', methods=['GET'])
 def gk_get_topics():
@@ -1414,38 +1413,31 @@ def lexa_chat():
         # Validate request
         if not request.is_json:
             return jsonify({"error": "Request must be JSON"}), 400
-        
         data = request.json
         if not data or 'message' not in data:
             return jsonify({"error": "Message is required"}), 400
-            
         user_message = data.get("message", "").strip()
         if not user_message:
             return jsonify({"error": "Message cannot be empty"}), 400
-
+        if not GROQ_API_KEY:
+            return jsonify({"error": "GROQ_API_KEY is not set on the server. Please contact admin."}), 500
         print(f"Lexa Chat - Message: {user_message[:100]}...")
-
         messages = [
             {"role": "system", "content": LEXA_SYSTEM_PROMPT},
             {"role": "user", "content": user_message}
         ]
-
         response = call_groq_api(messages, temperature=0.7, max_tokens=1024)
-
         if response is None:
-            return jsonify({"error": "Failed to get response from Lexa"}), 500
-
+            return jsonify({"error": "Failed to get response from Lexa. Please check GROQ_API_KEY and Groq API status."}), 500
         return jsonify({
             "response": response,
             "status": "success",
             "service": "lexa_chatbot",
             "timestamp": datetime.now().isoformat()
         })
-    
     except requests.exceptions.Timeout:
         print("Lexa request timeout")
         return jsonify({"error": "Request timeout"}), 504
-    
     except Exception as e:
         print(f"Lexa Server Exception: {str(e)}")
         return jsonify({"error": "Server Exception", "message": str(e)}), 500
@@ -1472,46 +1464,27 @@ def qt_generate_question():
         data = request.get_json()
         if not data:
             return jsonify({"error": "No JSON data provided"}), 400
-            
         topic = data.get("topic", "percentages")
         print(f"QT Request for topic: {topic}")
-        
         detailed_topic = QT_TOPIC_MAPPING.get(topic, topic)
         print(f"QT Mapped to detailed topic: {detailed_topic}")
-
+        if not GROQ_API_KEY:
+            return jsonify({"success": False, "error": "GROQ_API_KEY is not set on the server. Please contact admin.", "service": "qt_mentor"}), 500
         # Enhanced user prompt for better quality
-        user_prompt = f"""Generate a CLAT-style Quantitative Aptitude passage and exactly 6 questions on the topic: '{detailed_topic}'. 
-
-Requirements:
-1. Create a realistic business/economic scenario with specific numerical data
-2. Passage should be 7-10 sentences with concrete numbers
-3. Questions should progressively increase in difficulty
-4. Each question must test different aspects of the topic
-5. Ensure calculations are accurate and explanations are detailed
-6. Use realistic Indian context (₹ currency, Indian companies/cities)
-
-Topic focus: {detailed_topic}
-
-Please follow the exact format specified in the system prompt."""
-
+        user_prompt = f"""Generate a CLAT-style Quantitative Aptitude passage and exactly 6 questions on the topic: '{detailed_topic}'. \n\nRequirements:\n1. Create a realistic business/economic scenario with specific numerical data\n2. Passage should be 7-10 sentences with concrete numbers\n3. Questions should progressively increase in difficulty\n4. Each question must test different aspects of the topic\n5. Ensure calculations are accurate and explanations are detailed\n6. Use realistic Indian context (₹ currency, Indian companies/cities)\n\nTopic focus: {detailed_topic}\n\nPlease follow the exact format specified in the system prompt."""
         messages = [
             {"role": "system", "content": QT_SYSTEM_PROMPT},
             {"role": "user", "content": user_prompt}
         ]
-
         print("Making QT request to Groq API...")
-        
         response = call_groq_api(messages, temperature=0.7, max_tokens=4000)
-        
         if response is None:
             return jsonify({
                 "success": False,
-                "error": "Failed to generate QT content",
+                "error": "Failed to generate QT content. Please check GROQ_API_KEY and Groq API status.",
                 "service": "qt_mentor"
             }), 500
-        
         print(f"QT Generated content length: {len(response)}")
-        
         # Basic validation of generated content
         if not validate_qt_content(response):
             print("QT Content validation failed")
@@ -1521,7 +1494,6 @@ Please follow the exact format specified in the system prompt."""
                 "details": "Please try generating again",
                 "service": "qt_mentor"
             }), 400
-
         return jsonify({
             "success": True,
             "rawOutput": response,
@@ -1530,7 +1502,6 @@ Please follow the exact format specified in the system prompt."""
             "service": "qt_mentor",
             "timestamp": datetime.now().isoformat()
         })
-    
     except requests.exceptions.Timeout:
         print("QT Request timeout occurred")
         return jsonify({
@@ -1539,7 +1510,6 @@ Please follow the exact format specified in the system prompt."""
             "message": "API request took too long. Please try again.",
             "service": "qt_mentor"
         }), 500
-        
     except Exception as e:
         print(f"QT Unexpected error: {str(e)}")
         traceback.print_exc()
@@ -1652,24 +1622,18 @@ def generate_practice():
         section = data.get("section")
         subcategory = data.get("subcategory")
         passages = data.get("passages", 1)
-
         if not section or not subcategory:
             return jsonify({"error": "Section and subcategory are required"}), 400
-
         # Use the mapping to convert frontend subcategory to backend topic
         topic_name = SUBCATEGORY_MAPPINGS.get(subcategory)
         if not topic_name:
             return jsonify({"error": f"Unsupported subcategory: {subcategory}"}), 400
-
         if topic_name not in SECTIONAL_PROMPTS:
             return jsonify({"error": f"Unsupported topic: {topic_name}"}), 400
-
         print(f"[API] Generating practice for {topic_name} (subcategory: {subcategory}) with {passages} passages")
-
         generated = generate_study_material(topic_name, passages)
         if not generated:
             return jsonify({"error": "Content generation failed"}), 500
-
         all_questions = []
         for p_index, raw in enumerate(generated):
             print(f"[API] Processing passage {p_index + 1}")
@@ -1684,16 +1648,13 @@ def generate_practice():
                     "correct": q["correct"],
                     "explanation": q["explanation"]
                 })
-
         print(f"[API] Generated {len(all_questions)} total questions")
-
         return jsonify({
             "success": True,
             "questions": all_questions,
             "total": len(all_questions),
             "service": "sectional_tests"
         })
-
     except Exception as e:
         traceback.print_exc()
         return jsonify({"error": "Server error", "details": str(e)}), 500

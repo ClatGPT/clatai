@@ -1521,29 +1521,26 @@ function getDisplayName() {
                 // Update date info immediately
                 document.getElementById('dateInfo').textContent = `Day ${dayOfYear} of 365`;
 
-                // Fetch word from word-pdf table where day matches current day of year
+                // Fetch word from word-pdf table where Day matches current day of year
                 const { data, error } = await supabase
                     .from('word-pdf')
-                    .select('day, word, pronunciation, meaning')
-                    .eq('day', dayOfYear)
+                    .select('Day, Word, Pronunciation, Meaning')
+                    .eq('Day', dayOfYear)
                     .single();
 
                 if (error) {
                     console.error('❌ Error fetching word for day', dayOfYear, ':', error.message);
-                    
                     // Try to get a random word as fallback
                     console.log('🔄 Trying to get any available word...');
                     const { data: fallbackData, error: fallbackError } = await supabase
                         .from('word-pdf')
-                        .select('day, word, pronunciation, meaning')
+                        .select('Day, Word, Pronunciation, Meaning')
                         .limit(1)
                         .single();
-                    
                     if (fallbackError) {
                         console.error('❌ No words available in database:', fallbackError.message);
                         throw new Error('No words found in database');
                     }
-                    
                     console.log('✅ Using fallback word:', fallbackData);
                     currentWordData = fallbackData;
                 } else {
@@ -1552,7 +1549,6 @@ function getDisplayName() {
                 }
 
                 updateWordDisplay();
-                
             } catch (error) {
                 console.error('❌ Error fetching word of the day:', error);
                 setFallbackWord();
@@ -1568,15 +1564,13 @@ function getDisplayName() {
 
             const wordElement = document.getElementById('currentWord');
             const pronunciationElement = document.getElementById('currentPronunciation');
-            
-            wordElement.textContent = currentWordData.word || 'Word not available';
-            pronunciationElement.textContent = currentWordData.pronunciation || 'Pronunciation not available';
-            
+            // Use capitalized property names
+            wordElement.textContent = currentWordData.Word || 'Word not available';
+            pronunciationElement.textContent = currentWordData.Pronunciation || 'Pronunciation not available';
             // Remove loading classes
             wordElement.classList.remove('word-loading');
             pronunciationElement.classList.remove('word-loading');
-            
-            console.log('✅ Word display updated:', currentWordData.word);
+            console.log('✅ Word display updated:', currentWordData.Word);
         }
 
         // Set fallback word if Supabase fetch fails

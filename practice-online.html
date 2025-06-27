@@ -857,10 +857,13 @@
     "main-idea": "Reading Comprehension",
     "author-s-tone": "Reading Comprehension",
     "vocab": "Vocabulary",
-    "idioms-mics": "Vocabulary",
-    "sentence-correction": "Grammar",
-    "ordering-sentences": "Para Jumbles",
+    "literary-and-poetic-devices": "Reading Comprehension",
+    "author-based": "Reading Comprehension",
+    "source-based": "Reading Comprehension",
+    "title-theme": "Reading Comprehension",
+    "direct-inference-questions": "Reading Comprehension",
     "assumptions-inferences": "Critical Reasoning",
+    "idioms-mics": "Vocabulary",
 
     // Logical
     "assumptions": "Critical Reasoning",
@@ -870,17 +873,24 @@
     "strengthen-weaken": "Critical Reasoning",
     "direct-inference": "Logical Reasoning",
     "analogy-and-sequences": "Logical Reasoning",
+    "paradox-contradiction-resolution": "Logical Reasoning",
 
-    // Quant
+    // Quantitative
     "percentage-comparison": "Percentages",
     "what-percentage-more-less": "Percentages",
-    "discount-profit-loss": "Profit & Loss",
+    "percentage-change": "Percentages",
+    "dividing-quantities-in-given-ratios": "Ratios",
+    "missing-values-based-on-ratios": "Ratios",
+    "simplification-of-numbers-to-derive-simplest-ratio": "Ratios",
+    "simple-and-weighted-averages": "Averages",
     "cost-price-selling-price-and-marked-price-calculations": "Profit & Loss",
+    "discount-profit-loss": "Profit & Loss",
+    "basic-formula-applications-of-simple-and-compound-interest": "Compound Interest",
+    "area-perimeter-volume-and-surface-area": "Geometry",
 
-    // GK
+    // GK (add more as needed)
     "awards-honours": "Awards & Honours",
     "science-tech": "Science & Technology"
-    // add more as needed...
 };
 
         let currentPractice = null;
@@ -1075,19 +1085,22 @@
                 subcategorySelect.disabled = false;
                 
                 // Populate subcategories
-                config.subcategories.forEach(subcategory => {
-                    const option = document.createElement('option');
-                    option.value = subcategory.toLowerCase().replace(/\s+/g, '-');
-                    option.textContent = subcategory;
-                    subcategorySelect.appendChild(option);
+                // Use the subcategoryMap to get the key for each display name
+                Object.entries(subcategoryMap).forEach(([key, value]) => {
+                    // Only add subcategories relevant to the selected section
+                    if (sectionConfig[selectedSection].subcategories.map(s => s.toLowerCase().replace(/\s+/g, '-')).includes(key)) {
+                        const displayName = sectionConfig[selectedSection].subcategories.find(s => s.toLowerCase().replace(/\s+/g, '-') === key) || value;
+                        const option = document.createElement('option');
+                        option.value = key; // Use the key as value
+                        option.textContent = displayName;
+                        subcategorySelect.appendChild(option);
+                    }
                 });
-                
                 // Update passage slider
                 passagesSlider.max = config.maxPassages;
                 passagesSlider.value = Math.min(3, config.maxPassages);
                 maxPassages.textContent = config.maxPassages;
                 passageValue.textContent = passagesSlider.value;
-                
                 // Update description
                 document.getElementById('passageDescription').textContent = 
                     `Choose how many passages you want to practice with (max ${config.maxPassages} for ${selectedSection})`;
@@ -1337,10 +1350,8 @@
             e.preventDefault();
             
 const section = document.getElementById('section').value;
-const rawSubcategory = document.getElementById('subcategory').value;
-const subcategory = subcategoryMap[rawSubcategory] || rawSubcategory;
-
-            const passages = parseInt(document.getElementById('passages').value);
+const subcategory = document.getElementById('subcategory').value; // Use the raw value directly
+const passages = parseInt(document.getElementById('passages').value);
 
             if (!section || !subcategory || !passages) {
                 showMessage('Please fill in all fields to start practice.', 'error');
@@ -1371,24 +1382,20 @@ const subcategory = subcategoryMap[rawSubcategory] || rawSubcategory;
                 const sectionName = section.charAt(0).toUpperCase() + section.slice(1);
                 const subcategoryName = subcategory.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
                 document.getElementById('practiceTitle').textContent = `${sectionName} Practice`;
-                document.getElementById('practiceInfo').textContent = `${subcategoryName} • ${passages} Passage${passages > 1 ? 's' : ''}`;
+                document.getElementById('practiceInfo').textContent = `${subcategoryName} \u2022 ${passages} Passage${passages > 1 ? 's' : ''}`;
                 document.getElementById('totalQuestions').textContent = currentPractice.length;
 
-                // Reset practice state
                 currentQuestionIndex = 0;
-                userAnswers = {};
-                correctCount = 0;
-                totalAnswered = 0;
-                document.getElementById('correctAnswers').textContent = '0';
-                document.getElementById('accuracy').textContent = '0%';
-
-                // Display first question
                 displayQuestion();
-
+                startTimer(sectionConfig[section]?.timePerQuestion || 60);
             } catch (error) {
-                showMessage(error.message, 'error');
+                console.error("API Error:", error);
+                showMessage(`Server connection failed: ${error.message}. Using sample questions instead.`, 'error');
+                // Return sample questions as fallback
+                currentPractice = generateSampleQuestions(section, subcategory);
+                currentQuestionIndex = 0;
+                displayQuestion();
             } finally {
-                // Reset button state
                 startButton.classList.remove('loading');
                 buttonText.textContent = 'Start Practice';
                 startButton.disabled = false;

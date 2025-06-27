@@ -909,61 +909,61 @@
                 maxPassages: 4,
                 timePerQuestion: 60,
                 subcategories: [
-                    'Main idea',
-                    'Author\'s tone',
-                    'Vocab',
-                    'Literary and poetic devices',
-                    'Author-based',
-                    'Source-based',
-                    'Title & Theme',
-                    'Direct inference questions',
-                    'Assumptions & Inferences',
-                    'Idioms & MICS'
+                    'main-idea',
+                    'author-s-tone',
+                    'vocab',
+                    'literary-and-poetic-devices',
+                    'author-based',
+                    'source-based',
+                    'title-theme',
+                    'direct-inference-questions',
+                    'assumptions-inferences',
+                    'idioms-mics'
                 ]
             },
             logical: {
                 maxPassages: 4,
                 timePerQuestion: 60,
                 subcategories: [
-                    'Assumptions',
-                    'Inferences',
-                    'Argument-based',
-                    'Agree & Disagree',
-                    'Strengthen & Weaken',
-                    'Direct Inference',
-                    'Analogy and Sequences',
-                    'Paradox / Contradiction Resolution'
+                    'assumptions',
+                    'inferences',
+                    'argument-based',
+                    'agree-disagree',
+                    'strengthen-weaken',
+                    'direct-inference',
+                    'analogy-and-sequences',
+                    'paradox-contradiction-resolution'
                 ]
             },
             legal: {
                 maxPassages: 6,
                 timePerQuestion: 60,
                 subcategories: [
-                    'General Legal'
+                    'general-legal'
                 ] // Only one subcategory for legal
             },
             quantitative: {
                 maxPassages: 2,
                 timePerQuestion: 60,
                 subcategories: [
-                    'Percentage Comparison',
-                    'What percentage more/less',
-                    'Percentage Change',
-                    'Dividing quantities in given ratios',
-                    'Missing values based on ratios',
-                    'Simplification of numbers to derive simplest ratio',
-                    'Simple and weighted averages',
-                    'Cost price, selling price and marked price calculations',
-                    'Discount%, profit% and loss%',
-                    'Basic formula applications of simple and compound interest',
-                    'Area, perimeter, volume and surface area'
+                    'percentage-comparison',
+                    'what-percentage-more-less',
+                    'percentage-change',
+                    'dividing-quantities-in-given-ratios',
+                    'missing-values-based-on-ratios',
+                    'simplification-of-numbers-to-derive-simplest-ratio',
+                    'simple-and-weighted-averages',
+                    'cost-price-selling-price-and-marked-price-calculations',
+                    'discount-profit-loss',
+                    'basic-formula-applications-of-simple-and-compound-interest',
+                    'area-perimeter-volume-and-surface-area'
                 ]
             },
             gk: {
                 maxPassages: 5,
                 timePerQuestion: 90,
                 subcategories: [
-                    'General GK'
+                    'general-gk'
                 ] // Only one subcategory for GK
             }
         };
@@ -1095,15 +1095,12 @@
                 } else {
                     // Enable subcategory dropdown
                     subcategorySelect.disabled = false;
-                    // Populate subcategories
-                    Object.entries(subcategoryMap).forEach(([key, value]) => {
-                        if (sectionConfig[selectedSection].subcategories.map(s => s.toLowerCase().replace(/\s+/g, '-')).includes(key)) {
-                            const displayName = sectionConfig[selectedSection].subcategories.find(s => s.toLowerCase().replace(/\s+/g, '-') === key) || value;
-                            const option = document.createElement('option');
-                            option.value = key; // Use the key as value
-                            option.textContent = displayName;
-                            subcategorySelect.appendChild(option);
-                        }
+                    // Populate subcategories using sectionConfig keys and subcategoryMap for display
+                    config.subcategories.forEach(key => {
+                        const option = document.createElement('option');
+                        option.value = key;
+                        option.textContent = subcategoryMap[key] || key;
+                        subcategorySelect.appendChild(option);
                     });
                 }
                 // Update passage slider

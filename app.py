@@ -1083,6 +1083,9 @@ SUBCATEGORY_MAPPINGS = {
     "discount-profit-loss": "Profit & Loss",
     "basic-formula-applications-of-simple-and-compound-interest": "Compound Interest",
     "area-perimeter-volume-and-surface-area": "Geometry",
+    # Add direct mappings for single-subcategory cases
+    "general-legal": "Legal Reasoning",
+    "general-gk": "General Knowledge",
 }
 
 # =============================================================================

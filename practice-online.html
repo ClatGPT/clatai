@@ -938,7 +938,9 @@
             legal: {
                 maxPassages: 6,
                 timePerQuestion: 60,
-                subcategories: [] // No subcategories for legal
+                subcategories: [
+                    'General Legal'
+                ] // Only one subcategory for legal
             },
             quantitative: {
                 maxPassages: 2,
@@ -1081,21 +1083,24 @@
             if (selectedSection && sectionConfig[selectedSection]) {
                 const config = sectionConfig[selectedSection];
                 
-                // Enable subcategory dropdown
-                subcategorySelect.disabled = false;
-                
-                // Populate subcategories
-                // Use the subcategoryMap to get the key for each display name
-                Object.entries(subcategoryMap).forEach(([key, value]) => {
-                    // Only add subcategories relevant to the selected section
-                    if (sectionConfig[selectedSection].subcategories.map(s => s.toLowerCase().replace(/\s+/g, '-')).includes(key)) {
-                        const displayName = sectionConfig[selectedSection].subcategories.find(s => s.toLowerCase().replace(/\s+/g, '-') === key) || value;
-                        const option = document.createElement('option');
-                        option.value = key; // Use the key as value
-                        option.textContent = displayName;
-                        subcategorySelect.appendChild(option);
-                    }
-                });
+                // Special handling for legal section
+                if (selectedSection === 'legal') {
+                    subcategorySelect.disabled = true;
+                    subcategorySelect.innerHTML = '<option value="general-legal" selected>General Legal</option>';
+                } else {
+                    // Enable subcategory dropdown
+                    subcategorySelect.disabled = false;
+                    // Populate subcategories
+                    Object.entries(subcategoryMap).forEach(([key, value]) => {
+                        if (sectionConfig[selectedSection].subcategories.map(s => s.toLowerCase().replace(/\s+/g, '-')).includes(key)) {
+                            const displayName = sectionConfig[selectedSection].subcategories.find(s => s.toLowerCase().replace(/\s+/g, '-') === key) || value;
+                            const option = document.createElement('option');
+                            option.value = key; // Use the key as value
+                            option.textContent = displayName;
+                            subcategorySelect.appendChild(option);
+                        }
+                    });
+                }
                 // Update passage slider
                 passagesSlider.max = config.maxPassages;
                 passagesSlider.value = Math.min(3, config.maxPassages);
@@ -1106,6 +1111,7 @@
                     `Choose how many passages you want to practice with (max ${config.maxPassages} for ${selectedSection})`;
             } else {
                 subcategorySelect.disabled = true;
+                subcategorySelect.innerHTML = '<option value="">Select a subcategory</option>';
                 passagesSlider.max = 6;
                 passagesSlider.value = 3;
                 maxPassages.textContent = '6';
@@ -1350,8 +1356,13 @@
             e.preventDefault();
             
 const section = document.getElementById('section').value;
-const subcategory = document.getElementById('subcategory').value; // Use the raw value directly
+let subcategory = document.getElementById('subcategory').value; // Use the raw value directly
 const passages = parseInt(document.getElementById('passages').value);
+
+            // If legal, force subcategory to 'general-legal'
+            if (section === 'legal') {
+                subcategory = 'general-legal';
+            }
 
             if (!section || !subcategory || !passages) {
                 showMessage('Please fill in all fields to start practice.', 'error');

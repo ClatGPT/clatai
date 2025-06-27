@@ -602,8 +602,8 @@
     </div>
 
     <script>
-        // Configuration
-        const API_BASE_URL = 'http://localhost:5000'; // Change this to your Flask server URL
+        // API Configuration
+        const API_BASE_URL = window.location.origin; // Use relative URL for production
 
         // Get message from URL parameter if coming from homepage
         function getMessageFromURL() {

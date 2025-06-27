@@ -9,11 +9,14 @@ from datetime import datetime
 from fpdf import FPDF
 from io import BytesIO
 import tempfile
-from flask import send_from_directory, render_template
-import os
+from flask import send_from_directory
 
 app = Flask(__name__)
 CORS(app)
+
+# Environment configuration for Render
+PORT = int(os.environ.get('PORT', 5000))
+DEBUG = os.environ.get('FLASK_ENV') == 'development'
 
 # Groq API configuration
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
@@ -24,9 +27,11 @@ headers = {
     "Authorization": f"Bearer {GROQ_API_KEY}",
     "Content-Type": "application/json"
 }
+
 @app.route("/")
 def home():
     return send_from_directory('.', '1.land.html')
+
 @app.route("/<path:filename>")
 def serve_file(filename):
     return send_from_directory('.', filename)
@@ -1086,7 +1091,7 @@ def generate_study_material(topic, count):
     all_sections = []
     for i in range(count):
         print(f"📝 Generating section {i+1}/{count} for {topic}...")
-        mapped_topic = SUBCATEGORY_MAPPINGS.get(topic, topic)
+        mapped_topic = SUBCATEGORY_MAPPINGS.get(topic or "", topic or "")
         prompt = SECTIONAL_PROMPTS.get(mapped_topic, f"Generate a CLAT-level {mapped_topic} test with passage, questions, and answer key.")
 
         messages = [
@@ -1189,7 +1194,7 @@ def create_pdf(contents, title):
             clean = section
         pdf.multi_cell(0, 10, clean)
         pdf.ln()
-    return BytesIO(pdf.output(dest='S').encode('latin1'))
+    return BytesIO(pdf.output(dest='S'))
 
 # =============================================================================
 # MAIN ROUTES
@@ -1335,7 +1340,7 @@ def gk_upload_pdf():
             return jsonify({'error': 'No file uploaded'}), 400
 
         file = request.files['file']
-        if not file.filename.endswith('.pdf'):
+        if not file.filename or not file.filename.endswith('.pdf'):
             return jsonify({'error': 'Only PDF files are allowed'}), 400
 
         # For now, return a placeholder response since PyMuPDF isn't imported
@@ -1758,37 +1763,37 @@ if __name__ == '__main__':
     print("=" * 80)
     print("🚀 Starting CLAT Unified API Server v2.0.1 - FIXED")
     print("=" * 80)
-    print(f"📍 Server URL: http://127.0.0.1:5000")
-    print(f"🔗 Main endpoint: http://127.0.0.1:5000/")
+    print(f"📍 Server URL: http://127.0.0.1:{PORT}")
+    print(f"🔗 Main endpoint: http://127.0.0.1:{PORT}/")
     print("")
     print("📚 GK Research Engine:")
-    print(f"   • Generate: http://127.0.0.1:5000/gk/generate")
-    print(f"   • Assistant: http://127.0.0.1:5000/gk/assistant")
-    print(f"   • Topics: http://127.0.0.1:5000/gk/topics")
+    print(f"   • Generate: http://127.0.0.1:{PORT}/gk/generate")
+    print(f"   • Assistant: http://127.0.0.1:{PORT}/gk/assistant")
+    print(f"   • Topics: http://127.0.0.1:{PORT}/gk/topics")
     print("")
     print("🤖 Lexa Chatbot:")
-    print(f"   • Chat: http://127.0.0.1:5000/lexa/chat")
+    print(f"   • Chat: http://127.0.0.1:{PORT}/lexa/chat")
     print("")
     print("🔢 QT Mentor:")
-    print(f"   • Generate: http://127.0.0.1:5000/qt/generate-question")
-    print(f"   • Test: http://127.0.0.1:5000/qt/test")
+    print(f"   • Generate: http://127.0.0.1:{PORT}/qt/generate-question")
+    print(f"   • Test: http://127.0.0.1:{PORT}/qt/test")
     print("")
     print("📝 Sectional Tests:")
-    print(f"   • Generate: http://127.0.0.1:5000/generate-test")
-    print(f"   • Download PDF: http://127.0.0.1:5000/download-pdf")
-    print(f"   • Topics: http://127.0.0.1:5000/topics")
-    print(f"   • Practice: http://127.0.0.1:5000/api/generate-practice")
+    print(f"   • Generate: http://127.0.0.1:{PORT}/generate-test")
+    print(f"   • Download PDF: http://127.0.0.1:{PORT}/download-pdf")
+    print(f"   • Topics: http://127.0.0.1:{PORT}/topics")
+    print(f"   • Practice: http://127.0.0.1:{PORT}/api/generate-practice")
     print("")
     print("🔧 Debug:")
-    print(f"   • Test Parser: http://127.0.0.1:5000/test-parser")
+    print(f"   • Test Parser: http://127.0.0.1:{PORT}/test-parser")
     print("")
-    print(f"❤️  Health Check: http://127.0.0.1:5000/health")
+    print(f"❤️  Health Check: http://127.0.0.1:{PORT}/health")
     print("=" * 80)
     print(f"Groq API configured: {'Yes' if GROQ_API_KEY else 'No'}")
     print(f"GK Topics available: {len(TOPIC_CONTEXTS)}")
     print(f"QT Topics available: {len(QT_TOPIC_MAPPING)}")
     print(f"Sectional Topics available: {len(SECTIONAL_PROMPTS)}")
     print("=" * 80)
- 
-    # Run the Flask app
-    app.run(debug=True, host='0.0.0.0', port=5000)
+
+    if __name__ == "__main__":
+        app.run(host='0.0.0.0', port=PORT, debug=DEBUG)

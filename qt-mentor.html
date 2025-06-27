@@ -878,7 +878,7 @@
             welcomeScreen.style.display = 'none';
 // http://127.0.0.1:5000/qt/generate-question
             try {
-                const response = await fetch("http://127.0.0.1:5000/qt/generate-question", {
+                const response = await fetch("/qt/generate-question", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ topic: currentTopic })
@@ -916,7 +916,7 @@
                 questionContainer.innerHTML = `
                     <div class="error-message">
                         <strong>❌ Error:</strong> ${error.message}<br>
-                        <small>Please check if the Flask server is running on http://127.0.0.1:5000</small>
+                        <small>Please check if the Flask server is running on </small>
                         <br><br>
                         <button class="action-btn" onclick="generateQuestion()">🔄 Try Again</button>
                     </div>

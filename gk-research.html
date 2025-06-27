@@ -870,8 +870,13 @@
         
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Flask backend URL
-        const BACKEND_URL = 'http://localhost:5000';
+        // API Configuration
+        const BACKEND_URL = window.location.origin; // Use relative URL for production
+        const API_ENDPOINTS = {
+            assistant: `${BACKEND_URL}/gk/assistant`,
+            uploadPdf: `${BACKEND_URL}/gk/upload-pdf`,
+            health: `${BACKEND_URL}/gk/health`
+        };
 
         let selectedTopic = null;
 
@@ -1038,7 +1043,7 @@
             // http://127.0.0.1:5000/gk/generate
             try {
                 // Send request to Flask backend
-                const response = await fetch(`${BACKEND_URL}/gk/assistant`, {
+                const response = await fetch(API_ENDPOINTS.assistant, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1061,7 +1066,7 @@
             } catch (error) {
                 console.error('Error:', error);
                 hideTypingIndicator();
-                addMessage('assistant', 'Sorry, I encountered an error while generating the response. Please make sure the Flask server is running on localhost:5000 and try again.');
+                addMessage('assistant', 'Sorry, I encountered an error. Please try again or check your connection.');
             }
         }
 
@@ -1177,7 +1182,7 @@ async function uploadPDFToBackend() {
         // Show typing effect or loader if needed
         showTypingIndicator();
 
-        const response = await fetch('http://localhost:5000/gk/upload-pdf', {
+        const response = await fetch(API_ENDPOINTS.uploadPdf, {
             method: "POST",
             body: formData
         });

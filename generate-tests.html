@@ -910,8 +910,16 @@
                     // For sections without subcategories (Legal and GK), add a default option
                     subcategorySelect.disabled = false;
                     const option = document.createElement('option');
-                    option.value = selectedSection;
-                    option.textContent = `General ${selectedSection.charAt(0).toUpperCase() + selectedSection.slice(1)}`;
+                    if (selectedSection === 'legal') {
+                        option.value = 'general-legal';
+                        option.textContent = 'General Legal';
+                    } else if (selectedSection === 'gk') {
+                        option.value = 'general-gk';
+                        option.textContent = 'General GK';
+                    } else {
+                        option.value = selectedSection;
+                        option.textContent = `General ${selectedSection.charAt(0).toUpperCase() + selectedSection.slice(1)}`;
+                    }
                     subcategorySelect.appendChild(option);
                 }
                 

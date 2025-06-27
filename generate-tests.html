@@ -1107,6 +1107,7 @@
             
             alert(`Test Completed!\n\nScore: ${score}/${totalQuestions} (${percentage}%)\n\nCorrect Answers: ${score}\nIncorrect Answers: ${totalQuestions - score}`);
             
+            saveTestProgress(testMetadata.section, testMetadata.subcategory, score, totalQuestions);
             startNewTest();
         }
 
@@ -1320,6 +1321,19 @@
             const username = localStorage.getItem('username') || 'Student';
             document.querySelector('.greeting').textContent = `Hey ${username}! 👋`;
         });
+
+        // After test is completed and score is calculated, add this:
+        function saveTestProgress(section, subcategory, score, total) {
+            let progress = JSON.parse(localStorage.getItem('progress') || '[]');
+            progress.push({
+                date: new Date().toISOString(),
+                section,
+                subcategory,
+                score,
+                total
+            });
+            localStorage.setItem('progress', JSON.stringify(progress));
+        }
     </script>
 </body>
 </html>

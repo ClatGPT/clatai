@@ -1202,6 +1202,17 @@ async function uploadPDFToBackend() {
     }
 }
 
+function saveGKProgress(section, subcategory, score, total) {
+    let progress = JSON.parse(localStorage.getItem('progress') || '[]');
+    progress.push({
+        date: new Date().toISOString(),
+        section,
+        subcategory,
+        score,
+        total
+    });
+    localStorage.setItem('progress', JSON.stringify(progress));
+}
 
     </script>
 </body>

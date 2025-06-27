@@ -893,6 +893,42 @@
     "science-tech": "Science & Technology"
 };
 
+        // Add a display name map for subcategories
+        const subcategoryDisplayName = {
+            // English
+            "main-idea": "Main Idea",
+            "author-s-tone": "Author's Tone",
+            "vocab": "Vocabulary",
+            "literary-and-poetic-devices": "Literary & Poetic Devices",
+            "author-based": "Author-based",
+            "source-based": "Source-based",
+            "title-theme": "Title & Theme",
+            "direct-inference-questions": "Direct Inference Questions",
+            "assumptions-inferences": "Assumptions & Inferences",
+            "idioms-mics": "Idioms & Miscellaneous",
+            // Logical
+            "assumptions": "Assumptions",
+            "inferences": "Inferences",
+            "argument-based": "Argument-based",
+            "agree-disagree": "Agree & Disagree",
+            "strengthen-weaken": "Strengthen & Weaken",
+            "direct-inference": "Direct Inference",
+            "analogy-and-sequences": "Analogy & Sequences",
+            "paradox-contradiction-resolution": "Paradox/Contradiction Resolution",
+            // Quantitative
+            "percentage-comparison": "Percentage Comparison",
+            "what-percentage-more-less": "What Percentage More/Less",
+            "percentage-change": "Percentage Change",
+            "dividing-quantities-in-given-ratios": "Dividing Quantities in Given Ratios",
+            "missing-values-based-on-ratios": "Missing Values Based on Ratios",
+            "simplification-of-numbers-to-derive-simplest-ratio": "Simplification to Simplest Ratio",
+            "simple-and-weighted-averages": "Simple & Weighted Averages",
+            "cost-price-selling-price-and-marked-price-calculations": "Cost/Selling/Marked Price Calculations",
+            "discount-profit-loss": "Discount, Profit & Loss",
+            "basic-formula-applications-of-simple-and-compound-interest": "Simple & Compound Interest",
+            "area-perimeter-volume-and-surface-area": "Area, Perimeter, Volume & Surface Area"
+        };
+
         let currentPractice = null;
         let currentQuestionIndex = 0;
         let userAnswers = {};
@@ -1099,7 +1135,7 @@
                     config.subcategories.forEach(key => {
                         const option = document.createElement('option');
                         option.value = key;
-                        option.textContent = subcategoryMap[key] || key;
+                        option.textContent = subcategoryDisplayName[key] || subcategoryMap[key] || key;
                         subcategorySelect.appendChild(option);
                     });
                 }
@@ -1483,6 +1519,19 @@ const passages = parseInt(document.getElementById('passages').value);
         });
 
         window.addEventListener('resize', checkScreenSize);
+
+        // After practice is completed and score is calculated, add this:
+        function savePracticeProgress(section, subcategory, score, total) {
+            let progress = JSON.parse(localStorage.getItem('progress') || '[]');
+            progress.push({
+                date: new Date().toISOString(),
+                section,
+                subcategory,
+                score,
+                total
+            });
+            localStorage.setItem('progress', JSON.stringify(progress));
+        }
     </script>
 </body>
 </html>

@@ -907,11 +907,44 @@ continue using CLAT.GPT.1 platform.
             updateGreeting();
             checkScreenSize();
             animateProgressBars();
-            
-            // Draw chart after a short delay to ensure canvas is ready
-            setTimeout(() => {
-                drawPerformanceChart();
-            }, 500);
+            setTimeout(() => { drawPerformanceChart(); }, 500);
+
+            // Load progress from localStorage
+            let progress = JSON.parse(localStorage.getItem('progress') || '[]');
+            let testsTaken = progress.length;
+            let avgScore = testsTaken ? Math.round(progress.reduce((sum, p) => sum + (p.score/p.total)*100, 0) / testsTaken) : 0;
+
+            // Section mapping for all possible variants
+            function mapSection(section, subcategory) {
+                section = section.toLowerCase();
+                if (section === 'legal' || section === 'legal reasoning' || subcategory === 'general-legal') return 'Legal Reasoning';
+                if (section === 'logical' || section === 'logical reasoning') return 'Logical Reasoning';
+                if (section === 'english' || section === 'english language') return 'English Language';
+                if (section === 'gk' || section === 'general knowledge' || subcategory === 'general-gk') return 'General Knowledge';
+                if (section === 'quantitative' || section === 'quantitative techniques') return 'Quantitative Techniques';
+                return section.charAt(0).toUpperCase() + section.slice(1);
+            }
+
+            // Update stats
+            document.querySelectorAll('.stat-number')[0].textContent = testsTaken;
+            document.querySelectorAll('.stat-number')[1].textContent = avgScore + '%';
+
+            // Section-wise aggregation
+            const sections = ['Legal Reasoning','Logical Reasoning','English Language','General Knowledge','Quantitative Techniques'];
+            let sectionScores = { 'Legal Reasoning':0, 'Logical Reasoning':0, 'English Language':0, 'General Knowledge':0, 'Quantitative Techniques':0 };
+            let sectionCounts = { ...sectionScores };
+            progress.forEach(p => {
+                const mapped = mapSection(p.section, p.subcategory);
+                if (sectionScores[mapped] !== undefined) {
+                    sectionScores[mapped] += (p.score/p.total)*100;
+                    sectionCounts[mapped]++;
+                }
+            });
+            sections.forEach((sec, i) => {
+                let percent = sectionCounts[sec] ? Math.round(sectionScores[sec]/sectionCounts[sec]) : 0;
+                document.querySelectorAll('.skill-score')[i].textContent = percent + '%';
+                document.querySelectorAll('.skill-progress')[i].style.width = percent + '%';
+            });
         });
 
         // Redraw chart on window resize

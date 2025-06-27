@@ -1060,10 +1060,23 @@ SUBCATEGORY_MAPPINGS = {
     "direct-inference-questions": "Reading Comprehension",
     "assumptions-inferences": "Critical Reasoning",
     "idioms-mics": "Vocabulary",
+    # Ensure all possible variants from frontend are mapped
+    "title-theme": "Reading Comprehension",
+    "literary-and-poetic-devices": "Reading Comprehension",
+    "direct-inference-questions": "Reading Comprehension",
+    "assumptions-inferences": "Critical Reasoning",
+    "idioms-mics": "Vocabulary",
 
     # Logical
     "assumptions": "Critical Reasoning",
     "inferences": "Critical Reasoning",
+    "argument-based": "Critical Reasoning",
+    "agree-disagree": "Critical Reasoning",
+    "strengthen-weaken": "Critical Reasoning",
+    "direct-inference": "Logical Reasoning",
+    "analogy-and-sequences": "Logical Reasoning",
+    "paradox-contradiction-resolution": "Logical Reasoning",
+    # Ensure all possible variants from frontend are mapped
     "argument-based": "Critical Reasoning",
     "agree-disagree": "Critical Reasoning",
     "strengthen-weaken": "Critical Reasoning",
@@ -1078,6 +1091,12 @@ SUBCATEGORY_MAPPINGS = {
     "dividing-quantities-in-given-ratios": "Ratios",
     "missing-values-based-on-ratios": "Ratios",
     "simplification-of-numbers-to-derive-simplest-ratio": "Ratios",
+    "simple-and-weighted-averages": "Averages",
+    "cost-price-selling-price-and-marked-price-calculations": "Profit & Loss",
+    "discount-profit-loss": "Profit & Loss",
+    "basic-formula-applications-of-simple-and-compound-interest": "Compound Interest",
+    "area-perimeter-volume-and-surface-area": "Geometry",
+    # Ensure all possible variants from frontend are mapped
     "simple-and-weighted-averages": "Averages",
     "cost-price-selling-price-and-marked-price-calculations": "Profit & Loss",
     "discount-profit-loss": "Profit & Loss",

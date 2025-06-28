@@ -135,7 +135,7 @@
             flex-shrink: 0;
         }
 
- 
+        .nav-item.events::before { content: '📅'; }
         .nav-item.home::before { content: '🏠'; }
         .nav-item.practice::before { content: '📚'; }
         .nav-item.research::before { content: '🔍'; }
@@ -548,26 +548,29 @@
             <div class="logo">CLAT.GPT.1</div>
             
             
+            <button class="nav-item events" onclick="navigateTo('events')">
+                <span class="nav-text">Upcoming Events</span>
+            </button>
             <button class="nav-item home" onclick="navigateTo('home')">
                 <span class="nav-text">Home</span>
-            </button>
-            <button class="nav-item practice" onclick="navigateTo('practice-online')">
-                <span class="nav-text">Practice Online</span>
-            </button>
-            <button class="nav-item research" onclick="navigateTo('gk-research')">
-                <span class="nav-text">GK Research Engine</span>
             </button>
             <button class="nav-item mentor" onclick="navigateTo('qt-mentor')">
                 <span class="nav-text">QT AI Mentor</span>
             </button>
-            <button class="nav-item chatbot" onclick="navigateTo('lexa-chatbot')">
-                <span class="nav-text">Lexa Chatbot</span>
+            <button class="nav-item research" onclick="navigateTo('gk-research')">
+                <span class="nav-text">GK Research Engine</span>
             </button>
-            <button class="nav-item tests" onclick="navigateTo('generate-tests')">
-                <span class="nav-text">Generate Tests</span>
+            <button class="nav-item chatbot" onclick="navigateTo('lexa-chatbot')">
+                <span class="nav-text">Lexa</span>
+            </button>
+            <button class="nav-item practice" onclick="navigateTo('practice-online')">
+                <span class="nav-text">Practice Online</span>
             </button>
             <button class="nav-item progress active" onclick="navigateTo('progress')">
                 <span class="nav-text">Progress Tracker</span>
+            </button>
+            <button class="nav-item tests" onclick="navigateTo('generate-tests')">
+                <span class="nav-text">Generate Sectionals</span>
             </button>
             
             <div class="sidebar-bottom">
@@ -725,6 +728,25 @@
                     Download Report
                 </button>
             </div>
+
+            <!-- Debug Section (for testing) -->
+            <div class="download-section" style="margin-top: 20px; background: #f8fafc; border: 1px solid #e2e8f0;">
+                <div class="section-header" style="justify-content: center; margin-bottom: 16px;">
+                    <span class="section-icon">🔧</span>
+                    <h3 class="section-title" style="color: #1e293b;">Debug Tools</h3>
+                </div>
+                <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                    
+                    <button class="download-button" style="background: #ef4444; color: white;" onclick="clearAllData()">
+                        <span>🗑️</span>
+                        Clear All Data
+                    </button>
+                    <button class="download-button" style="background: #10b981; color: white;" onclick="showDebugInfo()">
+                        <span>🔍</span>
+                        Show Debug Info
+                    </button>
+                </div>
+            </div>
         </main>
     </div>
 
@@ -751,6 +773,7 @@
         // Navigation function
         function navigateTo(page) {
             const pages = {
+                'events': 'events.html',
                 'home': '2.homepage.html',
                 'practice-online': 'practice-online.html',
                 'gk-research': 'gk-research.html',
@@ -1134,6 +1157,53 @@ continue using CLAT.GPT.1 platform.
                 drawPerformanceChart();
             }, 100);
         });
+
+        // Debug functions for testing
+        
+
+        function clearAllData() {
+            if (confirm('Are you sure you want to clear all progress data? This cannot be undone.')) {
+                clearProgress();
+                loadProgressData();
+                alert('🗑️ All progress data cleared.');
+            }
+        }
+
+        function showDebugInfo() {
+            const stats = getProgressStats();
+            const recent = getRecentActivity();
+            const username = getUsername();
+            const streak = getCurrentStreak();
+            
+            const debugInfo = `
+🔍 DEBUG INFORMATION
+
+📊 Progress Stats:
+- Total Tests: ${stats.totalTests}
+- Average Score: ${stats.averageScore}%
+- Study Streak: ${streak} days
+- Username: ${username}
+
+📈 Section Performance:
+${Object.entries(stats.sectionStats).map(([section, data]) => 
+    `- ${section}: ${data.percentage}% (${data.count} tests)`
+).join('\n')}
+
+🕒 Recent Activity (${recent.length} items):
+${recent.map(test => 
+    `- ${test.section}: ${test.score}/${test.total} (${test.percentage}%) - ${new Date(test.date).toLocaleDateString()}`
+).join('\n')}
+
+💾 LocalStorage:
+- clatProgress: ${localStorage.getItem('clatProgress') ? 'Present' : 'Not found'}
+- $username: ${localStorage.getItem('$username') || 'Not set'}
+- dailyStreak: ${localStorage.getItem('dailyStreak') || 'Not set'}
+- lastVisitDate: ${localStorage.getItem('lastVisitDate') || 'Not set'}
+            `;
+            
+            console.log(debugInfo);
+            alert(debugInfo);
+        }
 
         // Example: After a test is completed
         saveProgress('Legal Reasoning', 'General', 8, 10, {

@@ -156,11 +156,13 @@ Provide accurate, helpful, and encouraging responses. Keep answers concise but c
 # QT Mentor System Prompt
 QT_SYSTEM_PROMPT = """
 You are a Quantitative Aptitude generator trained on the CLAT (Common Law Admission Test) pattern. Your task is to generate one complete Quantitative Aptitude passage, followed by exactly 6 multiple-choice questions, and a fully explained answer key.
-donot say this is the generated or any bs like that
+DO NOT say "this is the generated" or any similar phrases.
+
 FORMAT REQUIREMENTS:
 - Start passage with: "1 In recent years..." (number inline)
 - Write 7-10 neutral tone sentences for the passage with realistic numerical data
 - NO title for the passage
+- DO NOT include any formatting symbols like #, *, or backslashes
 
 QUESTIONS FORMAT:
 - Label questions as: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6
@@ -169,44 +171,39 @@ QUESTIONS FORMAT:
 - Questions should test analytical and calculation skills
 
 ANSWER KEY FORMAT:
-- Provide detailed step-by-step working
-- Format: "1.1 – (B) [detailed explanation with calculations, the explanation should be as if youre explaining to a 5 year old, and it should be lengthy, simple to understand ]"
-- Include mathematical calculations where applicable
-- Be thorough in explanations, almost like explainaing to a child, and be lengthy, i need 100 word explanations.
+- Provide extremely detailed, step-by-step explanations
+- Format: "1.1 – (B) [VERY DETAILED EXPLANATION]"
+- Explain as if teaching a 5-year-old child - use simple language, break down every step
+- Each explanation should be AT LEAST 100-150 words
+- Include all mathematical calculations with clear steps
+- Use analogies and simple examples where helpful
+- Explain WHY each step is taken, not just HOW
+- Make it so simple that even someone with no math background can understand
 
-EXAMPLE FORMAT:
-1 In recent years, the XYZ company has seen significant growth...
+EXAMPLE EXPLANATION STYLE:
+"1.1 – (B) Let me explain this step by step, like I'm teaching a little kid! First, we need to understand what a percentage increase means. Think of it like this: if you had 10 candies yesterday and 13 candies today, how much more do you have? Well, you have 3 more candies, right? But we want to know what percentage that is. 
 
-1.1 What is the percentage increase in sales from 2020 to 2023?
-(A) 25%
-(B) 30%
-(C) 35%
-(D) 40%
+Here's the magic formula: (New Amount - Old Amount) ÷ Old Amount × 100 = Percentage Increase
 
-1.2 If the company's profit margin is 15%, what was the profit in 2023?
-(A) ₹150,000
-(B) ₹200,000
-(C) ₹250,000
-(D) ₹300,000
+Let's break this down:
+Step 1: New Amount = 1300 (this is what we have now)
+Step 2: Old Amount = 1000 (this is what we had before)
+Step 3: Difference = 1300 - 1000 = 300 (this is how much more we have)
+Step 4: Divide by old amount: 300 ÷ 1000 = 0.3
+Step 5: Multiply by 100: 0.3 × 100 = 30%
 
-[Continue for all 6 questions]
-
-Answer Key:
-1.1 – (B) To find the percentage increase: (New Value - Old Value)/Old Value × 100 = (1300-1000)/1000 × 100 = 30%
-
-1.2 – (C) Profit = Revenue × Profit Margin = ₹1,666,667 × 15% = ₹250,000
-
-[Continue for all answers]
+So the answer is 30%, which is option (B). Think of it like this: for every 100 candies you had before, you now have 30 extra candies!"
 
 IMPORTANT: Output must be directly readable text, NOT code. Generate content that matches CLAT examination standards with proper numerical data and realistic scenarios.
 """
 
-# Fixed Sectional Test Generator Prompts with consistent formatting
+# Fixed Sectional Test Generator Prompts with consistent formatting and answer key generation
 SECTIONAL_PROMPTS = {
     "Reading Comprehension": """
 You are a CLAT Reading Comprehension test generator.
-Generate a passage of 500–600 words in a formal academic tone.
+Generate a passage of EXACTLY 500-600 words in a formal academic tone.
 The passage should contain logical arguments, assumptions, and analytical content.
+DO NOT include any formatting symbols like #, *, or backslashes.
 
 Then add the heading: **MCQs**
 
@@ -215,7 +212,7 @@ Each question should have 4 options labeled (A), (B), (C), (D). Only one correct
 
 After each question, include:
 Answer: (correct option)
-Explanation: short explanation of why it is correct.
+Explanation: detailed explanation of why it is correct (minimum 50 words).
 
 Structure:
 1. Question text here?
@@ -224,14 +221,24 @@ Structure:
 (C) Option 3 text
 (D) Option 4 text
 Answer: (C)
-Explanation: Explanation text here.
+Explanation: Detailed explanation text here explaining the reasoning step by step.
 
-Follow this format exactly. Do not include any other headings.
+Follow this format exactly. Do not include any other headings or formatting symbols.
+
+IMPORTANT: After all 5 questions, add a clean answer key section:
+
+**ANSWER KEY**
+1. (C)
+2. (B)
+3. (A)
+4. (D)
+5. (C)
 """,
     
     "Grammar": """
 You are a CLAT English Grammar test generator.
-Generate a passage of 300-400 words with grammatical concepts and examples.
+Generate a passage of EXACTLY 300-400 words with grammatical concepts and examples.
+DO NOT include any formatting symbols like #, *, or backslashes.
 
 Then add the heading: **MCQs**
 
@@ -240,7 +247,7 @@ Each question should have 4 options labeled (A), (B), (C), (D). Only one correct
 
 After each question, include:
 Answer: (correct option)
-Explanation: short explanation of the grammar rule.
+Explanation: detailed explanation of the grammar rule (minimum 50 words).
 
 Structure:
 1. Question text here?
@@ -249,14 +256,24 @@ Structure:
 (C) Option 3 text
 (D) Option 4 text
 Answer: (B)
-Explanation: Explanation text here.
+Explanation: Detailed explanation text here explaining the grammar rule step by step.
 
 Follow this format exactly.
+
+IMPORTANT: After all 5 questions, add a clean answer key section:
+
+**ANSWER KEY**
+1. (B)
+2. (A)
+3. (C)
+4. (D)
+5. (B)
 """,
     
     "Vocabulary": """
 You are a CLAT Vocabulary test generator.
-Generate a passage of 300-400 words with advanced vocabulary words in context.
+Generate a passage of EXACTLY 300-400 words with advanced vocabulary words in context.
+DO NOT include any formatting symbols like #, *, or backslashes.
 
 Then add the heading: **MCQs**
 
@@ -265,7 +282,7 @@ Each question should have 4 options labeled (A), (B), (C), (D). Only one correct
 
 After each question, include:
 Answer: (correct option)
-Explanation: short explanation of the word meaning.
+Explanation: detailed explanation of the word meaning (minimum 50 words).
 
 Structure:
 1. Question text here?
@@ -274,14 +291,24 @@ Structure:
 (C) Option 3 text
 (D) Option 4 text
 Answer: (A)
-Explanation: Explanation text here.
+Explanation: Detailed explanation text here explaining the word meaning step by step.
 
 Follow this format exactly.
+
+IMPORTANT: After all 5 questions, add a clean answer key section:
+
+**ANSWER KEY**
+1. (A)
+2. (C)
+3. (B)
+4. (D)
+5. (A)
 """,
     
     "Para Jumbles": """
 You are a CLAT Para Jumbles test generator.
-Generate a passage explaining para jumble concepts and provide examples.
+Generate a passage of EXACTLY 300-400 words explaining para jumble concepts and provide examples.
+DO NOT include any formatting symbols like #, *, or backslashes.
 
 Then add the heading: **MCQs**
 
@@ -290,7 +317,7 @@ Each question should have 4 options labeled (A), (B), (C), (D). Only one correct
 
 After each question, include:
 Answer: (correct option)
-Explanation: short explanation of the correct sequence.
+Explanation: detailed explanation of the correct sequence (minimum 50 words).
 
 Structure:
 1. Question text here?
@@ -299,14 +326,24 @@ Structure:
 (C) Option 3 text
 (D) Option 4 text
 Answer: (D)
-Explanation: Explanation text here.
+Explanation: Detailed explanation text here explaining the correct sequence step by step.
 
 Follow this format exactly.
+
+IMPORTANT: After all 5 questions, add a clean answer key section:
+
+**ANSWER KEY**
+1. (D)
+2. (A)
+3. (C)
+4. (B)
+5. (D)
 """,
     
     "Critical Reasoning": """
 You are a CLAT Critical Reasoning test generator.
-Generate a passage of 400-500 words with logical arguments and reasoning scenarios.
+Generate a passage of EXACTLY 400-500 words with logical arguments and reasoning scenarios.
+DO NOT include any formatting symbols like #, *, or backslashes.
 
 Then add the heading: **MCQs**
 
@@ -315,7 +352,7 @@ Each question should have 4 options labeled (A), (B), (C), (D). Only one correct
 
 After each question, include:
 Answer: (correct option)
-Explanation: short explanation of the reasoning.
+Explanation: detailed explanation of the reasoning (minimum 50 words).
 
 Structure:
 1. Question text here?
@@ -324,14 +361,24 @@ Structure:
 (C) Option 3 text
 (D) Option 4 text
 Answer: (C)
-Explanation: Explanation text here.
+Explanation: Detailed explanation text here explaining the reasoning step by step.
 
 Follow this format exactly.
+
+IMPORTANT: After all 5 questions, add a clean answer key section:
+
+**ANSWER KEY**
+1. (C)
+2. (A)
+3. (B)
+4. (D)
+5. (C)
 """,
     
     "Logical Reasoning": """
 You are a CLAT Logical Reasoning test generator.
-Generate a passage of 400-500 words with logical scenarios and reasoning problems.
+Generate a passage of EXACTLY 400-500 words with logical scenarios and reasoning problems.
+DO NOT include any formatting symbols like #, *, or backslashes.
 
 Then add the heading: **MCQs**
 
@@ -340,7 +387,7 @@ Each question should have 4 options labeled (A), (B), (C), (D). Only one correct
 
 After each question, include:
 Answer: (correct option)
-Explanation: short explanation of the logic.
+Explanation: detailed explanation of the logic (minimum 50 words).
 
 Structure:
 1. Question text here?
@@ -349,89 +396,24 @@ Structure:
 (C) Option 3 text
 (D) Option 4 text
 Answer: (A)
-Explanation: Explanation text here.
+Explanation: Detailed explanation text here explaining the logic step by step.
 
 Follow this format exactly.
-""",
-    
-    "Analytical Reasoning": """
-You are a CLAT Analytical Reasoning test generator.
-Generate a passage of 400-500 words with analytical scenarios and data.
 
-Then add the heading: **MCQs**
+IMPORTANT: After all 5 questions, add a clean answer key section:
 
-Create 5 multiple-choice questions (numbered 1 to 5) testing analytical reasoning.
-Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
-
-After each question, include:
-Answer: (correct option)
-Explanation: short explanation of the analysis.
-
-Structure:
-1. Question text here?
-(A) Option 1 text
-(B) Option 2 text
-(C) Option 3 text
-(D) Option 4 text
-Answer: (B)
-Explanation: Explanation text here.
-
-Follow this format exactly.
-""",
-    
-    "Puzzles": """
-You are a CLAT Puzzles test generator.
-Generate a passage of 300-400 words explaining puzzle-solving techniques.
-
-Then add the heading: **MCQs**
-
-Create 5 multiple-choice questions (numbered 1 to 5) with puzzle problems.
-Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
-
-After each question, include:
-Answer: (correct option)
-Explanation: short explanation of the solution.
-
-Structure:
-1. Question text here?
-(A) Option 1 text
-(B) Option 2 text
-(C) Option 3 text
-(D) Option 4 text
-Answer: (D)
-Explanation: Explanation text here.
-
-Follow this format exactly.
-""",
-    
-    "Syllogisms": """
-You are a CLAT Syllogisms test generator.
-Generate a passage of 300-400 words explaining syllogistic reasoning.
-
-Then add the heading: **MCQs**
-
-Create 5 multiple-choice questions (numbered 1 to 5) with syllogism problems.
-Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
-
-After each question, include:
-Answer: (correct option)
-Explanation: short explanation of the syllogistic reasoning.
-
-Structure:
-1. Question text here?
-(A) Option 1 text
-(B) Option 2 text
-(C) Option 3 text
-(D) Option 4 text
-Answer: (C)
-Explanation: Explanation text here.
-
-Follow this format exactly.
+**ANSWER KEY**
+1. (A)
+2. (B)
+3. (C)
+4. (D)
+5. (A)
 """,
     
     "Legal Reasoning": """
 You are a CLAT Legal Reasoning test generator.
-Generate a legal scenario passage of 400-500 words with legal principles and cases.
+Generate a passage of EXACTLY 400-500 words with legal scenarios and principles.
+DO NOT include any formatting symbols like #, *, or backslashes.
 
 Then add the heading: **MCQs**
 
@@ -440,32 +422,7 @@ Each question should have 4 options labeled (A), (B), (C), (D). Only one correct
 
 After each question, include:
 Answer: (correct option)
-Explanation: short explanation of the legal principle.
-
-Structure:
-1. Question text here?
-(A) Option 1 text
-(B) Option 2 text
-(C) Option 3 text
-(D) Option 4 text
-Answer: (A)
-Explanation: Explanation text here.
-
-Follow this format exactly.
-""",
-    
-    "Constitutional Law": """
-You are a CLAT Constitutional Law test generator.
-Generate a passage of 400-500 words about constitutional principles and articles.
-
-Then add the heading: **MCQs**
-
-Create 5 multiple-choice questions (numbered 1 to 5) testing constitutional law knowledge.
-Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
-
-After each question, include:
-Answer: (correct option)
-Explanation: short explanation of the constitutional provision.
+Explanation: detailed explanation of the legal principle (minimum 50 words).
 
 Structure:
 1. Question text here?
@@ -474,23 +431,33 @@ Structure:
 (C) Option 3 text
 (D) Option 4 text
 Answer: (B)
-Explanation: Explanation text here.
+Explanation: Detailed explanation text here explaining the legal principle step by step.
 
 Follow this format exactly.
+
+IMPORTANT: After all 5 questions, add a clean answer key section:
+
+**ANSWER KEY**
+1. (B)
+2. (A)
+3. (C)
+4. (D)
+5. (B)
 """,
     
-    "Contract Law": """
-You are a CLAT Contract Law test generator.
-Generate a passage of 400-500 words about contract law principles and cases.
+    "Quantitative Analysis": """
+You are a CLAT Quantitative Analysis test generator.
+Generate a passage of EXACTLY 300-400 words with mathematical concepts and problems.
+DO NOT include any formatting symbols like #, *, or backslashes.
 
 Then add the heading: **MCQs**
 
-Create 5 multiple-choice questions (numbered 1 to 5) testing contract law knowledge.
+Create 5 multiple-choice questions (numbered 1 to 5) testing quantitative skills.
 Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
 
 After each question, include:
 Answer: (correct option)
-Explanation: short explanation of the contract law principle.
+Explanation: detailed explanation of the calculation (minimum 50 words).
 
 Structure:
 1. Question text here?
@@ -499,264 +466,24 @@ Structure:
 (C) Option 3 text
 (D) Option 4 text
 Answer: (C)
-Explanation: Explanation text here.
+Explanation: Detailed explanation text here explaining the calculation step by step.
 
 Follow this format exactly.
-""",
-    
-    "Tort Law": """
-You are a CLAT Tort Law test generator.
-Generate a passage of 400-500 words about tort law principles and cases.
 
-Then add the heading: **MCQs**
+IMPORTANT: After all 5 questions, add a clean answer key section:
 
-Create 5 multiple-choice questions (numbered 1 to 5) testing tort law knowledge.
-Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
-
-After each question, include:
-Answer: (correct option)
-Explanation: short explanation of the tort law principle.
-
-Structure:
-1. Question text here?
-(A) Option 1 text
-(B) Option 2 text
-(C) Option 3 text
-(D) Option 4 text
-Answer: (D)
-Explanation: Explanation text here.
-
-Follow this format exactly.
-""",
-    
-    "Criminal Law": """
-You are a CLAT Criminal Law test generator.
-Generate a passage of 400-500 words about criminal law principles and cases.
-
-Then add the heading: **MCQs**
-
-Create 5 multiple-choice questions (numbered 1 to 5) testing criminal law knowledge.
-Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
-
-After each question, include:
-Answer: (correct option)
-Explanation: short explanation of the criminal law principle.
-
-Structure:
-1. Question text here?
-(A) Option 1 text
-(B) Option 2 text
-(C) Option 3 text
-(D) Option 4 text
-Answer: (A)
-Explanation: Explanation text here.
-
-Follow this format exactly.
-""",
-    
-    "Legal Principles": """
-You are a CLAT Legal Principles test generator.
-Generate a passage of 400-500 words about fundamental legal principles.
-
-Then add the heading: **MCQs**
-
-Create 5 multiple-choice questions (numbered 1 to 5) testing legal principles knowledge.
-Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
-
-After each question, include:
-Answer: (correct option)
-Explanation: short explanation of the legal principle.
-
-Structure:
-1. Question text here?
-(A) Option 1 text
-(B) Option 2 text
-(C) Option 3 text
-(D) Option 4 text
-Answer: (B)
-Explanation: Explanation text here.
-
-Follow this format exactly.
-""",
-    
-    "Legal Maxims": """
-You are a CLAT Legal Maxims test generator.
-Generate a passage of 300-400 words about important legal maxims and their applications.
-
-Then add the heading: **MCQs**
-
-Create 5 multiple-choice questions (numbered 1 to 5) testing legal maxims knowledge.
-Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
-
-After each question, include:
-Answer: (correct option)
-Explanation: short explanation of the legal maxim.
-
-Structure:
-1. Question text here?
-(A) Option 1 text
-(B) Option 2 text
-(C) Option 3 text
-(D) Option 4 text
-Answer: (C)
-Explanation: Explanation text here.
-
-Follow this format exactly.
-""",
-    
-    "Arithmetic": """
-You are a CLAT Arithmetic test generator.
-Generate a passage of 300-400 words with arithmetic problems and scenarios.
-
-Then add the heading: **MCQs**
-
-Create 5 multiple-choice questions (numbered 1 to 5) testing arithmetic skills.
-Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
-
-After each question, include:
-Answer: (correct option)
-Explanation: short explanation of the calculation.
-
-Structure:
-1. Question text here?
-(A) Option 1 text
-(B) Option 2 text
-(C) Option 3 text
-(D) Option 4 text
-Answer: (D)
-Explanation: Explanation text here.
-
-Follow this format exactly.
-""",
-    
-    "Algebra": """
-You are a CLAT Algebra test generator.
-Generate a passage of 300-400 words with algebraic problems and scenarios.
-
-Then add the heading: **MCQs**
-
-Create 5 multiple-choice questions (numbered 1 to 5) testing algebra skills.
-Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
-
-After each question, include:
-Answer: (correct option)
-Explanation: short explanation of the algebraic solution.
-
-Structure:
-1. Question text here?
-(A) Option 1 text
-(B) Option 2 text
-(C) Option 3 text
-(D) Option 4 text
-Answer: (A)
-Explanation: Explanation text here.
-
-Follow this format exactly.
-""",
-    
-    "Geometry": """
-You are a CLAT Geometry test generator.
-Generate a passage of 300-400 words with geometric problems and scenarios.
-
-Then add the heading: **MCQs**
-
-Create 5 multiple-choice questions (numbered 1 to 5) testing geometry skills.
-Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
-
-After each question, include:
-Answer: (correct option)
-Explanation: short explanation of the geometric solution.
-
-Structure:
-1. Question text here?
-(A) Option 1 text
-(B) Option 2 text
-(C) Option 3 text
-(D) Option 4 text
-Answer: (B)
-Explanation: Explanation text here.
-
-Follow this format exactly.
-""",
-    
-    "Data Interpretation": """
-You are a CLAT Data Interpretation test generator.
-Generate a passage of 400-500 words with data tables, charts, and interpretation scenarios.
-
-Then add the heading: **MCQs**
-
-Create 5 multiple-choice questions (numbered 1 to 5) testing data interpretation skills.
-Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
-
-After each question, include:
-Answer: (correct option)
-Explanation: short explanation of the data interpretation.
-
-Structure:
-1. Question text here?
-(A) Option 1 text
-(B) Option 2 text
-(C) Option 3 text
-(D) Option 4 text
-Answer: (C)
-Explanation: Explanation text here.
-
-Follow this format exactly.
-""",
-    
-    "Percentages": """
-You are a CLAT Percentages test generator.
-Generate a passage of 300-400 words with percentage problems and scenarios.
-
-Then add the heading: **MCQs**
-
-Create 5 multiple-choice questions (numbered 1 to 5) testing percentage calculations.
-Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
-
-After each question, include:
-Answer: (correct option)
-Explanation: short explanation of the percentage calculation.
-
-Structure:
-1. Question text here?
-(A) Option 1 text
-(B) Option 2 text
-(C) Option 3 text
-(D) Option 4 text
-Answer: (D)
-Explanation: Explanation text here.
-
-Follow this format exactly.
-""",
-    
-    "Profit & Loss": """
-You are a CLAT Profit & Loss test generator.
-Generate a passage of 300-400 words with profit and loss problems and business scenarios.
-
-Then add the heading: **MCQs**
-
-Create 5 multiple-choice questions (numbered 1 to 5) testing profit and loss calculations.
-Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
-
-After each question, include:
-Answer: (correct option)
-Explanation: short explanation of the profit/loss calculation.
-
-Structure:
-1. Question text here?
-(A) Option 1 text
-(B) Option 2 text
-(C) Option 3 text
-(D) Option 4 text
-Answer: (A)
-Explanation: Explanation text here.
-
-Follow this format exactly.
+**ANSWER KEY**
+1. (C)
+2. (A)
+3. (B)
+4. (D)
+5. (C)
 """,
     
     "General Knowledge": """
 You are a CLAT General Knowledge test generator.
-Generate a passage of 500-600 words about current affairs and general knowledge topics.
+Generate a passage of EXACTLY 400-500 words with current affairs and static GK topics.
+DO NOT include any formatting symbols like #, *, or backslashes.
 
 Then add the heading: **MCQs**
 
@@ -765,82 +492,7 @@ Each question should have 4 options labeled (A), (B), (C), (D). Only one correct
 
 After each question, include:
 Answer: (correct option)
-Explanation: short explanation of the fact.
-
-Structure:
-1. Question text here?
-(A) Option 1 text
-(B) Option 2 text
-(C) Option 3 text
-(D) Option 4 text
-Answer: (B)
-Explanation: Explanation text here.
-
-Follow this format exactly.
-""",
-    
-    "Current Affairs": """
-You are a CLAT Current Affairs test generator.
-Generate a passage of 500-600 words about recent current affairs and developments.
-
-Then add the heading: **MCQs**
-
-Create 5 multiple-choice questions (numbered 1 to 5) testing current affairs knowledge.
-Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
-
-After each question, include:
-Answer: (correct option)
-Explanation: short explanation of the current affair.
-
-Structure:
-1. Question text here?
-(A) Option 1 text
-(B) Option 2 text
-(C) Option 3 text
-(D) Option 4 text
-Answer: (C)
-Explanation: Explanation text here.
-
-Follow this format exactly.
-""",
-    
-    "History": """
-You are a CLAT History test generator.
-Generate a passage of 400-500 words about historical events and developments.
-
-Then add the heading: **MCQs**
-
-Create 5 multiple-choice questions (numbered 1 to 5) testing history knowledge.
-Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
-
-After each question, include:
-Answer: (correct option)
-Explanation: short explanation of the historical fact.
-
-Structure:
-1. Question text here?
-(A) Option 1 text
-(B) Option 2 text
-(C) Option 3 text
-(D) Option 4 text
-Answer: (D)
-Explanation: Explanation text here.
-
-Follow this format exactly.
-""",
-    
-    "Geography": """
-You are a CLAT Geography test generator.
-Generate a passage of 400-500 words about geographical features and concepts.
-
-Then add the heading: **MCQs**
-
-Create 5 multiple-choice questions (numbered 1 to 5) testing geography knowledge.
-Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
-
-After each question, include:
-Answer: (correct option)
-Explanation: short explanation of the geographical concept.
+Explanation: detailed explanation of the fact or concept (minimum 50 words).
 
 Structure:
 1. Question text here?
@@ -849,23 +501,34 @@ Structure:
 (C) Option 3 text
 (D) Option 4 text
 Answer: (A)
-Explanation: Explanation text here.
+Explanation: Detailed explanation text here explaining the fact or concept step by step.
 
 Follow this format exactly.
+
+IMPORTANT: After all 5 questions, add a clean answer key section:
+
+**ANSWER KEY**
+1. (A)
+2. (B)
+3. (C)
+4. (D)
+5. (A)
 """,
     
-    "Politics": """
-You are a CLAT Politics test generator.
-Generate a passage of 400-500 words about political systems and developments.
+    # Add specific topic prompts for quantitative
+    "Percentages": """
+You are a CLAT Percentages test generator.
+Generate a passage of EXACTLY 300-400 words with percentage-based problems and concepts.
+DO NOT include any formatting symbols like #, *, or backslashes.
 
 Then add the heading: **MCQs**
 
-Create 5 multiple-choice questions (numbered 1 to 5) testing political knowledge.
+Create 5 multiple-choice questions (numbered 1 to 5) testing percentage calculations.
 Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
 
 After each question, include:
 Answer: (correct option)
-Explanation: short explanation of the political concept.
+Explanation: detailed explanation of the percentage calculation (minimum 50 words).
 
 Structure:
 1. Question text here?
@@ -874,23 +537,33 @@ Structure:
 (C) Option 3 text
 (D) Option 4 text
 Answer: (B)
-Explanation: Explanation text here.
+Explanation: Detailed explanation text here explaining the percentage calculation step by step.
 
 Follow this format exactly.
+
+IMPORTANT: After all 5 questions, add a clean answer key section:
+
+**ANSWER KEY**
+1. (B)
+2. (A)
+3. (C)
+4. (D)
+5. (B)
 """,
     
-    "Economics": """
-You are a CLAT Economics test generator.
-Generate a passage of 400-500 words about economic concepts and developments.
+    "Arithmetic": """
+You are a CLAT Arithmetic test generator.
+Generate a passage of EXACTLY 300-400 words with arithmetic problems and concepts.
+DO NOT include any formatting symbols like #, *, or backslashes.
 
 Then add the heading: **MCQs**
 
-Create 5 multiple-choice questions (numbered 1 to 5) testing economics knowledge.
+Create 5 multiple-choice questions (numbered 1 to 5) testing arithmetic skills.
 Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
 
 After each question, include:
 Answer: (correct option)
-Explanation: short explanation of the economic concept.
+Explanation: detailed explanation of the arithmetic calculation (minimum 50 words).
 
 Structure:
 1. Question text here?
@@ -899,23 +572,33 @@ Structure:
 (C) Option 3 text
 (D) Option 4 text
 Answer: (C)
-Explanation: Explanation text here.
+Explanation: Detailed explanation text here explaining the arithmetic calculation step by step.
 
 Follow this format exactly.
+
+IMPORTANT: After all 5 questions, add a clean answer key section:
+
+**ANSWER KEY**
+1. (C)
+2. (A)
+3. (B)
+4. (D)
+5. (C)
 """,
     
-    "Science & Technology": """
-You are a CLAT Science & Technology test generator.
-Generate a passage of 400-500 words about scientific and technological developments.
+    "Profit & Loss": """
+You are a CLAT Profit & Loss test generator.
+Generate a passage of EXACTLY 300-400 words with profit and loss problems and concepts.
+DO NOT include any formatting symbols like #, *, or backslashes.
 
 Then add the heading: **MCQs**
 
-Create 5 multiple-choice questions (numbered 1 to 5) testing science and technology knowledge.
+Create 5 multiple-choice questions (numbered 1 to 5) testing profit and loss calculations.
 Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
 
 After each question, include:
 Answer: (correct option)
-Explanation: short explanation of the scientific concept.
+Explanation: detailed explanation of the profit/loss calculation (minimum 50 words).
 
 Structure:
 1. Question text here?
@@ -923,49 +606,34 @@ Structure:
 (B) Option 2 text
 (C) Option 3 text
 (D) Option 4 text
-Answer: (D)
-Explanation: Explanation text here.
+Answer: (A)
+Explanation: Detailed explanation text here explaining the profit/loss calculation step by step.
 
 Follow this format exactly.
+
+IMPORTANT: After all 5 questions, add a clean answer key section:
+
+**ANSWER KEY**
+1. (A)
+2. (B)
+3. (C)
+4. (D)
+5. (A)
 """,
     
-    "Sports": """
-You are a CLAT Sports test generator.
-Generate a passage of 300-400 words about sports events and achievements.
+    "Geometry": """
+You are a CLAT Geometry test generator.
+Generate a passage of EXACTLY 300-400 words with geometry problems and concepts.
+DO NOT include any formatting symbols like #, *, or backslashes.
 
 Then add the heading: **MCQs**
 
-Create 5 multiple-choice questions (numbered 1 to 5) testing sports knowledge.
+Create 5 multiple-choice questions (numbered 1 to 5) testing geometry skills.
 Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
 
 After each question, include:
 Answer: (correct option)
-Explanation: short explanation of the sports fact.
-
-Structure:
-1. Question text here?
-(A) Option 1 text
-(B) Option 2 text
-(C) Option 3 text
-(D) Option 4 text
-Answer: (D)
-Explanation: Explanation text here.
-
-Follow this format exactly.
-""",
-    
-    "Ratios": """
-You are a CLAT Ratios test generator.
-Generate a passage of 300-400 words with ratio and proportion problems and scenarios.
-
-Then add the heading: **MCQs**
-
-Create 5 multiple-choice questions (numbered 1 to 5) testing ratio and proportion calculations.
-Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
-
-After each question, include:
-Answer: (correct option)
-Explanation: short explanation of the ratio calculation.
+Explanation: detailed explanation of the geometry calculation (minimum 50 words).
 
 Structure:
 1. Question text here?
@@ -974,59 +642,18 @@ Structure:
 (C) Option 3 text
 (D) Option 4 text
 Answer: (B)
-Explanation: Explanation text here.
+Explanation: Detailed explanation text here explaining the geometry calculation step by step.
 
 Follow this format exactly.
-""",
-    
-    "Averages": """
-You are a CLAT Averages test generator.
-Generate a passage of 300-400 words with average problems and scenarios.
 
-Then add the heading: **MCQs**
+IMPORTANT: After all 5 questions, add a clean answer key section:
 
-Create 5 multiple-choice questions (numbered 1 to 5) testing average calculations.
-Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
-
-After each question, include:
-Answer: (correct option)
-Explanation: short explanation of the average calculation.
-
-Structure:
-1. Question text here?
-(A) Option 1 text
-(B) Option 2 text
-(C) Option 3 text
-(D) Option 4 text
-Answer: (C)
-Explanation: Explanation text here.
-
-Follow this format exactly.
-""",
-    
-    "Compound Interest": """
-You are a CLAT Compound Interest test generator.
-Generate a passage of 300-400 words with compound interest problems and banking scenarios.
-
-Then add the heading: **MCQs**
-
-Create 5 multiple-choice questions (numbered 1 to 5) testing compound interest calculations.
-Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
-
-After each question, include:
-Answer: (correct option)
-Explanation: short explanation of the compound interest calculation.
-
-Structure:
-1. Question text here?
-(A) Option 1 text
-(B) Option 2 text
-(C) Option 3 text
-(D) Option 4 text
-Answer: (D)
-Explanation: Explanation text here.
-
-Follow this format exactly.
+**ANSWER KEY**
+1. (B)
+2. (A)
+3. (C)
+4. (D)
+5. (B)
 """
 }
 
@@ -1088,23 +715,67 @@ SUBCATEGORY_MAPPINGS = {
     "percentage-comparison": "Percentages",
     "what-percentage-more-less": "Percentages",
     "percentage-change": "Percentages",
-    "dividing-quantities-in-given-ratios": "Ratios",
-    "missing-values-based-on-ratios": "Ratios",
-    "simplification-of-numbers-to-derive-simplest-ratio": "Ratios",
-    "simple-and-weighted-averages": "Averages",
+    "dividing-quantities-in-given-ratios": "Arithmetic",
+    "missing-values-based-on-ratios": "Arithmetic",
+    "simplification-of-numbers-to-derive-simplest-ratio": "Arithmetic",
+    "simple-and-weighted-averages": "Arithmetic",
     "cost-price-selling-price-and-marked-price-calculations": "Profit & Loss",
     "discount-profit-loss": "Profit & Loss",
-    "basic-formula-applications-of-simple-and-compound-interest": "Compound Interest",
+    "basic-formula-applications-of-simple-and-compound-interest": "Arithmetic",
     "area-perimeter-volume-and-surface-area": "Geometry",
     # Ensure all possible variants from frontend are mapped
-    "simple-and-weighted-averages": "Averages",
+    "simple-and-weighted-averages": "Arithmetic",
     "cost-price-selling-price-and-marked-price-calculations": "Profit & Loss",
     "discount-profit-loss": "Profit & Loss",
-    "basic-formula-applications-of-simple-and-compound-interest": "Compound Interest",
+    "basic-formula-applications-of-simple-and-compound-interest": "Arithmetic",
     "area-perimeter-volume-and-surface-area": "Geometry",
+    
     # Add direct mappings for single-subcategory cases
     "general-legal": "Legal Reasoning",
     "general-gk": "General Knowledge",
+    
+    # Add missing mappings for quantitative topics
+    "percentages": "Percentages",
+    "ratios": "Arithmetic",
+    "averages": "Arithmetic",
+    "profit-loss": "Profit & Loss",
+    "compound-interest": "Arithmetic",
+    "geometry": "Geometry",
+    
+    # Add mappings for GK topics
+    "awards-honours": "General Knowledge",
+    "science-tech": "General Knowledge",
+    
+    # Add missing mappings for practice-online
+    "main-idea": "Reading Comprehension",
+    "author-s-tone": "Reading Comprehension",
+    "vocab": "Vocabulary",
+    "literary-and-poetic-devices": "Reading Comprehension",
+    "author-based": "Reading Comprehension",
+    "source-based": "Reading Comprehension",
+    "title-theme": "Reading Comprehension",
+    "direct-inference-questions": "Reading Comprehension",
+    "assumptions-inferences": "Critical Reasoning",
+    "idioms-mics": "Vocabulary",
+    "assumptions": "Critical Reasoning",
+    "inferences": "Critical Reasoning",
+    "argument-based": "Critical Reasoning",
+    "agree-disagree": "Critical Reasoning",
+    "strengthen-weaken": "Critical Reasoning",
+    "direct-inference": "Logical Reasoning",
+    "analogy-and-sequences": "Logical Reasoning",
+    "paradox-contradiction-resolution": "Logical Reasoning",
+    "percentage-comparison": "Percentages",
+    "what-percentage-more-less": "Percentages",
+    "percentage-change": "Percentages",
+    "dividing-quantities-in-given-ratios": "Arithmetic",
+    "missing-values-based-on-ratios": "Arithmetic",
+    "simplification-of-numbers-to-derive-simplest-ratio": "Arithmetic",
+    "simple-and-weighted-averages": "Arithmetic",
+    "cost-price-selling-price-and-marked-price-calculations": "Profit & Loss",
+    "discount-profit-loss": "Profit & Loss",
+    "basic-formula-applications-of-simple-and-compound-interest": "Arithmetic",
+    "area-perimeter-volume-and-surface-area": "Geometry",
 }
 
 # =============================================================================
@@ -1168,6 +839,31 @@ def validate_qt_content(content):
     except:
         return False
 
+def clean_formatting_artifacts(text):
+    """Clean up formatting artifacts from AI-generated content"""
+    if not text:
+        return text
+    
+    # Remove common formatting artifacts
+    cleaned = text
+    
+    # Remove backslashes that are not part of valid escape sequences
+    cleaned = re.sub(r'\\(?!n|t|r|\\|"|\')', '', cleaned)
+    
+    # Remove hashtags and markdown symbols that shouldn't be visible
+    cleaned = re.sub(r'#+', '', cleaned)  # Remove hashtags
+    cleaned = re.sub(r'\*\*(?!MCQs|ANSWER KEY)', '', cleaned)  # Remove ** except for MCQs and ANSWER KEY
+    cleaned = re.sub(r'\*(?!\()', '', cleaned)  # Remove * except for option markers like (A)
+    
+    # Remove extra whitespace and normalize line breaks
+    cleaned = re.sub(r'\n\s*\n\s*\n', '\n\n', cleaned)  # Remove excessive line breaks
+    cleaned = re.sub(r' +', ' ', cleaned)  # Remove multiple spaces
+    
+    # Clean up the text
+    cleaned = cleaned.strip()
+    
+    return cleaned
+
 def generate_study_material(topic, count):
     """Generate study material for sectional tests"""
     all_sections = []
@@ -1176,59 +872,162 @@ def generate_study_material(topic, count):
         mapped_topic = SUBCATEGORY_MAPPINGS.get(topic or "", topic or "")
         prompt = SECTIONAL_PROMPTS.get(mapped_topic, f"Generate a CLAT-level {mapped_topic} test with passage, questions, and answer key.")
 
+        # Add more explicit instructions to ensure format compliance
+        enhanced_prompt = f"""
+{prompt}
+
+CRITICAL: You MUST follow this exact format:
+1. Write a passage first
+2. Then add the line: **MCQs**
+3. Then write 5 numbered questions (1. 2. 3. 4. 5.)
+4. Each question must have options (A) (B) (C) (D)
+5. Each question must have "Answer: (X)" and "Explanation: ..."
+6. Finally add: **ANSWER KEY** followed by numbered answers
+
+DO NOT deviate from this format. The **MCQs** marker is essential for parsing.
+"""
+
         messages = [
-            {"role": "system", "content": "You are an expert CLAT study material generator."},
-            {"role": "user", "content": prompt}
+            {"role": "system", "content": "You are an expert CLAT study material generator. You MUST follow the exact format specified in the prompt."},
+            {"role": "user", "content": enhanced_prompt}
         ]
         result = call_groq_api(messages)
         if result:
-            all_sections.append(f"Topic: {topic}\n\n{result.strip()}")
+            # Clean up formatting artifacts
+            cleaned_result = clean_formatting_artifacts(result)
+            print(f"[DEBUG] Raw AI response length: {len(result)}")
+            print(f"[DEBUG] Cleaned response length: {len(cleaned_result)}")
+            print(f"[DEBUG] Response preview: {cleaned_result[:300]}...")
+            
+            # Check if response contains MCQs section
+            if "**MCQs**" in cleaned_result:
+                print(f"[DEBUG] ✅ MCQs section found")
+            else:
+                print(f"[DEBUG] ❌ MCQs section NOT found")
+                print(f"[DEBUG] Full response: {cleaned_result}")
+            
+            all_sections.append(f"Topic: {topic}\n\n{cleaned_result.strip()}")
         else:
             print(f"❌ Failed to generate section {i+1}")
     return all_sections
 
 def parse_mcqs(raw_text):
-    """Parse MCQs from raw text - FIXED VERSION"""
+    """Parse MCQs from raw text - IMPROVED ROBUST VERSION"""
     try:
+        # First try to find the **MCQs** section
         parts = re.split(r'\*\*MCQs\*\*', raw_text)
         if len(parts) < 2:
-            print("[DEBUG] No **MCQs** section found")
+            print("[DEBUG] No **MCQs** section found, trying alternative parsing")
+            # If no **MCQs** section, try to find questions directly
+            mcqs_text = raw_text
+            # Try to extract passage from the beginning before any numbered questions
+            passage_match = re.search(r'^(.+?)(?=\n\d+\.|\nQuestion|\n[A-D]\.|\n\([A-D]\)|\Z)', raw_text, re.DOTALL)
+            passage = passage_match.group(1).strip() if passage_match else "Passage not found"
+        else:
+            passage = parts[0].strip()
+            mcqs_text = parts[1].strip()
+
+        # Remove the answer key section from MCQs text to avoid parsing it as questions
+        mcqs_text = re.sub(r'\*\*ANSWER KEY\*\*.*', '', mcqs_text, flags=re.DOTALL)
+        mcqs_text = mcqs_text.strip()
+
+        # Try multiple patterns to find questions
+        question_patterns = [
+            r'(\d+\..*?)(?=\n\d+\.|\Z)',  # Standard numbered questions
+            r'(\d+\)\s*.*?)(?=\n\d+\)|\Z)',  # Questions with parentheses
+            r'(Question\s*\d+.*?)(?=Question\s*\d+|\Z)',  # "Question X" format
+        ]
+        
+        question_blocks = []
+        for pattern in question_patterns:
+            question_blocks = re.findall(pattern, mcqs_text, re.DOTALL)
+            if question_blocks:
+                print(f"[DEBUG] Found {len(question_blocks)} question blocks using pattern: {pattern}")
+                break
+        
+        if not question_blocks:
+            print("[DEBUG] No question blocks found with any pattern")
+            print(f"[DEBUG] Raw text preview: {raw_text[:500]}...")
             return []
 
-        passage = parts[0].strip()
-        mcqs_text = parts[1].strip()
-
-        # Updated regex to match the actual format from prompts
-        question_blocks = re.findall(r'(\d+\..*?)(?=\n\d+\.|\Z)', mcqs_text, re.DOTALL)
         structured_questions = []
-
-        print(f"[DEBUG] Found {len(question_blocks)} question blocks")
 
         for idx, block in enumerate(question_blocks, start=1):
             try:
+                # Skip blocks that are just answer key entries (like "1. (A)")
+                if re.match(r'^\d+\.\s*\([A-D]\)\s*$', block.strip()) or re.match(r'^\d+\)\s*\([A-D]\)\s*$', block.strip()):
+                    print(f"[DEBUG] Skipping answer key block: {block.strip()}")
+                    continue
+                
                 # Look for question text before first option (A)
-                q_match = re.search(r'\d+\.\s*(.+?)\n\(A\)', block, re.DOTALL)
-                question = q_match.group(1).strip() if q_match else "Unknown question"
+                q_patterns = [
+                    r'\d+\.\s*(.+?)\n\(A\)',  # Standard format with (A)
+                    r'\d+\)\s*(.+?)\n\(A\)',  # Parentheses format with (A)
+                    r'Question\s*\d+.*?\n(.+?)\n\(A\)',  # Question format with (A)
+                    r'\d+\.\s*(.+?)\nA\.',  # Standard format with A.
+                    r'\d+\)\s*(.+?)\nA\.',  # Parentheses format with A.
+                    r'Question\s*\d+.*?\n(.+?)\nA\.',  # Question format with A.
+                ]
+                
+                question = "Unknown question"
+                for q_pattern in q_patterns:
+                    q_match = re.search(q_pattern, block, re.DOTALL)
+                    if q_match:
+                        question = q_match.group(1).strip()
+                        break
+
+                # Skip if this doesn't look like a real question
+                if question == "Unknown question" or len(question) < 10:
+                    print(f"[DEBUG] Skipping invalid question block: {block[:100]}...")
+                    continue
 
                 options = []
                 for opt in ['A', 'B', 'C', 'D']:
-    # Match: (A) Option text until the next (B)/(C)/(D)/Answer/End
-                    opt_match = re.search(rf'\({opt}\)\s*(.+?)(?=\n\([A-D]\)|\nAnswer:|\Z)', block, re.DOTALL)
-                    if opt_match:
-                        options.append(opt_match.group(1).strip())
-                    else:
-                        options.append(f"Option ({opt}) text missing")
+                    # Match: (A) Option text until the next (B)/(C)/(D)/Answer/End
+                    opt_patterns = [
+                        rf'\({opt}\)\s*(.+?)(?=\n\([A-D]\)|\nAnswer:|\Z)',  # (A) format
+                        rf'{opt}\)\s*(.+?)(?=\n[A-D]\)|\nAnswer:|\Z)',  # A) format
+                        rf'{opt}\.\s*(.+?)(?=\n[A-D]\.|\nAnswer:|\Z)',  # A. format
+                    ]
+                    
+                    option_text = f"Option ({opt}) text missing"
+                    for opt_pattern in opt_patterns:
+                        opt_match = re.search(opt_pattern, block, re.DOTALL)
+                        if opt_match:
+                            option_text = opt_match.group(1).strip()
+                            break
+                    options.append(option_text)
 
-
-
-                # Look for answer in format Answer: (A)
-                ans_match = re.search(r'Answer:\s*(([A-D]))', block)
-                correct_letter = ans_match.group(1) if ans_match else 'A'
+                # Look for answer in multiple formats
+                ans_patterns = [
+                    r'Answer:\s*\(([A-D])\)',
+                    r'Answer:\s*([A-D])',
+                    r'Correct Answer:\s*\(([A-D])\)',
+                    r'Correct Answer:\s*([A-D])',
+                ]
+                
+                correct_letter = 'A'
+                for ans_pattern in ans_patterns:
+                    ans_match = re.search(ans_pattern, block)
+                    if ans_match:
+                        correct_letter = ans_match.group(1)
+                        break
+                
                 correct_index = ord(correct_letter) - ord('A')
 
                 # Look for explanation
-                exp_match = re.search(r'Explanation:\s*(.+)', block, re.DOTALL)
-                explanation = exp_match.group(1).strip() if exp_match else "Explanation not available"
+                exp_patterns = [
+                    r'Explanation:\s*(.+)',
+                    r'Solution:\s*(.+)',
+                    r'Reasoning:\s*(.+)',
+                ]
+                
+                explanation = "Explanation not available"
+                for exp_pattern in exp_patterns:
+                    exp_match = re.search(exp_pattern, block, re.DOTALL)
+                    if exp_match:
+                        explanation = exp_match.group(1).strip()
+                        break
 
                 structured_questions.append({
                     "id": idx,
@@ -1253,11 +1052,174 @@ def parse_mcqs(raw_text):
         print(f"[ERROR in parse_mcqs]: {e}")
         return []
 
+def parse_answer_key(raw_text):
+    """Parse answer key from raw text (robust version)"""
+    try:
+        # Look for the answer key section
+        answer_key_match = re.search(r'\*\*ANSWER KEY\*\*\s*\n(.*?)(?=\n\n|\Z)', raw_text, re.DOTALL)
+        if not answer_key_match:
+            print("[DEBUG] No **ANSWER KEY** section found")
+            return []
+        
+        answer_key_text = answer_key_match.group(1).strip()
+        
+        # Parse individual answers: 1. (A), 1. A, 1) A, 1 : A, etc.
+        answers = []
+        answer_patterns = [
+            r'(\d+)\.\s*\(([A-D])\)',   # 1. (A)
+            r'(\d+)\.\s*([A-D])',         # 1. A
+            r'(\d+)\)\s*([A-D])',         # 1) A
+            r'(\d+)\s*[:-]\s*([A-D])',    # 1 : A or 1 - A
+        ]
+        for pattern in answer_patterns:
+            matches = re.findall(pattern, answer_key_text)
+            for question_num, answer_letter in matches:
+                answers.append({
+                    "question": int(question_num),
+                    "answer": answer_letter,
+                    "answer_index": ord(answer_letter) - ord('A')
+                })
+        print(f"[DEBUG] Successfully parsed {len(answers)} answer key entries")
+        return answers
+        
+    except Exception as e:
+        print(f"[ERROR in parse_answer_key]: {e}")
+        return []
+
+def create_answer_key_pdf(questions, answer_key, test_metadata):
+    """Create answer key PDF with improved formatting and debug logging"""
+    try:
+        print("[DEBUG] create_answer_key_pdf called")
+        print(f"[DEBUG] questions: {questions}")
+        print(f"[DEBUG] answer_key: {answer_key}")
+        print(f"[DEBUG] test_metadata: {test_metadata}")
+        pdf = FPDF()
+        pdf.add_page()
+        pdf.set_auto_page_break(auto=True, margin=15)
+        
+        try:
+            font_path = "DejaVuSans.ttf"
+            if os.path.exists(font_path):
+                pdf.add_font("DejaVu", "", font_path, uni=True)
+                pdf.set_font("DejaVu", size=12)
+            else:
+                pdf.set_font("Arial", size=12)
+        except Exception as font_exc:
+            print(f"[DEBUG] Font load error: {font_exc}")
+            pdf.set_font("Arial", size=12)
+        
+        # Title
+        pdf.set_font("Arial", 'B', 18)
+        pdf.cell(0, 15, 'CLAT Practice Test - Answer Key', ln=True, align='C')
+        pdf.ln(5)
+        
+        # Test info
+        pdf.set_font("Arial", 'B', 14)
+        test_info = f"{test_metadata.get('sectionName', 'Unknown')} - {test_metadata.get('subcategoryName', 'Unknown')}"
+        pdf.cell(0, 10, test_info, ln=True, align='C')
+        pdf.ln(5)
+        
+        # Test details
+        pdf.set_font("Arial", '', 12)
+        details = f"Total Questions: {len(questions)} • Passages: {test_metadata.get('passages', 1)}"
+        pdf.cell(0, 8, details, ln=True, align='C')
+        pdf.ln(10)
+        
+        # Answer key table header
+        pdf.set_font("Arial", 'B', 12)
+        pdf.cell(0, 10, 'Answer Key Summary:', ln=True)
+        pdf.ln(5)
+        
+        # Create answer key table
+        pdf.set_font("Arial", 'B', 11)
+        pdf.cell(40, 8, 'Question', 1, 0, 'C')
+        pdf.cell(30, 8, 'Answer', 1, 0, 'C')
+        pdf.cell(120, 8, 'Correct Option', 1, 1, 'C')
+        
+        pdf.set_font("Arial", '', 11)
+        for i, answer in enumerate(answer_key, 1):
+            question_num = answer.get('question', str(i))
+            answer_letter = answer.get('answer', 'N/A')
+            answer_index = answer.get('answer_index', 0)
+            
+            # Get the correct option text
+            correct_option = "N/A"
+            if i <= len(questions):
+                question = questions[i-1]
+                if 'options' in question and answer_index < len(question['options']):
+                    correct_option = question['options'][answer_index]
+            
+            pdf.cell(40, 8, f"Q{question_num}", 1, 0, 'C')
+            pdf.cell(30, 8, answer_letter, 1, 0, 'C')
+            pdf.cell(120, 8, correct_option[:50] + "..." if len(correct_option) > 50 else correct_option, 1, 1)
+        
+        pdf.ln(15)
+        
+        # Detailed explanations
+        pdf.set_font("Arial", 'B', 14)
+        pdf.cell(0, 10, 'Detailed Explanations:', ln=True)
+        pdf.ln(5)
+        
+        for i, question in enumerate(questions, 1):
+            # Check if we need a new page
+            if pdf.get_y() > 250:
+                pdf.add_page()
+            
+            pdf.set_font("Arial", 'B', 12)
+            pdf.cell(0, 8, f"Question {i}:", ln=True)
+            
+            # Question text
+            pdf.set_font("Arial", '', 11)
+            question_text = question.get('question', 'Question text not available')
+            pdf.multi_cell(0, 6, f"Q: {question_text}")
+            
+            # Options
+            options = question.get('options', [])
+            for j, option in enumerate(options):
+                option_letter = chr(65 + j)
+                is_correct = j == question.get('correct', 0)
+                option_text = f"{option_letter}. {option}"
+                if is_correct:
+                    pdf.set_font("Arial", 'B', 11)
+                    option_text += " ✓"
+                else:
+                    pdf.set_font("Arial", '', 11)
+                pdf.multi_cell(0, 6, option_text)
+            
+            # Correct answer
+            correct_index = question.get('correct', 0)
+            correct_letter = chr(65 + correct_index)
+            pdf.set_font("Arial", 'B', 11)
+            pdf.cell(0, 8, f"Correct Answer: {correct_letter}", ln=True)
+            
+            # Explanation
+            explanation = question.get('explanation', 'No explanation available.')
+            pdf.set_font("Arial", '', 11)
+            pdf.multi_cell(0, 6, f"Explanation: {explanation}")
+            
+            pdf.ln(8)
+        
+        # Add footer
+        pdf.set_y(-30)
+        pdf.set_font("Arial", '', 8)
+        pdf.set_text_color(107, 114, 128)
+        pdf.cell(0, 5, 'Generated by CLAT.GPT.1 - For more material visit: https://discord.gg/9kFymfz7qN', ln=True, align='C')
+        pdf.cell(0, 5, 'Contact: 7702832727 | Telegram: https://t.me/CLAT_Community', ln=True, align='C')
+        
+        return BytesIO(pdf.output(dest='S'))
+        
+    except Exception as e:
+        print(f"[ERROR in create_answer_key_pdf]: {e}")
+        import traceback
+        traceback.print_exc()
+        return None
+
 def create_pdf(contents, title):
-    """Create PDF from content"""
+    """Create PDF from content with improved formatting"""
     pdf = FPDF()
     pdf.add_page()
     pdf.set_auto_page_break(auto=True, margin=15)
+    
     try:
         font_path = "DejaVuSans.ttf"
         if os.path.exists(font_path):
@@ -1267,15 +1229,29 @@ def create_pdf(contents, title):
             pdf.set_font("Arial", size=12)
     except:
         pdf.set_font("Arial", size=12)
-    pdf.cell(0, 10, title, ln=True, align='C')
-    pdf.ln()
+    
+    # Title
+    pdf.set_font("Arial", 'B', 16)
+    pdf.cell(0, 15, title, ln=True, align='C')
+    pdf.ln(10)
+    
+    # Content
+    pdf.set_font("Arial", '', 12)
     for section in contents:
         try:
             clean = section.encode('latin1', 'replace').decode('latin1')
         except:
             clean = section
         pdf.multi_cell(0, 10, clean)
-        pdf.ln()
+        pdf.ln(5)
+    
+    # Add footer
+    pdf.set_y(-30)
+    pdf.set_font("Arial", '', 8)
+    pdf.set_text_color(107, 114, 128)
+    pdf.cell(0, 5, 'Generated by CLAT.GPT.1 - For more material visit: https://discord.gg/9kFymfz7qN', ln=True, align='C')
+    pdf.cell(0, 5, 'Contact: 7702832727 | Telegram: https://t.me/CLAT_Community', ln=True, align='C')
+    
     return BytesIO(pdf.output(dest='S'))
 
 # =============================================================================
@@ -1353,10 +1329,13 @@ def gk_generate_response():
         if response is None:
             return jsonify({'error': 'Failed to generate response from Groq API'}), 500
         
-        print(f"GK Generated response length: {len(response)} characters")
+        # Clean up formatting artifacts
+        cleaned_response = clean_formatting_artifacts(response)
+        
+        print(f"GK Generated response length: {len(cleaned_response)} characters")
         
         return jsonify({
-            'response': response,
+            'response': cleaned_response,
             'topic': topic,
             'timestamp': datetime.now().isoformat(),
             'service': 'gk_research'
@@ -1385,8 +1364,12 @@ def gk_study_assistant():
         response = call_groq_api(messages)
         if response is None:
             return jsonify({'error': 'Failed to generate assistant response. Please check GROQ_API_KEY and Groq API status.'}), 500
+        
+        # Clean up formatting artifacts
+        cleaned_response = clean_formatting_artifacts(response)
+        
         return jsonify({
-            'response': response,
+            'response': cleaned_response,
             'service': 'gk_assistant',
             'timestamp': datetime.now().isoformat()
         })
@@ -1451,8 +1434,12 @@ def lexa_chat():
         response = call_groq_api(messages, temperature=0.7, max_tokens=1024)
         if response is None:
             return jsonify({"error": "Failed to get response from Lexa. Please check GROQ_API_KEY and Groq API status."}), 500
+        
+        # Clean up formatting artifacts
+        cleaned_response = clean_formatting_artifacts(response)
+        
         return jsonify({
-            "response": response,
+            "response": cleaned_response,
             "status": "success",
             "service": "lexa_chatbot",
             "timestamp": datetime.now().isoformat()
@@ -1507,8 +1494,12 @@ def qt_generate_question():
                 "service": "qt_mentor"
             }), 500
         print(f"QT Generated content length: {len(response)}")
+        
+        # Clean up formatting artifacts
+        cleaned_response = clean_formatting_artifacts(response)
+        
         # Basic validation of generated content
-        if not validate_qt_content(response):
+        if not validate_qt_content(cleaned_response):
             print("QT Content validation failed")
             return jsonify({
                 "success": False,
@@ -1518,9 +1509,9 @@ def qt_generate_question():
             }), 400
         return jsonify({
             "success": True,
-            "rawOutput": response,
+            "rawOutput": cleaned_response,
             "topic": topic,
-            "contentLength": len(response),
+            "contentLength": len(cleaned_response),
             "service": "qt_mentor",
             "timestamp": datetime.now().isoformat()
         })
@@ -1547,7 +1538,7 @@ def qt_generate_question():
 # =============================================================================
 @app.route("/generate-test", methods=['POST'])
 def generate_content():
-    """Generate sectional test content"""
+    """Generate sectional test content with answer key"""
     try:
         data = request.get_json()
         topic = data.get('topic') or data.get('subcategory')
@@ -1573,12 +1564,26 @@ def generate_content():
             print("\n[DEBUG] Raw output:\n", sections[0])
             return jsonify({'error': 'Parsing failed: MCQ format not recognized.'}), 500
 
+        # Parse answer key from the same content
+        answer_key = parse_answer_key(sections[0])
+        if not answer_key:
+            print("[DEBUG] No answer key found, generating from questions")
+            # Fallback: generate answer key from parsed questions
+            answer_key = []
+            for question in structured:
+                answer_key.append({
+                    "question": question['id'],
+                    "answer": chr(65 + question['correct']),
+                    "answer_index": question['correct']
+                })
+
         return jsonify({
             'success': True,
             'topic': topic,
             'mapped_topic': mapped_topic,
             'count': len(structured),
             'test': structured,
+            'answer_key': answer_key,
             'timestamp': datetime.now().isoformat(),
             'service': 'sectional_tests'
         })
@@ -1614,6 +1619,33 @@ def download_pdf():
             tmp_path = tmp.name
 
         filename = f"{topic.lower().replace(' ', '_')}_clat_practice.pdf"
+        return send_file(tmp_path, as_attachment=True, download_name=filename, mimetype='application/pdf')
+
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({'error': 'Internal server error', 'details': str(e)}), 500
+
+@app.route('/download-answer-key', methods=['POST'])
+def download_answer_key():
+    """Download answer key as PDF"""
+    try:
+        data = request.get_json()
+        questions = data.get('questions', [])
+        answer_key = data.get('answer_key', [])
+        test_metadata = data.get('test_metadata', {})
+        
+        if not questions or not answer_key:
+            return jsonify({'error': 'Questions and answer key data are required'}), 400
+
+        pdf_buffer = create_answer_key_pdf(questions, answer_key, test_metadata)
+        if not pdf_buffer:
+            return jsonify({'error': 'Failed to create answer key PDF'}), 500
+
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
+            tmp.write(pdf_buffer.getvalue())
+            tmp_path = tmp.name
+
+        filename = f"Answer_Key_{test_metadata.get('sectionName', 'Test')}_{test_metadata.get('subcategoryName', 'Practice')}_{datetime.now().strftime('%Y-%m-%d')}.pdf"
         return send_file(tmp_path, as_attachment=True, download_name=filename, mimetype='application/pdf')
 
     except Exception as e:

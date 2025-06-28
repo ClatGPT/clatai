@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Practice Online - CLAT.GPT.1</title>
+    <link rel="stylesheet" href="radix-icons.css">
     <style>
         * {
             margin: 0;
@@ -139,6 +140,7 @@
             flex-shrink: 0;
         }
 
+        .nav-item.events::before { content: '📅'; }
         .nav-item.home::before { content: '🏠'; }
         .nav-item.practice::before { content: '📚'; }
         .nav-item.research::before { content: '🔍'; }
@@ -728,26 +730,29 @@
             
             <div class="logo">CLAT.GPT.1</div>
             
+            <button class="nav-item events" onclick="navigateTo('events')">
+                <span class="nav-text">Upcoming Events</span>
+            </button>
             <button class="nav-item home" onclick="navigateTo('home')">
                 <span class="nav-text">Home</span>
-            </button>
-            <button class="nav-item practice active" onclick="navigateTo('practice-online')">
-                <span class="nav-text">Practice Online</span>
-            </button>
-            <button class="nav-item research" onclick="navigateTo('gk-research')">
-                <span class="nav-text">GK Research Engine</span>
             </button>
             <button class="nav-item mentor" onclick="navigateTo('qt-mentor')">
                 <span class="nav-text">QT AI Mentor</span>
             </button>
-            <button class="nav-item chatbot" onclick="navigateTo('lexa-chatbot')">
-                <span class="nav-text">Lexa Chatbot</span>
+            <button class="nav-item research" onclick="navigateTo('gk-research')">
+                <span class="nav-text">GK Research Engine</span>
             </button>
-            <button class="nav-item tests" onclick="navigateTo('generate-tests')">
-                <span class="nav-text">Generate Tests</span>
+            <button class="nav-item chatbot" onclick="navigateTo('lexa-chatbot')">
+                <span class="nav-text">Lexa</span>
+            </button>
+            <button class="nav-item practice active" onclick="navigateTo('practice-online')">
+                <span class="nav-text">Practice Online</span>
             </button>
             <button class="nav-item progress" onclick="navigateTo('progress')">
                 <span class="nav-text">Progress Tracker</span>
+            </button>
+            <button class="nav-item tests" onclick="navigateTo('generate-tests')">
+                <span class="nav-text">Generate Sectionals</span>
             </button>
             
             <div class="sidebar-bottom">
@@ -1137,10 +1142,10 @@
                 // Special handling for legal and gk section
                 if (selectedSection === 'legal') {
                     subcategorySelect.disabled = true;
-                    subcategorySelect.innerHTML = '<option value="general-legal" selected>General Legal</option>';
+                    subcategorySelect.innerHTML = '<option value="general-legal" selected>General Legal (No subcategories)</option>';
                 } else if (selectedSection === 'gk') {
                     subcategorySelect.disabled = true;
-                    subcategorySelect.innerHTML = '<option value="general-gk" selected>General GK</option>';
+                    subcategorySelect.innerHTML = '<option value="general-gk" selected>General GK (No subcategories)</option>';
                 } else {
                     // Enable subcategory dropdown
                     subcategorySelect.disabled = false;
@@ -1404,6 +1409,7 @@
         // Navigation function
         function navigateTo(page) {
             const pages = {
+                'events': 'events.html',
                 'home': '2.homepage.html',
                 'practice-online': 'practice-online.html',
                 'gk-research': 'gk-research.html',

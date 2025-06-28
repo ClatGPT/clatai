@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CLAT.GPT.1 - Dashboard</title>
+    <link rel="stylesheet" href="radix-icons.css">
     <style>
         * {
             margin: 0;
@@ -139,6 +140,7 @@
             flex-shrink: 0;
         }
 
+        .nav-item.events::before { content: '📅'; }
         .nav-item.home::before { content: '🏠'; }
         .nav-item.practice::before { content: '📚'; }
         .nav-item.research::before { content: '🔍'; }
@@ -1174,7 +1176,7 @@
 
         .quick-actions {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             gap: 20px;
         }
 
@@ -1216,6 +1218,7 @@
         .qt-mentor .action-icon { color: #10b981; }
         .online-tests .action-icon { color: #f59e0b; }
         .generate-tests .action-icon { color: #8b5cf6; }
+        .newspapers .action-icon { color: #ef4444; }
 
         @media (max-width: 768px) {
             .container {
@@ -1317,26 +1320,29 @@
             
             <div class="logo">CLAT.GPT.1</div>
             
+            <button class="nav-item events" onclick="navigateTo('events')">
+                <span class="nav-text">Upcoming Events</span>
+            </button>
             <button class="nav-item home active" onclick="navigateTo('home')">
                 <span class="nav-text">Home</span>
-            </button>
-            <button class="nav-item practice" onclick="navigateTo('practice-online')">
-                <span class="nav-text">Practice Online</span>
-            </button>
-            <button class="nav-item research" onclick="navigateTo('gk-research')">
-                <span class="nav-text">GK Research Engine</span>
             </button>
             <button class="nav-item mentor" onclick="navigateTo('qt-mentor')">
                 <span class="nav-text">QT AI Mentor</span>
             </button>
-            <button class="nav-item chatbot" onclick="navigateTo('lexa-chatbot')">
-                <span class="nav-text">Lexa Chatbot</span>
+            <button class="nav-item research" onclick="navigateTo('gk-research')">
+                <span class="nav-text">GK Research Engine</span>
             </button>
-            <button class="nav-item tests" onclick="navigateTo('generate-tests')">
-                <span class="nav-text">Generate Tests</span>
+            <button class="nav-item chatbot" onclick="navigateTo('lexa-chatbot')">
+                <span class="nav-text">Lexa</span>
+            </button>
+            <button class="nav-item practice" onclick="navigateTo('practice-online')">
+                <span class="nav-text">Practice Online</span>
             </button>
             <button class="nav-item progress" onclick="navigateTo('progress')">
                 <span class="nav-text">Progress Tracker</span>
+            </button>
+            <button class="nav-item tests" onclick="navigateTo('generate-tests')">
+                <span class="nav-text">Generate Sectionals</span>
             </button>
             
             <div class="sidebar-bottom">
@@ -1429,32 +1435,7 @@
                     </div>
 
                     <div id="todoList">
-                        <div class="todo-item" data-id="1">
-                            <div class="todo-left">
-                                <div class="todo-checkbox" onclick="toggleTodo(1)"></div>
-                                <span class="todo-text">Daily Quiz Reminder</span>
-                            </div>
-                            <div class="todo-right">
-                                <span class="todo-time">9:00 AM</span>
-                                <div class="todo-actions">
-                                    <button class="todo-btn todo-edit" onclick="editTodo(1)" title="Edit">✏️</button>
-                                    <button class="todo-btn todo-delete" onclick="deleteTodo(1)" title="Delete">🗑️</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="todo-item" data-id="2">
-                            <div class="todo-left">
-                                <div class="todo-checkbox" onclick="toggleTodo(2)"></div>
-                                <span class="todo-text">Read the newspaper</span>
-                            </div>
-                            <div class="todo-right">
-                                <span class="todo-time">76-100</span>
-                                <div class="todo-actions">
-                                    <button class="todo-btn todo-edit" onclick="editTodo(2)" title="Edit">✏️</button>
-                                    <button class="todo-btn todo-delete" onclick="deleteTodo(2)" title="Delete">🗑️</button>
-                                </div>
-                            </div>
-                        </div>
+                        <!-- Todo items will be dynamically rendered here -->
                     </div>
 
                     <!-- Todo Management -->
@@ -1492,6 +1473,10 @@
                         <button class="action-btn generate-tests" onclick="navigateTo('generate-tests')">
                             <div class="action-icon">⚡</div>
                             <div class="action-text">Generate<br>Tests</div>
+                        </button>
+                        <button class="action-btn newspapers" onclick="navigateTo('gk-research')">
+                            <div class="action-icon">📰</div>
+                            <div class="action-text">Daily<br>Newspapers</div>
                         </button>
                     </div>
                 </section>
@@ -1701,10 +1686,58 @@
             try {
                 console.log('📰 Fetching newspaper...');
                 
-                // Update status
-                document.getElementById('newspaperStatus').textContent = 'Daily newspaper coming soon...';
+                // Get today's date in ddmmyy format
+                const today = new Date();
+                const todayFormatted = formatDateForFilename(today);
+                const filename = `${todayFormatted}.pdf`;
                 
-                // Set fallback newspaper data for now
+                // Try to fetch today's newspaper
+                const { data, error } = await supabase.storage
+                    .from('news-pdf')
+                    .getPublicUrl(filename);
+                
+                if (error) {
+                    console.log('📰 No newspaper found for today, checking for recent ones...');
+                    // Try to get the most recent newspaper
+                    const { data: recentFiles } = await supabase.storage
+                        .from('news-pdf')
+                        .list('', { 
+                            limit: 10, 
+                            sortBy: { column: 'created_at', order: 'desc' } 
+                        });
+                    
+                    if (recentFiles && recentFiles.length > 0) {
+                        const latestFile = recentFiles[0];
+                        const { data: latestUrl } = await supabase.storage
+                            .from('news-pdf')
+                            .getPublicUrl(latestFile.name);
+                        
+                        currentNewspaperData = {
+                            filename: latestFile.name,
+                            pdf_url: latestUrl.publicUrl,
+                            date: new Date(latestFile.created_at),
+                            displayDate: formatDate(new Date(latestFile.created_at)),
+                            isToday: false
+                        };
+                        
+                        updateNewspaperDisplay();
+                        return;
+                    }
+                } else {
+                    // Today's newspaper found
+                    currentNewspaperData = {
+                        filename: filename,
+                        pdf_url: data.publicUrl,
+                        date: today,
+                        displayDate: formatDate(today),
+                        isToday: true
+                    };
+                    
+                    updateNewspaperDisplay();
+                    return;
+                }
+                
+                // If no newspaper found, set fallback
                 setFallbackNewspaper();
                 
             } catch (error) {
@@ -1717,16 +1750,16 @@
         function updateNewspaperDisplay() {
             if (!currentNewspaperData) return;
             
+            const titleElement = document.getElementById('newspaperName');
             const statusElement = document.getElementById('newspaperStatus');
-            const titleElement = document.getElementById('pdfTitle');
             
             if (currentNewspaperData.isToday) {
-                statusElement.textContent = 'Today\'s edition available';
                 titleElement.textContent = `CLAT Daily - ${currentNewspaperData.displayDate}`;
+                statusElement.textContent = '📰 Today\'s edition available';
             } else {
                 const daysAgo = Math.floor((new Date() - currentNewspaperData.date) / (1000 * 60 * 60 * 24));
-                statusElement.textContent = `Latest edition (${daysAgo} day${daysAgo > 1 ? 's' : ''} ago)`;
                 titleElement.textContent = `CLAT Daily - ${currentNewspaperData.displayDate}`;
+                statusElement.textContent = `📰 Latest edition (${daysAgo} day${daysAgo > 1 ? 's' : ''} ago)`;
             }
             
             console.log('✅ Newspaper display updated');
@@ -1734,16 +1767,18 @@
 
         // Set fallback newspaper data
         function setFallbackNewspaper() {
-            const today = new Date();
+            console.log('🔄 Setting fallback newspaper data');
+            
             currentNewspaperData = {
                 filename: null,
                 pdf_url: null,
-                date: today,
-                displayDate: formatDate(today),
+                date: new Date(),
+                displayDate: formatDate(new Date()),
                 isToday: false
             };
             
-            document.getElementById('newspaperStatus').textContent = 'Daily newspaper coming soon...';
+            document.getElementById('newspaperName').textContent = 'CLAT Daily';
+            document.getElementById('newspaperStatus').textContent = '📰 Check back soon for updates';
             console.log('🔄 Set fallback newspaper data');
         }
 
@@ -1922,35 +1957,32 @@
         function openNewspaperOverlay() {
             console.log('📰 Opening newspaper overlay...');
             
+            const overlay = document.getElementById('newspaperOverlay');
+            const pdfEmbed = document.getElementById('pdfEmbed');
+            const pdfFallback = document.getElementById('pdfFallback');
+            const pdfTitle = document.getElementById('pdfTitle');
+            
             if (!currentNewspaperData || !currentNewspaperData.pdf_url) {
-                // Show a message instead of trying to open PDF
-                const overlay = document.getElementById('newspaperOverlay');
-                const pdfEmbed = document.getElementById('pdfEmbed');
-                const pdfTitle = document.getElementById('pdfTitle');
-                
-                // Hide the PDF embed and show message
+                // No newspaper available - show fallback
                 pdfEmbed.style.display = 'none';
+                pdfFallback.style.display = 'block';
                 pdfTitle.textContent = 'Daily Newspaper';
                 
-                // Show the message div
-                const messageDiv = overlay.querySelector('p');
-                if (messageDiv) {
-                    messageDiv.textContent = 'Our daily newspaper feature is coming soon! This will include curated CLAT-relevant news, current affairs, and practice questions. Stay tuned for updates.';
-                }
+                // Update fallback message
+                const messageDiv = pdfFallback.querySelector('p');
+                messageDiv.textContent = 'No newspaper is currently available. Please check back later or visit the GK Research Engine for current affairs content.';
                 
                 overlay.classList.add('active');
                 return;
             }
             
-            // If PDF exists, show it
-            const pdfEmbed = document.getElementById('pdfEmbed');
-            const pdfTitle = document.getElementById('pdfTitle');
-            
+            // Show PDF viewer
             pdfEmbed.style.display = 'block';
+            pdfFallback.style.display = 'none';
             pdfEmbed.src = currentNewspaperData.pdf_url;
             pdfTitle.textContent = `CLAT Daily - ${currentNewspaperData.displayDate}`;
             
-            document.getElementById('newspaperOverlay').classList.add('active');
+            overlay.classList.add('active');
         }
 
         function closeNewspaperOverlay() {
@@ -1963,7 +1995,7 @@
 
         function downloadNewspaper() {
             if (!currentNewspaperData || !currentNewspaperData.pdf_url) {
-                alert('Daily newspaper feature is coming soon! This will include downloadable PDFs with CLAT-relevant content.');
+                alert('No newspaper is currently available for download. Please check back later or visit the GK Research Engine for current affairs content.');
                 return;
             }
             
@@ -1975,6 +2007,8 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+            
+            console.log('✅ Newspaper download initiated');
         }
 
         // Sidebar toggle functionality
@@ -1986,6 +2020,7 @@
         // Navigation function
         function navigateTo(page) {
             const pages = {
+                'events': 'events.html',
                 'home': '2.homepage.html',
                 'practice-online': 'practice-online.html',
                 'gk-research': 'gk-research.html',

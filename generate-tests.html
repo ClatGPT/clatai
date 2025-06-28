@@ -6,6 +6,8 @@
     <title>Generate Tests - CLAT.GPT.1</title>
     <!-- Add jsPDF library for PDF generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- Add Radix Icons CSS -->
+    <link rel="stylesheet" href="radix-icons.css">
     <style>
         * {
             margin: 0;
@@ -137,6 +139,7 @@
             flex-shrink: 0;
         }
 
+        .nav-item.events::before { content: '📅'; }
         .nav-item.home::before { content: '🏠'; }
         .nav-item.practice::before { content: '📚'; }
         .nav-item.research::before { content: '🔍'; }
@@ -333,48 +336,66 @@
 
         .download-section {
             background: #f8fafc;
-            border-radius: 16px;
-            padding: 32px;
-            border: 1px solid #e2e8f0;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 24px;
             margin-top: 24px;
             text-align: center;
-            display: none;
         }
 
-        .download-button {
-            padding: 16px 32px;
-            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        .download-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
             color: white;
             border: none;
-            border-radius: 12px;
-            font-size: 18px;
+            padding: 12px 24px;
+            border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin: 0 auto;
+            gap: 8px;
         }
 
-        .download-button:hover {
+        .download-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(5, 150, 105, 0.3);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
         }
 
-        .download-button.loading {
-            pointer-events: none;
+        .download-btn.loading {
             opacity: 0.7;
+            cursor: not-allowed;
         }
 
-        .download-button.loading::after {
-            content: '';
-            width: 20px;
-            height: 20px;
-            border: 2px solid transparent;
-            border-top: 2px solid white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+        .answer-key-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .answer-key-btn:hover {
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        .secondary-btn {
+            background: #64748b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .secondary-btn:hover {
+            background: #475569;
         }
 
         .new-test-button {
@@ -458,26 +479,29 @@
         
             <div class="logo">CLAT.GPT.1</div>
             
+            <button class="nav-item events" onclick="navigateTo('events')">
+                <span class="nav-text">Upcoming Events</span>
+            </button>
             <button class="nav-item home" onclick="navigateTo('home')">
                 <span class="nav-text">Home</span>
-            </button>
-            <button class="nav-item practice" onclick="navigateTo('practice-online')">
-                <span class="nav-text">Practice Online</span>
-            </button>
-            <button class="nav-item research" onclick="navigateTo('gk-research')">
-                <span class="nav-text">GK Research Engine</span>
             </button>
             <button class="nav-item mentor" onclick="navigateTo('qt-mentor')">
                 <span class="nav-text">QT AI Mentor</span>
             </button>
-            <button class="nav-item chatbot" onclick="navigateTo('lexa-chatbot')">
-                <span class="nav-text">Lexa Chatbot</span>
+            <button class="nav-item research" onclick="navigateTo('gk-research')">
+                <span class="nav-text">GK Research Engine</span>
             </button>
-            <button class="nav-item tests active" onclick="navigateTo('generate-tests')">
-                <span class="nav-text">Generate Tests</span>
+            <button class="nav-item chatbot" onclick="navigateTo('lexa-chatbot')">
+                <span class="nav-text">Lexa</span>
+            </button>
+            <button class="nav-item practice" onclick="navigateTo('practice-online')">
+                <span class="nav-text">Practice Online</span>
             </button>
             <button class="nav-item progress" onclick="navigateTo('progress')">
                 <span class="nav-text">Progress Tracker</span>
+            </button>
+            <button class="nav-item tests active" onclick="navigateTo('generate-tests')">
+                <span class="nav-text">Generate Sectionals</span>
             </button>
             
             <div class="sidebar-bottom">
@@ -544,15 +568,15 @@
                 </div>
 
                 <!-- Download Section -->
-                <div id="downloadSection" class="download-section">
-                    <h3 style="margin-bottom: 16px; color: #1e293b;">Test Generated Successfully! 🎉</h3>
-                    <p style="margin-bottom: 24px; color: #64748b;">Your customized CLAT practice test is ready for download. The PDF includes all questions with proper formatting, watermark, and instructions.</p>
-                    <button class="download-button" id="downloadButton" onclick="downloadTestPDF()">
-                        📄 Download Test PDF
-                    </button>
-                    <button class="new-test-button" onclick="startNewTest()">
-                        🔄 Generate New Test
-                    </button>
+                <div id="downloadSection" style="display: none;" class="download-section">
+                    <h3>📄 Test Generated Successfully!</h3>
+                    <p>Your CLAT practice test with answer key is ready for download.</p>
+                    <div class="download-buttons">
+                        <button id="downloadButton" onclick="downloadTestPDF()" class="download-btn">
+                            📄 Download Test PDF (with Answer Key)
+                        </button>
+                    </div>
+                    <button onclick="startNewTest()" class="secondary-btn">🔄 Generate New Test</button>
                 </div>
             </div>
         </main>
@@ -565,6 +589,7 @@
 
         let currentTest = null;
         let testMetadata = {};
+        let currentAnswerKey = null; // Store answer key data
 
         // Section configurations - Updated with correct subcategories
         const sectionConfig = {
@@ -675,20 +700,9 @@
                         subcategorySelect.appendChild(option);
                     });
                 } else {
-                    // For sections without subcategories (Legal and GK), add a default option
-                    subcategorySelect.disabled = false;
-                    const option = document.createElement('option');
-                    if (selectedSection === 'legal') {
-                        option.value = 'general-legal';
-                        option.textContent = 'General Legal';
-                    } else if (selectedSection === 'gk') {
-                        option.value = 'general-gk';
-                        option.textContent = 'General GK';
-                    } else {
-                        option.value = selectedSection;
-                        option.textContent = `General ${selectedSection.charAt(0).toUpperCase() + selectedSection.slice(1)}`;
-                    }
-                    subcategorySelect.appendChild(option);
+                    // For sections without subcategories (Legal and GK), disable and show message
+                    subcategorySelect.disabled = true;
+                    subcategorySelect.innerHTML = '<option value="">No subcategories available</option>';
                 }
                 
                 // Populate passages dropdown
@@ -716,6 +730,7 @@
         // Navigation function
         function navigateTo(page) {
             const pages = {
+                'events': 'events.html',
                 'home': '2.homepage.html',
                 'practice-online': 'practice-online.html',
                 'gk-research': 'gk-research.html',
@@ -736,6 +751,7 @@
         function startNewTest() {
             document.getElementById('downloadSection').style.display = 'none';
             currentTest = null;
+            currentAnswerKey = null; // Reset answer key
             testMetadata = {};
             
             // Reset form
@@ -745,7 +761,7 @@
             document.getElementById('passages').innerHTML = '<option value="">Select number of passages</option>';
         }
 
-        // PDF Download Function with Watermark, Header, and Footer
+        // PDF Download Function with Answer Key Included
         async function downloadTestPDF() {
             if (!currentTest || currentTest.length === 0) {
                 showError('No test available to download.');
@@ -778,7 +794,7 @@
                         doc.addPage();
                         yPosition = margin + 40; // Extra space for header
                         addHeader();
-                        addWatermarkSync();
+                        addWatermark();
                     }
                 }
 
@@ -814,59 +830,19 @@
                     doc.text('Telegram: - https://t.me/CLAT_Community and Instagram: - https://www.instagram.com/clat_community/', pageWidth / 2, footerY + 8, { align: 'center' });
                 }
 
-                function addWatermarkSync() {
-                    // Add text watermark with 30% opacity (synchronous version)
-                    // Use a very light gray color to simulate 30% opacity
-                    doc.setTextColor(240, 240, 240); // Very light gray for 30% opacity effect
+                function addWatermark() {
+                    // Add text watermark with improved visibility (50% opacity effect)
+                    // Use a medium gray color to simulate 50% opacity effect
+                    doc.setTextColor(180, 180, 180); // Medium gray for 50% opacity effect
                     doc.setFontSize(60);
                     doc.setFont(undefined, 'bold');
+                    // doc.text('CLAT.GPT.1', pageWidth / 2, pageHeight / 2, { align: 'center', angle: 45 });
                     
-                    // Reset text color
-                    doc.setTextColor(0, 0, 0);
-                }
-
-                async function addWatermark() {
-                    try {
-                        // Try to add the CLAT logo as watermark
-                        const logoPath = 'images/CLAT COMMUNITY ILLUSTRATED LOGO .png';
-                        
-                        // Create an image element to check if the logo exists
-                        const img = new Image();
-                        img.crossOrigin = 'anonymous';
-                        
-                        await new Promise((resolve, reject) => {
-                            img.onload = resolve;
-                            img.onerror = () => {
-                                // If logo fails to load, use text watermark
-                                addTextWatermark();
-                                resolve();
-                            };
-                            img.src = logoPath;
-                        });
-                        
-                        if (img.complete && img.naturalWidth > 0) {
-                            // Logo loaded successfully, add it as watermark
-                            // Note: jsPDF doesn't support opacity directly, so we'll use the image as-is
-                            const logoWidth = 80;
-                            const logoHeight = (logoWidth * img.naturalHeight) / img.naturalWidth;
-                            const logoX = (pageWidth - logoWidth) / 2;
-                            const logoY = (pageHeight - logoHeight) / 2;
-                            
-                            doc.addImage(img, 'PNG', logoX, logoY, logoWidth, logoHeight, undefined, 'FAST', 0);
-                        }
-                    } catch (error) {
-                        // Fallback to text watermark
-                        addTextWatermark();
-                    }
-                }
-
-                function addTextWatermark() {
-                    // Add text watermark as fallback with 30% opacity effect
-                    // Use a very light gray color to simulate 30% opacity
-                    doc.setTextColor(240, 240, 240); // Very light gray for 30% opacity effect
-                    doc.setFontSize(60);
-                    doc.setFont(undefined, 'bold');
-                    doc.text('CLAT.GPT.1', pageWidth / 2, pageHeight / 2, { align: 'center', angle: 45 });
+                    // Add additional smaller watermarks in corners for better coverage
+                    doc.setFontSize(20);
+                    doc.setTextColor(200, 200, 200);
+                    // doc.text('CLAT.GPT.1', margin + 10, margin + 30, { angle: 15 });
+                    // doc.text('CLAT.GPT.1', pageWidth - margin - 10, pageHeight - margin - 30, { angle: -15, align: 'right' });
                     
                     // Reset text color
                     doc.setTextColor(0, 0, 0);
@@ -877,7 +853,7 @@
                 yPosition += 40; // Space after header
 
                 // Add watermark to first page
-                await addWatermark();
+                addWatermark();
 
                 // Add main title
                 doc.setFontSize(24);
@@ -962,20 +938,116 @@
                     questionNumber++;
                 });
 
+                // Add Answer Key Section
+                checkNewPage(100);
+                
+                // Add page break for answer key
+                doc.addPage();
+                addHeader();
+                addWatermark();
+                yPosition = margin + 40;
+
+                // Answer Key Title
+                doc.setFontSize(20);
+                doc.setFont(undefined, 'bold');
+                doc.text('Answer Key', pageWidth / 2, yPosition, { align: 'center' });
+                yPosition += 20;
+
+                // Answer Key Summary Table
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.text('Answer Key Summary:', margin, yPosition);
+                yPosition += 15;
+
+                // Table headers
+                doc.setFontSize(12);
+                doc.setFont(undefined, 'bold');
+                doc.text('Question', margin, yPosition);
+                doc.text('Answer', margin + 60, yPosition);
+                doc.text('Correct Option', margin + 120, yPosition);
+                yPosition += 10;
+
+                // Table content
+                doc.setFont(undefined, 'normal');
+                currentTest.forEach((question, index) => {
+                    const questionNum = index + 1;
+                    const correctIndex = question.correct;
+                    const correctLetter = String.fromCharCode(65 + correctIndex);
+                    const correctOption = question.options[correctIndex];
+
+                    doc.text(`Q${questionNum}`, margin, yPosition);
+                    doc.text(correctLetter, margin + 60, yPosition);
+                    doc.text(correctOption.substring(0, 40) + (correctOption.length > 40 ? '...' : ''), margin + 120, yPosition);
+                    yPosition += 8;
+                });
+
+                yPosition += 20;
+
+                // Detailed Explanations
+                doc.setFontSize(16);
+                doc.setFont(undefined, 'bold');
+                doc.text('Detailed Explanations:', margin, yPosition);
+                yPosition += 15;
+
+                currentTest.forEach((question, index) => {
+                    checkNewPage(80);
+
+                    doc.setFontSize(14);
+                    doc.setFont(undefined, 'bold');
+                    yPosition = addWrappedText(`Question ${index + 1}:`, margin, yPosition, pageWidth - 2 * margin);
+                    yPosition += 5;
+
+                    // Question text
+                    doc.setFontSize(11);
+                    doc.setFont(undefined, 'normal');
+                    yPosition = addWrappedText(`Q: ${question.question}`, margin, yPosition, pageWidth - 2 * margin);
+                    yPosition += 5;
+
+                    // Options with correct answer marked
+                    question.options.forEach((option, optionIndex) => {
+                        const optionLetter = String.fromCharCode(65 + optionIndex);
+                        const isCorrect = optionIndex === question.correct;
+                        let optionText = `${optionLetter}. ${option}`;
+                        
+                        if (isCorrect) {
+                            doc.setFont(undefined, 'bold');
+                            optionText += ' ✓';
+                        } else {
+                            doc.setFont(undefined, 'normal');
+                        }
+                        
+                        yPosition = addWrappedText(optionText, margin, yPosition, pageWidth - 2 * margin);
+                        yPosition += 3;
+                    });
+
+                    // Correct answer
+                    const correctIndex = question.correct;
+                    const correctLetter = String.fromCharCode(65 + correctIndex);
+                    doc.setFont(undefined, 'bold');
+                    yPosition = addWrappedText(`Correct Answer: ${correctLetter}`, margin, yPosition, pageWidth - 2 * margin);
+                    yPosition += 5;
+
+                    // Explanation
+                    doc.setFont(undefined, 'normal');
+                    const explanation = question.explanation || 'No explanation available.';
+                    yPosition = addWrappedText(`Explanation: ${explanation}`, margin, yPosition, pageWidth - 2 * margin);
+                    yPosition += 10;
+                });
+
                 // Add header, footer, and watermark to all pages
                 const totalPages = doc.internal.getNumberOfPages();
                 for (let i = 1; i <= totalPages; i++) {
                     doc.setPage(i);
                     addHeader();
                     addFooter();
-                    addWatermarkSync();
+                    addWatermark();
                 }
 
                 const fileName = `CLAT_${testMetadata.sectionName}_${testMetadata.subcategoryName}_${new Date().toISOString().split('T')[0]}.pdf`;
                 doc.save(fileName);
 
                 setTimeout(() => {
-                    showSuccess('Test PDF downloaded successfully!');
+                    showSuccess('Test PDF with Answer Key downloaded successfully!');
                 }, 500);
 
             } catch (error) {
@@ -983,7 +1055,7 @@
                 showError('Error generating PDF. Please try again.');
             } finally {
                 downloadButton.classList.remove('loading');
-                downloadButton.innerHTML = '📄 Download Test PDF';
+                downloadButton.innerHTML = '📄 Download Test PDF (with Answer Key)';
             }
         }
 
@@ -995,17 +1067,30 @@
             const subcategory = document.getElementById('subcategory').value;
             const passages = parseInt(document.getElementById('passages').value);
             
-            if (!section || !subcategory || !passages) {
-                showError('Please fill in all fields to generate your test.');
+            if (!section || !passages) {
+                showError('Please fill in all required fields to generate your test.');
                 return;
+            }
+
+            // Handle sections without subcategories (Legal and GK)
+            let finalSubcategory = subcategory;
+            if (!subcategory || subcategory === '') {
+                if (section === 'legal') {
+                    finalSubcategory = 'general-legal';
+                } else if (section === 'gk') {
+                    finalSubcategory = 'general-gk';
+                } else {
+                    showError('Please select a subcategory.');
+                    return;
+                }
             }
 
             testMetadata = {
                 section: section,
-                subcategory: subcategory,
+                subcategory: finalSubcategory,
                 passages: passages,
                 sectionName: section.charAt(0).toUpperCase() + section.slice(1),
-                subcategoryName: subcategory.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
+                subcategoryName: finalSubcategory.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
             };
 
             const buildButton = document.getElementById('buildButton');
@@ -1023,7 +1108,7 @@
                     },
                     body: JSON.stringify({
                         section: section,
-                        subcategory: subcategory,
+                        subcategory: finalSubcategory,
                         passages: passages
                     })
                 });
@@ -1040,6 +1125,7 @@
                 }
 
                 currentTest = data.test;
+                currentAnswerKey = data.answer_key; // Store answer key data
 
                 // Show download section
                 document.getElementById('downloadSection').style.display = 'block';

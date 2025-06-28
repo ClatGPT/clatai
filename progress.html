@@ -488,6 +488,52 @@
         .main-content::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
+
+        /* Activity List Styles */
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s ease;
+        }
+
+        .activity-item:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .activity-icon {
+            font-size: 20px;
+            color: #3b82f6;
+            flex-shrink: 0;
+        }
+
+        .activity-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .activity-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+
+        .activity-details {
+            font-size: 12px;
+            color: #64748b;
+        }
     </style>
 </head>
 <body>
@@ -682,11 +728,12 @@
         </main>
     </div>
 
+    <script src="progress-tracker.js"></script>
     <script>
-        // Username management
-        function getUsername() {
-            return localStorage.getItem('username') || 'User';
-        }
+        // Username management - use shared function from progress-tracker.js
+        // function getUsername() {
+        //     return getUsername(); // Use shared function
+        // }
 
         // Update greeting
         function updateGreeting() {
@@ -704,7 +751,6 @@
         // Navigation function
         function navigateTo(page) {
             const pages = {
-
                 'home': '2.homepage.html',
                 'practice-online': 'practice-online.html',
                 'gk-research': 'gk-research.html',
@@ -723,35 +769,35 @@
 
         // Download report function
         function downloadReport() {
+            const stats = getProgressStats();
+            const username = getUsername();
+            const streak = getCurrentStreak();
+            
             // Create a comprehensive text report
             const reportContent = `
 CLAT.GPT.1 Progress Report
 Generated on: ${new Date().toLocaleDateString()}
-Student: ${getUsername()}
+Student: ${username}
 
 === PROGRESS SUMMARY ===
-Tests Taken: 0
-Average Score: 0%
-Study Streak: ${localStorage.getItem('dailyStreak') || 1} days
+Tests Taken: ${stats.totalTests}
+Average Score: ${stats.averageScore}%
+Study Streak: ${streak} days
 
 === SECTION-WISE PERFORMANCE ===
-Legal Reasoning: 0%
-Logical Reasoning: 0%
-English Language: 0%
-General Knowledge: 0%
-Quantitative Techniques: 0%
+${generateSectionReport(stats)}
+
+=== RECENT ACTIVITY ===
+${generateRecentActivityReport()}
 
 === RECOMMENDATIONS ===
-- Start with practice tests to establish baseline performance
-- Focus on consistent daily practice
-- Use the AI mentor for personalized guidance
-- Review weak areas regularly
+${generateRecommendations(stats)}
 
 === NEXT STEPS ===
-1. Take a diagnostic test
-2. Create a study schedule
-3. Practice daily with sectional tests
-4. Track progress weekly
+1. Continue daily practice
+2. Focus on weak areas
+3. Take more sectional tests
+4. Review progress weekly
 
 For detailed analytics and personalized recommendations, 
 continue using CLAT.GPT.1 platform.
@@ -762,7 +808,7 @@ continue using CLAT.GPT.1 platform.
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `CLAT_Progress_Report_${new Date().toISOString().split('T')[0]}.txt`;
+            a.download = `CLAT_Progress_Report_${username}_${new Date().toISOString().split('T')[0]}.txt`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -772,32 +818,177 @@ continue using CLAT.GPT.1 platform.
             alert('Progress report downloaded successfully!');
         }
 
-        // Keyboard shortcuts
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.key === 'b') {
-                e.preventDefault();
-                toggleSidebar();
-            }
-        });
-
-        // Auto-collapse sidebar on mobile
-        function checkScreenSize() {
-            if (window.innerWidth <= 768) {
-                document.getElementById('sidebar').classList.add('collapsed');
-            }
+        // Generate section-wise report
+        function generateSectionReport(stats) {
+            const sections = ['Legal Reasoning', 'Logical Reasoning', 'English Language', 'General Knowledge', 'Quantitative Techniques'];
+            
+            return sections.map(section => {
+                const sectionStats = stats.sectionStats[section];
+                return `${section}: ${sectionStats.percentage}% (${sectionStats.count} tests)`;
+            }).join('\n');
         }
 
-        // Animate progress bars on load
-        function animateProgressBars() {
-            const progressBars = document.querySelectorAll('.skill-progress');
-            progressBars.forEach((bar, index) => {
-                setTimeout(() => {
-                    bar.style.width = bar.style.width; // Trigger animation
-                }, index * 200);
+        // Generate recent activity report
+        function generateRecentActivityReport() {
+            const recentActivity = getRecentActivity(5);
+            
+            if (recentActivity.length === 0) return 'No recent activity';
+            
+            return recentActivity.map(test => 
+                `${new Date(test.date).toLocaleDateString()}: ${test.section} - ${test.score}/${test.total} (${test.percentage}%)`
+            ).join('\n');
+        }
+
+        // Generate recommendations based on performance
+        function generateRecommendations(stats) {
+            if (stats.totalTests === 0) {
+                return '- Start with practice tests to establish baseline performance\n- Focus on consistent daily practice\n- Use the AI mentor for personalized guidance';
+            }
+            
+            const weakAreas = Object.entries(stats.sectionStats)
+                .filter(([section, sectionStats]) => sectionStats.percentage < 70)
+                .sort((a, b) => a[1].percentage - b[1].percentage);
+            
+            let recommendations = '- Continue daily practice to maintain consistency\n';
+            
+            if (weakAreas.length > 0) {
+                recommendations += `- Focus on improving ${weakAreas[0][0]} (current: ${weakAreas[0][1].percentage}%)\n`;
+            }
+            
+            recommendations += '- Take more sectional tests to improve accuracy\n- Review weak areas regularly';
+            
+            return recommendations;
+        }
+
+        // Load and display progress data from localStorage
+        function loadProgressData() {
+            const stats = getProgressStats();
+            const username = getUsername();
+            
+            console.log('📊 Loading progress data:', stats);
+            
+            // Update stats cards
+            document.querySelectorAll('.stat-number')[0].textContent = stats.totalTests;
+            document.querySelectorAll('.stat-number')[1].textContent = stats.averageScore + '%';
+            
+            // Update progress bars and scores
+            updateProgressBars(stats);
+            
+            // Update chart data
+            updateChartData(stats);
+            
+            // Show/hide empty states
+            toggleEmptyStates(stats.totalTests);
+            
+            // Update recent activity
+            updateRecentActivity();
+        }
+
+        // Update progress bars with calculated data
+        function updateProgressBars(stats) {
+            const sections = ['Legal Reasoning', 'Logical Reasoning', 'English Language', 'General Knowledge', 'Quantitative Techniques'];
+            
+            sections.forEach((section, index) => {
+                const sectionStats = stats.sectionStats[section];
+                const percentage = sectionStats.percentage;
+                
+                // Update score display
+                const scoreElements = document.querySelectorAll('.skill-score');
+                if (scoreElements[index]) {
+                    scoreElements[index].textContent = percentage + '%';
+                }
+                
+                // Update progress bar
+                const progressElements = document.querySelectorAll('.skill-progress');
+                if (progressElements[index]) {
+                    progressElements[index].style.width = percentage + '%';
+                }
             });
         }
 
-        // Chart drawing function
+        // Update chart with new data
+        function updateChartData(stats) {
+            const sections = ['Legal Reasoning', 'Logical Reasoning', 'English Language', 'General Knowledge', 'Quantitative Techniques'];
+            const chartData = sections.map(section => ({
+                label: section,
+                value: stats.sectionStats[section].percentage,
+                color: getSectionColor(section)
+            }));
+            
+            // Store chart data for drawing
+            window.chartData = chartData;
+            drawPerformanceChart();
+        }
+
+        // Get color for each section
+        function getSectionColor(section) {
+            const colors = {
+                'Legal Reasoning': '#3b82f6',
+                'Logical Reasoning': '#10b981',
+                'English Language': '#f59e0b',
+                'General Knowledge': '#8b5cf6',
+                'Quantitative Techniques': '#ef4444'
+            };
+            return colors[section] || '#6b7280';
+        }
+
+        // Toggle empty states based on data availability
+        function toggleEmptyStates(totalTests) {
+            const emptyStates = document.querySelectorAll('.empty-state');
+            
+            if (totalTests === 0) {
+                // Show empty states
+                emptyStates.forEach(state => {
+                    state.style.display = 'block';
+                });
+            } else {
+                // Hide empty states and show actual content
+                emptyStates.forEach(state => {
+                    state.style.display = 'none';
+                });
+                
+                // Show actual content sections
+                showActualContent();
+            }
+        }
+
+        // Show actual content when data is available
+        function showActualContent() {
+            // This function can be expanded to show actual charts, lists, etc.
+            // For now, we'll just hide empty states
+        }
+
+        // Update recent activity section
+        function updateRecentActivity() {
+            const recentActivitySection = document.querySelector('.progress-section.full-width .empty-state');
+            const recentActivity = getRecentActivity(5);
+            
+            if (recentActivity.length === 0) {
+                return; // Keep empty state
+            }
+            
+            // Replace empty state with activity list
+            const activityHTML = `
+                <div class="activity-list">
+                    ${recentActivity.map(test => `
+                        <div class="activity-item">
+                            <div class="activity-icon">📝</div>
+                            <div class="activity-content">
+                                <div class="activity-title">${test.section} Test</div>
+                                <div class="activity-details">
+                                    Score: ${test.score}/${test.total} (${test.percentage}%) • 
+                                    ${new Date(test.date).toLocaleDateString()}
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            recentActivitySection.innerHTML = activityHTML;
+        }
+
+        // Enhanced chart drawing function
         function drawPerformanceChart() {
             const canvas = document.getElementById('performanceChart');
             const ctx = canvas.getContext('2d');
@@ -810,8 +1001,8 @@ continue using CLAT.GPT.1 platform.
             const width = canvas.offsetWidth;
             const height = canvas.offsetHeight;
             
-            // Sample data for demonstration (all zeros for new users)
-            const data = [
+            // Use actual data if available, otherwise use zeros
+            const data = window.chartData || [
                 { label: 'Legal Reasoning', value: 0, color: '#3b82f6' },
                 { label: 'Logical Reasoning', value: 0, color: '#10b981' },
                 { label: 'English Language', value: 0, color: '#f59e0b' },
@@ -824,7 +1015,7 @@ continue using CLAT.GPT.1 platform.
             const chartWidth = width - padding * 2;
             const chartHeight = height - padding * 2;
             const barWidth = chartWidth / data.length;
-            const maxValue = 100; // Set max to 100% for percentage scale
+            const maxValue = 100;
             
             // Clear canvas
             ctx.clearRect(0, 0, width, height);
@@ -851,7 +1042,7 @@ continue using CLAT.GPT.1 platform.
             // Draw bars
             data.forEach((item, index) => {
                 const x = padding + index * barWidth + barWidth * 0.2;
-                const barHeight = Math.max((item.value / maxValue) * chartHeight, 2); // Minimum height for visibility
+                const barHeight = Math.max((item.value / maxValue) * chartHeight, 2);
                 const y = padding + chartHeight - barHeight;
                 const actualBarWidth = barWidth * 0.6;
                 
@@ -902,49 +1093,38 @@ continue using CLAT.GPT.1 platform.
             ctx.stroke();
         }
 
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'b') {
+                e.preventDefault();
+                toggleSidebar();
+            }
+        });
+
+        // Auto-collapse sidebar on mobile
+        function checkScreenSize() {
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.add('collapsed');
+            }
+        }
+
+        // Animate progress bars on load
+        function animateProgressBars() {
+            const progressBars = document.querySelectorAll('.skill-progress');
+            progressBars.forEach((bar, index) => {
+                setTimeout(() => {
+                    bar.style.width = bar.style.width; // Trigger animation
+                }, index * 200);
+            });
+        }
+
         // Initialize page
         document.addEventListener('DOMContentLoaded', function() {
             updateGreeting();
             checkScreenSize();
+            loadProgressData();
             animateProgressBars();
             setTimeout(() => { drawPerformanceChart(); }, 500);
-
-            // Load progress from localStorage
-            let progress = JSON.parse(localStorage.getItem('progress') || '[]');
-            let testsTaken = progress.length;
-            let avgScore = testsTaken ? Math.round(progress.reduce((sum, p) => sum + (p.score/p.total)*100, 0) / testsTaken) : 0;
-
-            // Section mapping for all possible variants
-            function mapSection(section, subcategory) {
-                section = section.toLowerCase();
-                if (section === 'legal' || section === 'legal reasoning' || subcategory === 'general-legal') return 'Legal Reasoning';
-                if (section === 'logical' || section === 'logical reasoning') return 'Logical Reasoning';
-                if (section === 'english' || section === 'english language') return 'English Language';
-                if (section === 'gk' || section === 'general knowledge' || subcategory === 'general-gk') return 'General Knowledge';
-                if (section === 'quantitative' || section === 'quantitative techniques') return 'Quantitative Techniques';
-                return section.charAt(0).toUpperCase() + section.slice(1);
-            }
-
-            // Update stats
-            document.querySelectorAll('.stat-number')[0].textContent = testsTaken;
-            document.querySelectorAll('.stat-number')[1].textContent = avgScore + '%';
-
-            // Section-wise aggregation
-            const sections = ['Legal Reasoning','Logical Reasoning','English Language','General Knowledge','Quantitative Techniques'];
-            let sectionScores = { 'Legal Reasoning':0, 'Logical Reasoning':0, 'English Language':0, 'General Knowledge':0, 'Quantitative Techniques':0 };
-            let sectionCounts = { ...sectionScores };
-            progress.forEach(p => {
-                const mapped = mapSection(p.section, p.subcategory);
-                if (sectionScores[mapped] !== undefined) {
-                    sectionScores[mapped] += (p.score/p.total)*100;
-                    sectionCounts[mapped]++;
-                }
-            });
-            sections.forEach((sec, i) => {
-                let percent = sectionCounts[sec] ? Math.round(sectionScores[sec]/sectionCounts[sec]) : 0;
-                document.querySelectorAll('.skill-score')[i].textContent = percent + '%';
-                document.querySelectorAll('.skill-progress')[i].style.width = percent + '%';
-            });
         });
 
         // Redraw chart on window resize
@@ -954,6 +1134,16 @@ continue using CLAT.GPT.1 platform.
                 drawPerformanceChart();
             }, 100);
         });
+
+        // Example: After a test is completed
+        saveProgress('Legal Reasoning', 'General', 8, 10, {
+            testType: 'practice',
+            timeTaken: '15:30'
+        });
+
+        const stats = getProgressStats();
+        console.log('Total tests:', stats.totalTests);
+        console.log('Average score:', stats.averageScore);
     </script>
 </body>
 </html>

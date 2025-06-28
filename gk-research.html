@@ -387,42 +387,154 @@
             gap: 8px;
         }
 
-        .topics-grid {
+        /* Upload Container Styles */
+        .upload-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .upload-area {
+            position: relative;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border: 3px dashed #cbd5e1;
+            border-radius: 16px;
+            padding: 32px 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .upload-area::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(59, 130, 246, 0.1) 50%, transparent 70%);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .upload-area:hover::before {
+            transform: translateX(100%);
+        }
+
+        .upload-area:hover {
+            border-color: #3b82f6;
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+        }
+
+        .upload-area.dragover {
+            border-color: #3b82f6;
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            margin-bottom: 16px;
+            color: #64748b;
+            transition: all 0.3s ease;
+        }
+
+        .upload-area:hover .upload-icon {
+            color: #3b82f6;
+            transform: scale(1.1);
+        }
+
+        .upload-text h4 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+
+        .upload-text p {
+            font-size: 14px;
+            color: #64748b;
+            margin: 0;
+        }
+
+        .file-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .upload-actions {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
         }
 
-        .topic-card {
-            background: white;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 12px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .topic-card:hover {
-            border-color: #3b82f6;
-            background: #f0f9ff;
-            transform: translateY(-1px);
-        }
-
-        .topic-card.selected {
-            border-color: #3b82f6;
-            background: #dbeafe;
-        }
-
-        .topic-icon {
-            font-size: 20px;
-            margin-bottom: 6px;
-        }
-
-        .topic-name {
-            font-size: 12px;
+        .upload-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
             font-weight: 600;
-            color: #1e293b;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .upload-btn:hover::before {
+            left: 100%;
+        }
+
+        .upload-btn.primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .upload-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        .upload-btn.secondary {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            color: #475569;
+            border: 2px solid #cbd5e1;
+        }
+
+        .upload-btn.secondary:hover {
+            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-icon {
+            font-size: 16px;
+        }
+
+        .btn-text {
+            font-size: 13px;
         }
 
         .newspapers-list {
@@ -788,63 +900,46 @@
 
                 <!-- Sidebar Panel -->
                 <div class="sidebar-panel">
-                    <!-- Topics Section -->
-                    <div class="panel-section">
-                        <h3 class="panel-title">🎯 Practice Specific Topics</h3>
-                        <div class="topics-grid">
-                            <div class="topic-card" onclick="selectTopic('Indian Politics')" data-topic="Indian Politics">
-                                <div class="topic-icon">🏛️</div>
-                                <div class="topic-name">Politics</div>
-                            </div>
-                            <div class="topic-card" onclick="selectTopic('Economics')" data-topic="Economics">
-                                <div class="topic-icon">💰</div>
-                                <div class="topic-name">Economics</div>
-                            </div>
-                            <div class="topic-card" onclick="selectTopic('International Relations')" data-topic="International Relations">
-                                <div class="topic-icon">🌍</div>
-                                <div class="topic-name">International</div>
-                            </div>
-                            <div class="topic-card" onclick="selectTopic('Environment')" data-topic="Environment">
-                                <div class="topic-icon">🌱</div>
-                                <div class="topic-name">Environment</div>
-                            </div>
-                            <div class="topic-card" onclick="selectTopic('Science & Technology')" data-topic="Science & Technology">
-                                <div class="topic-icon">🔬</div>
-                                <div class="topic-name">Science & Tech</div>
-                            </div>
-                            <div class="topic-card" onclick="selectTopic('Social Issues')" data-topic="Social Issues">
-                                <div class="topic-icon">👥</div>
-                                <div class="topic-name">Social Issues</div>
-                            </div>
-                            <div class="topic-card" onclick="selectTopic('Legal Affairs')" data-topic="Legal Affairs">
-                                <div class="topic-icon">⚖️</div>
-                                <div class="topic-name">Legal Affairs</div>
-                            </div>
-                            <div class="topic-card" onclick="selectTopic('History & Culture')" data-topic="History & Culture">
-                                <div class="topic-icon">🏺</div>
-                                <div class="topic-name">History</div>
-                            </div>
-                        </div>
-                    </div>
 
                     <!-- Newspapers Section -->
                     <div class="panel-section">
                         <h3 class="panel-title">📰 Daily Newspapers</h3>
                         <div class="newspapers-list" id="newspapersList">
                             <div class="loading-text">Loading newspapers...</div>
-                            <div style="margin-top: 20px;">
-                                <input type="file" id="pdfUploader" accept="application/pdf">
-                                <button onclick="uploadPDF()">📤 Upload PDF</button>
-                            </div>
-
-
                         </div>
                     </div>
+
+                    <!-- PDF Upload Section -->
                     <div class="panel-section">
-  <h3 class="panel-title">📤 Upload Your PDF</h3>
-  <input type="file" id="pdfFileInput" accept="application/pdf" />
-  <button onclick="uploadPDFToBackend()">Upload & Generate</button>
-</div>
+                        <h3 class="panel-title">📤 Upload & Analyze PDF</h3>
+                        <div class="upload-container">
+                            <div class="upload-area" id="uploadArea">
+                                <div class="upload-icon">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                        <polyline points="7,10 12,15 17,10"></polyline>
+                                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                                    </svg>
+                                </div>
+                                <div class="upload-text">
+                                    <h4>Drop your PDF here</h4>
+                                    <p>or click to browse files</p>
+                                </div>
+                                <input type="file" id="pdfFileInput" accept="application/pdf" class="file-input" />
+                            </div>
+                            
+                            <div class="upload-actions">
+                                <button class="upload-btn primary" onclick="uploadPDFToBackend()">
+                                    <span class="btn-icon">🚀</span>
+                                    <span class="btn-text">Analyze & Generate</span>
+                                </button>
+                                <button class="upload-btn secondary" onclick="uploadPDF()">
+                                    <span class="btn-icon">📁</span>
+                                    <span class="btn-text">Store PDF</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
@@ -863,6 +958,7 @@
         </div>
     </div>
 
+    <script src="progress-tracker.js"></script>
     <script>
         // Supabase configuration
         const SUPABASE_URL = 'https://agmdmagahkpuzafnsprx.supabase.co';
@@ -877,8 +973,6 @@
             uploadPdf: `${BACKEND_URL}/gk/upload-pdf`,
             health: `${BACKEND_URL}/gk/health`
         };
-
-        let selectedTopic = null;
 
         // Load newspapers from Supabase
         async function loadNewspapers() {
@@ -975,27 +1069,6 @@
             document.getElementById('pdfEmbed').src = '';
         }
 
-        // Select topic and generate passage
-        function selectTopic(topic) {
-            // Remove previous selection
-            document.querySelectorAll('.topic-card').forEach(card => {
-                card.classList.remove('selected');
-            });
-            
-            // Add selection to clicked topic
-            event.currentTarget.classList.add('selected');
-            selectedTopic = topic;
-            
-            // Generate message for the topic
-            const message = `Generate a CLAT-style GK passage and 5 MCQs on ${topic}`;
-            
-            // Add user message to chat
-            addMessage('user', `Generate passage on: ${topic}`);
-            
-            // Send to backend
-            sendToBackend(message);
-        }
-
         // Chat functionality
         function addMessage(type, content) {
             const messagesContainer = document.getElementById('chatMessages');
@@ -1050,7 +1123,6 @@
                     },
                     body: JSON.stringify({ 
                         message: message,
-                        topic: selectedTopic 
                     })
                 });
 
@@ -1136,83 +1208,181 @@
         window.addEventListener('load', function() {
             loadNewspapers();
             checkScreenSize();
+            setupDragAndDrop();
         });
 
         window.addEventListener('resize', checkScreenSize);
-        async function uploadPDF() {
-    const input = document.getElementById('pdfUploader');
-    const file = input.files[0];
 
-    if (!file) {
-        alert("Please select a PDF file to upload.");
-        return;
-    }
+        // Drag and drop functionality
+        function setupDragAndDrop() {
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('pdfFileInput');
 
-    const fileName = file.name;
+            // Prevent default drag behaviors
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, preventDefaults, false);
+                document.body.addEventListener(eventName, preventDefaults, false);
+            });
 
-    const { data, error } = await supabase.storage
-        .from('news-pdf')
-        .upload(fileName, file, {
-            contentType: 'application/pdf',
-            upsert: true  // Overwrites if file with same name exists
-        });
+            // Highlight drop area when item is dragged over it
+            ['dragenter', 'dragover'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, highlight, false);
+            });
 
-    if (error) {
-        console.error("Upload error:", error);
-        alert("Failed to upload PDF.");
-    } else {
-        alert("PDF uploaded successfully!");
-        loadNewspapers();  // Refresh newspaper list
-    }
-}
+            ['dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, unhighlight, false);
+            });
 
-async function uploadPDFToBackend() {
-    const fileInput = document.getElementById('pdfFileInput');
-    const file = fileInput.files[0];
+            // Handle dropped files
+            uploadArea.addEventListener('drop', handleDrop, false);
 
-    if (!file || file.type !== "application/pdf") {
-        alert("Please select a valid PDF file.");
-        return;
-    }
+            // Handle file input change
+            fileInput.addEventListener('change', handleFileSelect);
 
-    const formData = new FormData();
-    formData.append("file", file);
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
 
-    try {
-        // Show typing effect or loader if needed
-        showTypingIndicator();
+            function highlight(e) {
+                uploadArea.classList.add('dragover');
+            }
 
-        const response = await fetch(API_ENDPOINTS.uploadPdf, {
-            method: "POST",
-            body: formData
-        });
+            function unhighlight(e) {
+                uploadArea.classList.remove('dragover');
+            }
 
-        const result = await response.json();
-        hideTypingIndicator();
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                handleFiles(files);
+            }
 
-        if (response.ok) {
-            addMessage("assistant", result.response);
-        } else {
-            addMessage("assistant", `❌ Error: ${result.error}`);
+            function handleFileSelect(e) {
+                const files = e.target.files;
+                handleFiles(files);
+            }
+
+            function handleFiles(files) {
+                if (files.length > 0) {
+                    const file = files[0];
+                    if (file.type === 'application/pdf') {
+                        fileInput.files = files;
+                        // Update upload area text to show selected file
+                        const uploadText = uploadArea.querySelector('.upload-text h4');
+                        uploadText.textContent = `Selected: ${file.name}`;
+                        uploadText.style.color = '#3b82f6';
+                    } else {
+                        alert('Please select a PDF file.');
+                    }
+                }
+            }
         }
-    } catch (error) {
-        hideTypingIndicator();
-        console.error("Error uploading PDF:", error);
-        addMessage("assistant", "❌ Error uploading PDF. Check your backend or file size.");
-    }
-}
 
-function saveGKProgress(section, subcategory, score, total) {
-    let progress = JSON.parse(localStorage.getItem('progress') || '[]');
-    progress.push({
-        date: new Date().toISOString(),
-        section,
-        subcategory,
-        score,
-        total
-    });
-    localStorage.setItem('progress', JSON.stringify(progress));
-}
+        async function uploadPDF() {
+            const fileInput = document.getElementById('pdfFileInput');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert("Please select a PDF file to upload.");
+                return;
+            }
+
+            const fileName = file.name;
+
+            const { data, error } = await supabase.storage
+                .from('news-pdf')
+                .upload(fileName, file, {
+                    contentType: 'application/pdf',
+                    upsert: true  // Overwrites if file with same name exists
+                });
+
+            if (error) {
+                console.error("Upload error:", error);
+                alert("Failed to upload PDF.");
+            } else {
+                alert("PDF uploaded successfully!");
+                loadNewspapers();  // Refresh newspaper list
+                // Reset upload area
+                const uploadText = document.querySelector('.upload-text h4');
+                uploadText.textContent = 'Drop your PDF here';
+                uploadText.style.color = '#1e293b';
+                fileInput.value = '';
+            }
+        }
+
+        async function uploadPDFToBackend() {
+            const fileInput = document.getElementById('pdfFileInput');
+            const file = fileInput.files[0];
+
+            if (!file || file.type !== "application/pdf") {
+                alert("Please select a valid PDF file.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("file", file);
+
+            try {
+                // Show typing effect or loader if needed
+                showTypingIndicator();
+
+                const response = await fetch(API_ENDPOINTS.uploadPdf, {
+                    method: "POST",
+                    body: formData
+                });
+
+                const result = await response.json();
+                hideTypingIndicator();
+
+                if (response.ok) {
+                    addMessage("assistant", result.response);
+                } else {
+                    addMessage("assistant", `❌ Error: ${result.error}`);
+                }
+
+                // Reset upload area
+                const uploadText = document.querySelector('.upload-text h4');
+                uploadText.textContent = 'Drop your PDF here';
+                uploadText.style.color = '#1e293b';
+                fileInput.value = '';
+
+            } catch (error) {
+                hideTypingIndicator();
+                console.error("Error uploading PDF:", error);
+                addMessage("assistant", "❌ Error uploading PDF. Check your backend or file size.");
+                
+                // Reset upload area on error too
+                const uploadText = document.querySelector('.upload-text h4');
+                uploadText.textContent = 'Drop your PDF here';
+                uploadText.style.color = '#1e293b';
+                fileInput.value = '';
+            }
+        }
+
+        function saveGKProgress(section, subcategory, score, total) {
+            // Map section names to standardized names
+            const sectionMap = {
+                'gk': 'General Knowledge',
+                'general knowledge': 'General Knowledge',
+                'research': 'General Knowledge'
+            };
+            
+            const mappedSection = sectionMap[section] || section;
+            
+            // Save progress using shared system
+            const success = saveProgress(mappedSection, subcategory, score, total, {
+                testType: 'gk-research',
+                section: section,
+                subcategory: subcategory
+            });
+            
+            if (success) {
+                console.log('✅ GK Research progress saved successfully');
+            } else {
+                console.error('❌ Failed to save GK Research progress');
+            }
+        }
 
     </script>
 </body>

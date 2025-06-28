@@ -12,10 +12,12 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f1f5f9;
-            min-height: 100vh;
-            overflow-y: auto;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+            background: #fbfbfd;
+            color: #1d1d1f;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         .container {
@@ -145,10 +147,9 @@
         .nav-item.mentor::before { content: '🤖'; }
         .nav-item.chatbot::before { content: '💬'; }
         .nav-item.tests::before { content: '📝'; }
-        .nav-item.settings::before { content: '⚙'; }
-        .nav-item.appearance::before { content: '🎨'; }
         .nav-item.progress::before { content: '📊'; }
-        
+        .nav-item.settings::before { content: '⚙️'; }
+        .nav-item.appearance::before { content: '🎨'; }
 
         .nav-text {
             transition: opacity 0.3s ease;
@@ -169,385 +170,378 @@
             border: none;
         }
 
+        /* Main Content */
         .main-content {
             flex: 1;
             display: flex;
             flex-direction: column;
-            background: white;
+            background: #fbfbfd;
             overflow-y: auto;
         }
 
-        .header {
-            padding: 24px 40px;
-            border-bottom: 1px solid #e2e8f0;
-            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+        .main-content-inner {
+            flex: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 24px;
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            animation: slideInFromTop 0.6s ease-out;
-        }
-
-        .greeting {
-            font-size: 32px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .page-subtitle {
-            font-size: 16px;
-            opacity: 0.9;
-        }
-
-        .content-area {
-            flex: 1;
-            display: flex;
-            /* overflow: hidden; */
-        }
-
-        .topic-selector {
-            width: 300px;
-            background: #f8fafc;
-            border-right: 1px solid #e2e8f0;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-        }
-
-        .selector-header {
-            padding: 24px;
-            background: white;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .selector-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #1e293b;
-            margin-bottom: 16px;
-        }
-
-        .topic-list {
-            flex: 1;
-            padding: 16px;
-        }
-
-        .topic-category {
-            margin-bottom: 24px;
-        }
-
-        .category-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: #64748b;
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .topic-item {
-            display: flex;
-            align-items: center;
-            padding: 12px 16px;
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .topic-item:hover {
-            border-color: #8b5cf6;
-            box-shadow: 0 2px 8px rgba(139, 92, 246, 0.1);
-        }
-
-        .topic-item.active {
-            border-color: #8b5cf6;
-            background: #f3f4f6;
-        }
-
-        .topic-icon {
-            width: 32px;
-            height: 32px;
-            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 12px;
-            font-size: 16px;
-        }
-
-        .topic-info {
-            flex: 1;
-        }
-
-        .topic-name {
-            font-size: 14px;
-            font-weight: 600;
-            color: #1e293b;
-            margin-bottom: 2px;
-        }
-
-        .topic-desc {
-            font-size: 12px;
-            color: #64748b;
-        }
-
-        .question-area {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            background: white;
-        }
-
-        .question-header {
-            padding: 24px;
-            border-bottom: 1px solid #e2e8f0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .question-title {
-            font-size: 20px;
-            font-weight: 600;
-            color: #1e293b;
-            flex: 1;
-        }
-
-        .generate-btn {
-            padding: 12px 24px;
-            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .generate-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
-        }
-
-        .generate-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .question-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 24px;
-        }
-
-        .welcome-screen {
+            padding: 80px 24px;
             text-align: center;
-            color: #64748b;
-            margin-top: 100px;
         }
 
-        .welcome-icon {
-            font-size: 64px;
-            margin-bottom: 24px;
-        }
-
-        .welcome-title {
-            font-size: 24px;
-            font-weight: 600;
-            color: #1e293b;
-            margin-bottom: 12px;
-        }
-
-        .welcome-text {
-            font-size: 16px;
-            line-height: 1.6;
-            max-width: 400px;
+        .hero-content {
+            max-width: 800px;
             margin: 0 auto;
         }
 
-        .question-container {
-            display: none;
-            animation: fadeIn 0.5s ease-out;
+        .hero-title {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
         }
 
-        .question-container.show {
+        .hero-subtitle {
+            font-size: 20px;
+            font-weight: 400;
+            opacity: 0.9;
+            margin-bottom: 40px;
+        }
+
+        .hero-icon {
+            font-size: 64px;
+            margin-bottom: 24px;
             display: block;
         }
 
-        .question-section {
-            background: #f8fafc;
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 24px;
-            border: 1px solid #e2e8f0;
+        /* Topic Selection */
+        .topic-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
         }
 
         .section-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1d1d1f;
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: #86868b;
+            font-weight: 400;
+        }
+
+        .topic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .topic-card {
+            background: #fbfbfd;
+            border: 2px solid transparent;
+            border-radius: 16px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .topic-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+            border-color: #007aff;
+        }
+
+        .topic-card.selected {
+            border-color: #007aff;
+            background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
+        }
+
+        .topic-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #007aff 0%, #5856d6 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+
+        .topic-name {
             font-size: 18px;
             font-weight: 600;
-            color: #1e293b;
-            margin-bottom: 16px;
-            display: flex;
+            color: #1d1d1f;
+            margin-bottom: 8px;
+        }
+
+        .topic-description {
+            font-size: 14px;
+            color: #86868b;
+            line-height: 1.5;
+        }
+
+        /* Subtopic Selection */
+        .subtopic-section {
+            display: none;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            animation: slideDown 0.4s ease-out;
+        }
+
+        .subtopic-section.show {
+            display: block;
+        }
+
+        .subtopic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .subtopic-card {
+            background: #fbfbfd;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .subtopic-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: #007aff;
+        }
+
+        .subtopic-card.selected {
+            border-color: #007aff;
+            background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
+        }
+
+        .subtopic-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 8px;
+        }
+
+        .subtopic-description {
+            font-size: 13px;
+            color: #86868b;
+        }
+
+        /* Action Buttons */
+        .action-section {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .btn {
+            background: #007aff;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 16px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
             align-items: center;
             gap: 8px;
         }
 
-        .passage-output {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            border: 1px solid #e2e8f0;
-            margin-bottom: 20px;
-            font-size: 15px;
-            line-height: 1.6;
-            color: #374151;
+        .btn:hover {
+            background: #0056cc;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 122, 255, 0.3);
         }
 
-        .single-question {
-            background: white;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 1px solid #e2e8f0;
-        }
-
-        .question-label {
-            font-weight: 600;
-            color: #8b5cf6;
-            margin-bottom: 8px;
-        }
-
-        .question-text {
-            font-size: 16px;
-            color: #374151;
-            line-height: 1.6;
-            margin-bottom: 16px;
-        }
-
-        .options-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-bottom: 16px;
-        }
-
-        .option {
-            padding: 12px 16px;
-            background: #f8fafc;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .option:hover {
-            border-color: #8b5cf6;
-            background: #faf5ff;
-        }
-
-        .option.selected {
-            border-color: #8b5cf6;
-            background: #f3f4f6;
-        }
-
-        .option.correct {
-            border-color: #10b981;
-            background: #ecfdf5;
-        }
-
-        .option.incorrect {
-            border-color: #ef4444;
-            background: #fef2f2;
-        }
-
-        .action-btn {
-            padding: 12px 24px;
-            border: 2px solid #8b5cf6;
-            border-radius: 8px;
-            background: white;
-            color: #8b5cf6;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-right: 12px;
-        }
-
-        .action-btn:hover {
-            background: #8b5cf6;
-            color: white;
-        }
-
-        .action-btn.primary {
-            background: #8b5cf6;
-            color: white;
-        }
-
-        .action-btn.primary:hover {
-            background: #7c3aed;
-        }
-
-        .action-btn:disabled {
-            opacity: 0.5;
+        .btn:disabled {
+            background: #d1d1d6;
             cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
 
-        .action-buttons {
-            display: flex;
-            gap: 12px;
-            margin-top: 24px;
-            justify-content: center;
+        .btn-secondary {
+            background: transparent;
+            color: #007aff;
+            border: 2px solid #007aff;
         }
 
-        .answer-result {
-            margin-top: 16px;
-            padding: 16px;
-            border-radius: 8px;
-            background: #f0f9ff;
-            border: 1px solid #bae6fd;
+        .btn-secondary:hover {
+            background: #007aff;
+            color: white;
+        }
+
+        /* Question Area */
+        .question-area {
             display: none;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            animation: slideUp 0.4s ease-out;
         }
 
-        .answer-result.show {
+        .question-area.show {
             display: block;
         }
 
-        .solution {
-            font-size: 14px;
-            line-height: 1.6;
-            color: #374151;
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
         }
 
-        .loading-spinner {
+        .question-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1d1d1f;
+        }
+
+        .question-content {
+            background: #fbfbfd;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .question-text {
+            font-size: 18px;
+            color: #1d1d1f;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .option {
+            background: white;
+            border: 2px solid #e5e5e7;
+            border-radius: 12px;
+            padding: 16px 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 16px;
+            color: #1d1d1f;
+        }
+
+        .option:hover {
+            border-color: #007aff;
+            background: #f0f8ff;
+        }
+
+        .option.selected {
+            border-color: #007aff;
+            background: #e6f3ff;
+        }
+
+        .option.correct {
+            border-color: #34c759;
+            background: #f0fff4;
+        }
+
+        .option.incorrect {
+            border-color: #ff3b30;
+            background: #fff5f5;
+        }
+
+        .solution {
+            background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
+            border: 1px solid #007aff;
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 24px;
+            display: none;
+        }
+
+        .solution.show {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .solution-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #007aff;
+            margin-bottom: 16px;
+        }
+
+        .solution-text {
+            font-size: 16px;
+            color: #1d1d1f;
+            line-height: 1.6;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
             width: 40px;
             height: 40px;
-            border: 4px solid #e2e8f0;
-            border-top: 4px solid #8b5cf6;
+            border: 3px solid #e5e5e7;
+            border-top: 3px solid #007aff;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin: 0 auto;
+            margin: 0 auto 16px;
         }
 
-        .error-message {
-            color: #ef4444;
-            text-align: center;
-            padding: 20px;
-            background: #fef2f2;
-            border: 1px solid #fecaca;
-            border-radius: 8px;
-            margin: 20px 0;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @keyframes slideInFromTop {
+        /* Animations */
+        @keyframes slideDown {
             from {
                 opacity: 0;
                 transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
             }
             to {
                 opacity: 1;
@@ -564,229 +558,41 @@
             }
         }
 
-        /* Responsive Design */
-        @media (max-width: 1024px) {
-            .content-area {
-                flex-direction: column;
-            }
-            
-            .topic-selector {
-                width: 100%;
-                height: 200px;
-                border-right: none;
-                border-bottom: 1px solid #e2e8f0;
-            }
-            
-            .topic-list {
-                display: flex;
-                gap: 16px;
-                overflow-x: auto;
-                padding: 16px;
-            }
-            
-            .topic-category {
-                margin-bottom: 0;
-                min-width: 200px;
-            }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
+        /* Responsive Design */
         @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-            }
-            
-            .sidebar {
-                width: 100%;
-                height: auto;
-                order: 2;
+            .hero-title {
+                font-size: 36px;
             }
 
-            .sidebar.collapsed {
-                width: 100%;
-                height: 60px;
+            .hero-subtitle {
+                font-size: 18px;
             }
 
             .main-content {
-                order: 1;
+                padding: 40px 16px;
             }
 
-            .header {
-                padding: 16px 20px;
-            }
-
-            .greeting {
-                font-size: 24px;
-            }
-
-            .question-content {
-                padding: 16px;
-            }
-
-            .action-buttons {
-                flex-direction: column;
-            }
-        }
-
-        .topic-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 32px;
-            margin-bottom: 16px;
-        }
-        .topic-group {
-            margin-bottom: 0;
-        }
-        .topic-group-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #3b82f6;
-            margin-bottom: 12px;
-            margin-top: 8px;
-        }
-        .subtopic-row {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-        .subtopic-card {
-            background: linear-gradient(135deg, #f1f5f9 0%, #e0e7ef 100%);
-            border: 2px solid #e2e8f0;
-            border-radius: 16px;
-            padding: 24px 20px;
-            min-width: 160px;
-            min-height: 80px;
-            font-size: 16px;
-            font-weight: 600;
-            color: #1e293b;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(59,130,246,0.04);
-            transition: all 0.2s, box-shadow 0.3s;
-            outline: none;
-        }
-        .subtopic-card:hover, .subtopic-card:focus {
-            border-color: #3b82f6;
-            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-            box-shadow: 0 4px 16px rgba(59,130,246,0.10);
-        }
-        .subtopic-card.selected {
-            border-color: #10b981;
-            background: linear-gradient(135deg, #bbf7d0 0%, #6ee7b7 100%);
-            color: #065f46;
-            box-shadow: 0 6px 24px rgba(16,185,129,0.12);
-        }
-        .subtopic-icon {
-            font-size: 28px;
-            margin-right: 8px;
-        }
-        @media (max-width: 900px) {
-            .subtopic-row {
-                flex-direction: column;
-                gap: 12px;
-            }
-            .subtopic-card {
-                min-width: 100%;
-            }
-        }
-        .practice-setup {
-            max-width: 600px;
-            margin: 40px auto 0;
-            animation: fadeIn 0.8s ease-out;
-        }
-        .form-section {
-            background: #f8fafc;
-            border-radius: 16px;
-            padding: 32px;
-            border: 1px solid #e2e8f0;
-            margin-bottom: 24px;
-            box-shadow: 0 4px 24px rgba(59,130,246,0.07);
-        }
-        .icon-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
-            border-radius: 20px;
-            margin: 0 auto 24px;
-            font-size: 40px;
-        }
-        .section-title {
-            font-size: 24px;
-            font-weight: 600;
-            color: #1e293b;
-            margin-bottom: 24px;
-            text-align: center;
-        }
-        .form-group {
-            margin-bottom: 24px;
-        }
-        .form-label {
-            display: block;
-            font-size: 16px;
-            font-weight: 600;
-            color: #374151;
-            margin-bottom: 8px;
-        }
-        .form-select {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            font-size: 16px;
-            background: white;
-            color: #374151;
-            cursor: pointer;
-            transition: all 0.2s;
-            outline: none;
-        }
-        .form-select:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-        .form-select:hover {
-            border-color: #94a3b8;
-        }
-        .form-description {
-            font-size: 14px;
-            color: #6b7280;
-            margin-top: 4px;
-        }
-        .start-button {
-            width: 100%;
-            padding: 16px 24px;
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 32px;
-            position: relative;
-            overflow: hidden;
-        }
-        .start-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
-        }
-        .start-button:active {
-            transform: translateY(0);
-        }
-        .start-button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        @media (max-width: 768px) {
-            .practice-setup {
-                max-width: 100%;
-            }
-            .form-section {
+            .topic-section,
+            .subtopic-section,
+            .question-area {
                 padding: 24px;
+            }
+
+            .topic-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .subtopic-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-menu {
+                display: none;
             }
         }
     </style>
@@ -823,7 +629,6 @@
             <button class="nav-item progress" onclick="navigateTo('progress')">
                 <span class="nav-text">Progress Tracker</span>
             </button>
-
             
             <div class="sidebar-bottom">
                 <button class="nav-item settings" onclick="navigateTo('settings')">
@@ -832,172 +637,138 @@
                 <button class="nav-item appearance" onclick="navigateTo('appearance')">
                     <span class="nav-text">Appearance</span>
                 </button>
-
             </div>
         </nav>
 
         <main class="main-content">
-            <header class="header">
-                <h1 class="greeting">Hello Student! 🤖</h1>
-                <p class="page-subtitle">Master Quantitative Techniques with AI-powered step-by-step solutions and expert tips</p>
-            </header>
-
-            <div class="content-area">
-                <!-- Practice Setup Form (Modern Card UI) -->
-                <div id="mentorSetup" class="practice-setup" style="max-width:600px;margin:40px auto 0;">
-                    <div class="form-section">
-                        <div class="icon-wrapper" style="background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%); font-size: 40px;">🧮</div>
-                        <h2 class="section-title">QT Mentor Mode</h2>
-                        <form id="mentorForm">
-                            <div class="form-group">
-                                <label class="form-label" for="topicSelect">Topic</label>
-                                <select class="form-select" id="topicSelect" required>
-                                    <option value="">Select a topic</option>
-                                    <option value="data-interpretation">Data Interpretation</option>
-                                    <option value="mathematics">Mathematics</option>
-                                    <option value="advanced-topics">Advanced Topics</option>
-                                </select>
-                                <p class="form-description">Choose the main topic area you want to practice</p>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label" for="subtopicSelect">Subtopic</label>
-                                <select class="form-select" id="subtopicSelect" required disabled>
-                                    <option value="">Select a subtopic</option>
-                                </select>
-                                <p class="form-description">Choose the specific subtopic within the topic</p>
-                            </div>
-                            <button type="submit" class="start-button" id="mentorStartButton" disabled>
-                                <span id="mentorButtonText">Start Practicing</span>
-                            </button>
-                        </form>
-                    </div>
+            <!-- Hero Section -->
+            <section class="hero">
+                <div class="hero-content">
+                    <span class="hero-icon">🧮</span>
+                    <h1 class="hero-title">QT AI Mentor</h1>
+                    <p class="hero-subtitle">Master Quantitative Techniques with AI-powered step-by-step solutions and expert guidance</p>
                 </div>
+            </section>
 
-                <!-- Question Area (hidden until topic selected) -->
-                <div class="question-area" id="mentorQuestionArea" style="display:none;">
-                    <div class="question-header">
-                        <h2 class="question-title" id="questionTitle">QT AI Mentor</h2>
-                        <button class="generate-btn" id="generateBtn" onclick="generateQuestion()">
-                            Generate New Set
-                        </button>
+            <!-- Main Content -->
+            <div class="main-content-inner">
+                <!-- Topic Selection -->
+                <section class="topic-section" id="topicSection">
+                    <div class="section-header">
+                        <h2 class="section-title">Choose Your Topic</h2>
+                        <p class="section-subtitle">Select a topic to begin your quantitative practice journey</p>
                     </div>
-                    <div class="question-content">
-                        <div class="welcome-screen" id="welcomeScreen">
-                            <div class="welcome-icon">🤖</div>
-                            <div class="welcome-title">Welcome to QT AI Mentor!</div>
-                            <div class="welcome-text">
-                                Select a topic to get started with AI-powered quantitative practice. 
-                                I'll provide step-by-step solutions, useful tricks, and help you avoid common errors.
-                            </div>
-                        </div>  
-                        <div class="question-container" id="questionContainer">
-                            <!-- Dynamic content will be loaded here -->
+
+                    <div class="topic-grid">
+                        <div class="topic-card" data-topic="data-interpretation">
+                            <div class="topic-icon">📊</div>
+                            <h3 class="topic-name">Data Interpretation</h3>
+                            <p class="topic-description">Master charts, graphs, tables, and data analysis techniques</p>
+                        </div>
+                        <div class="topic-card" data-topic="mathematics">
+                            <div class="topic-icon">🔢</div>
+                            <h3 class="topic-name">Mathematics</h3>
+                            <p class="topic-description">Practice arithmetic, algebra, geometry, and number systems</p>
+                        </div>
+                        <div class="topic-card" data-topic="advanced-topics">
+                            <div class="topic-icon">🚀</div>
+                            <h3 class="topic-name">Advanced Topics</h3>
+                            <p class="topic-description">Complex problems, speed mathematics, and advanced techniques</p>
                         </div>
                     </div>
-                </div>
+                </section>
+
+                <!-- Subtopic Selection -->
+                <section class="subtopic-section" id="subtopicSection">
+                    <div class="section-header">
+                        <h2 class="section-title">Select Subtopic</h2>
+                        <p class="section-subtitle">Choose a specific area within your selected topic</p>
+                    </div>
+
+                    <div class="subtopic-grid" id="subtopicGrid">
+                        <!-- Dynamic subtopics will be loaded here -->
+                    </div>
+
+                    <div class="action-section">
+                        <button class="btn btn-secondary" id="backToTopics">← Back to Topics</button>
+                        <button class="btn" id="startPractice" disabled>Start Practice →</button>
+                    </div>
+                </section>
+
+                <!-- Question Area -->
+                <section class="question-area" id="questionArea">
+                    <div class="question-header">
+                        <h2 class="question-title" id="questionTitle">QT AI Mentor</h2>
+                        <button class="btn" id="generateNew">Generate New Question</button>
+                    </div>
+
+                    <div class="question-content" id="questionContent">
+                        <div class="loading" id="loadingContent">
+                            <div class="spinner"></div>
+                            <p>Generating your practice question...</p>
+                        </div>
+
+                        <div id="questionContainer" style="display: none;">
+                            <!-- Dynamic question content will be loaded here -->
+                        </div>
+                    </div>
+                </section>
             </div>
         </main>
     </div>
 
+    <script src="progress-tracker.js"></script>
     <script>
-        let currentTopic = null;
-        let currentSubtopic = null;
-        let quizData = [];
-        let userAnswers = [];
-
-        // Subtopic map
-        const subtopicMap = {
-            'data-interpretation': [
-                { value: 'tables', label: 'Tables' },
-                { value: 'bar-charts', label: 'Bar Charts' },
-                { value: 'line-graphs', label: 'Line Graphs' },
-                { value: 'pie-charts', label: 'Pie Charts' }
-            ],
-            'mathematics': [
-                { value: 'percentages', label: 'Percentages' },
-                { value: 'ratios', label: 'Ratios & Proportions' },
-                { value: 'averages', label: 'Averages' },
-                { value: 'profit-loss', label: 'Profit & Loss' }
-            ],
-            'advanced-topics': [
-                { value: 'compound-interest', label: 'Compound Interest' },
-                { value: 'time-work', label: 'Time & Work' },
-                { value: 'speed-distance', label: 'Speed & Distance' }
-            ]
+        // Topic and subtopic data
+        const topicData = {
+            'data-interpretation': {
+                name: 'Data Interpretation',
+                subtopics: [
+                    { id: 'bar-charts', name: 'Bar Charts', description: 'Analyze bar chart data and trends' },
+                    { id: 'line-graphs', name: 'Line Graphs', description: 'Interpret line graph patterns' },
+                    { id: 'pie-charts', name: 'Pie Charts', description: 'Understand pie chart proportions' },
+                    { id: 'tables', name: 'Data Tables', description: 'Work with tabular data' },
+                    { id: 'mixed-charts', name: 'Mixed Charts', description: 'Complex multi-chart analysis' }
+                ]
+            },
+            'mathematics': {
+                name: 'Mathematics',
+                subtopics: [
+                    { id: 'arithmetic', name: 'Arithmetic', description: 'Basic mathematical operations' },
+                    { id: 'algebra', name: 'Algebra', description: 'Algebraic expressions and equations' },
+                    { id: 'geometry', name: 'Geometry', description: 'Geometric shapes and calculations' },
+                    { id: 'number-systems', name: 'Number Systems', description: 'Different number bases and properties' },
+                    { id: 'percentages', name: 'Percentages', description: 'Percentage calculations and applications' }
+                ]
+            },
+            'advanced-topics': {
+                name: 'Advanced Topics',
+                subtopics: [
+                    { id: 'speed-math', name: 'Speed Mathematics', description: 'Fast calculation techniques' },
+                    { id: 'complex-problems', name: 'Complex Problems', description: 'Multi-step problem solving' },
+                    { id: 'logical-reasoning', name: 'Logical Reasoning', description: 'Mathematical logic and reasoning' },
+                    { id: 'advanced-algebra', name: 'Advanced Algebra', description: 'Complex algebraic concepts' },
+                    { id: 'statistics', name: 'Statistics', description: 'Statistical analysis and probability' }
+                ]
+            }
         };
 
-        // Hide old topic selector and graphical grid if present
+        let selectedTopic = null;
+        let selectedSubtopic = null;
+        let currentQuestion = null;
+
+        // Initialize the page
         document.addEventListener('DOMContentLoaded', function() {
-            const oldSelector = document.querySelector('.topic-selector');
-            if (oldSelector) oldSelector.style.display = 'none';
-            const oldGrid = document.querySelector('.topic-grid');
-            if (oldGrid) oldGrid.style.display = 'none';
-
-            // Dropdown logic
-            const topicSelect = document.getElementById('topicSelect');
-            const subtopicSelect = document.getElementById('subtopicSelect');
-            const startBtn = document.getElementById('mentorStartButton');
-
-            topicSelect.addEventListener('change', function() {
-                const selected = this.value;
-                subtopicSelect.innerHTML = '<option value="">Select a subtopic</option>';
-                if (subtopicMap[selected]) {
-                    subtopicMap[selected].forEach(sub => {
-                        const opt = document.createElement('option');
-                        opt.value = sub.value;
-                        opt.textContent = sub.label;
-                        subtopicSelect.appendChild(opt);
-                    });
-                    subtopicSelect.disabled = false;
-                } else {
-                    subtopicSelect.disabled = true;
-                }
-                startBtn.disabled = true;
-            });
-
-            subtopicSelect.addEventListener('change', function() {
-                startBtn.disabled = !(topicSelect.value && subtopicSelect.value);
-            });
+            setupEventListeners();
         });
 
-        // Form submission handler for mentor
-        document.addEventListener('DOMContentLoaded', function() {
-            const mentorForm = document.getElementById('mentorForm');
-            const mentorSetup = document.getElementById('mentorSetup');
-            const mentorQuestionArea = document.getElementById('mentorQuestionArea');
-            const mentorStartButton = document.getElementById('mentorStartButton');
-            const mentorButtonText = document.getElementById('mentorButtonText');
-            const topicSelect = document.getElementById('topicSelect');
-            const subtopicSelect = document.getElementById('subtopicSelect');
-
-            mentorForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const topic = topicSelect.value;
-                const subtopic = subtopicSelect.value;
-                if (!topic || !subtopic) return;
-                currentTopic = topic;
-                currentSubtopic = subtopic;
-                mentorSetup.style.display = 'none';
-                mentorQuestionArea.style.display = 'block';
-                document.getElementById('questionTitle').textContent = subtopicSelect.options[subtopicSelect.selectedIndex].text.trim();
-                generateQuestion();
-            });
-        });
-
-        function getUsername() {
-            return localStorage.getItem('username') || 'Student';
-        }
-
-        function updateGreeting() {
-            const username = getUsername();
-            const greetingEl = document.querySelector('.greeting');
-            if (greetingEl) greetingEl.textContent = `Hello ${username}! 🤖`;
-        }
-
+        // Sidebar toggle functionality
         function toggleSidebar() {
-            document.getElementById('sidebar')?.classList.toggle('collapsed');
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('collapsed');
         }
 
+        // Navigation function
         function navigateTo(page) {
             const pages = {
                 'home': '2.homepage.html',
@@ -1006,353 +777,251 @@
                 'qt-mentor': 'qt-mentor.html',
                 'lexa-chatbot': 'lexa-chatbot.html',
                 'generate-tests': 'generate-tests.html',
+                'progress': 'progress.html',
                 'settings': 'settings.html',
                 'appearance': 'appearance.html',
-                'progress': 'progress.html',
-     
             };
-            if (pages[page]) window.location.href = pages[page];
+
+            if (pages[page]) {
+                window.location.href = pages[page];
+            }
         }
 
-        function selectTopic(element) {
-            document.querySelectorAll('.topic-item').forEach(item => item.classList.remove('active'));
-            element.classList.add('active');
-            currentTopic = element.dataset.topic;
-
-            const topicName = element.querySelector('.topic-name').textContent;
-            document.getElementById('questionTitle').textContent = topicName;
-            document.getElementById('generateBtn').disabled = false;
-            document.getElementById('welcomeScreen').style.display = 'none';
-            document.getElementById('questionContainer').innerHTML = '';
-            document.getElementById('questionContainer').classList.remove('show');
-        }
-
-        async function generateQuestion() {
-            if (!currentSubtopic) return;
-
-            const generateBtn = document.getElementById('generateBtn');
-            const questionContainer = document.getElementById('questionContainer');
-            const welcomeScreen = document.getElementById('welcomeScreen');
-
-            // Show loading state
-            generateBtn.textContent = 'Generating...';
-            generateBtn.disabled = true;
-            questionContainer.innerHTML = `
-                <div style="text-align: center; padding: 40px;">
-                    <div class="loading-spinner"></div>
-                    <p style="font-size: 16px; margin-top: 16px; color: #64748b;">
-                        Generating your CLAT-style passage and quiz...
-                    </p>
-                </div>
-            `;
-            questionContainer.classList.add('show');
-            welcomeScreen.style.display = 'none';
-// http://127.0.0.1:5000/qt/generate-question
-            try {
-                const response = await fetch("/qt/generate-question", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ topic: currentSubtopic })
+        function setupEventListeners() {
+            // Topic selection
+            document.querySelectorAll('.topic-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    selectTopic(this.dataset.topic);
                 });
+            });
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
+            // Back to topics button
+            document.getElementById('backToTopics').addEventListener('click', function() {
+                showTopicSection();
+            });
 
-                const data = await response.json();
+            // Start practice button
+            document.getElementById('startPractice').addEventListener('click', function() {
+                startPractice();
+            });
+
+            // Generate new question button
+            document.getElementById('generateNew').addEventListener('click', function() {
+                generateQuestion();
+            });
+        }
+
+        function selectTopic(topicId) {
+            selectedTopic = topicId;
+            
+            // Update UI
+            document.querySelectorAll('.topic-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.querySelector(`[data-topic="${topicId}"]`).classList.add('selected');
+
+            // Load subtopics
+            loadSubtopics(topicId);
+            
+            // Show subtopic section
+            showSubtopicSection();
+        }
+
+        function loadSubtopics(topicId) {
+            const topic = topicData[topicId];
+            const subtopicGrid = document.getElementById('subtopicGrid');
+            
+            subtopicGrid.innerHTML = '';
+            
+            topic.subtopics.forEach(subtopic => {
+                const card = document.createElement('div');
+                card.className = 'subtopic-card';
+                card.dataset.subtopic = subtopic.id;
                 
-                if (!data.success) {
-                    throw new Error(data.error || 'Unknown error occurred');
-                }
-
-                const rawOutput = data.rawOutput;
-                console.log('Raw output:', rawOutput);
-
-                // Parse the response more robustly
-                const parsedData = parseQuizData(rawOutput);
-                
-                if (!parsedData.passage || parsedData.questions.length === 0) {
-                    throw new Error('Could not parse the generated content properly');
-                }
-
-                // Store quiz data globally
-                quizData = parsedData.questions;
-                userAnswers = Array(parsedData.questions.length).fill(null);
-
-                // Render the quiz
-                renderQuiz(parsedData.passage, parsedData.questions);
-
-            } catch (error) {
-                console.error('Error generating question:', error);
-                questionContainer.innerHTML = `
-                    <div class="error-message">
-                        <strong>❌ Error:</strong> ${error.message}<br>
-                        <small>Please check if the Flask server is running on </small>
-                        <br><br>
-                        <button class="action-btn" onclick="generateQuestion()">🔄 Try Again</button>
-                    </div>
+                card.innerHTML = `
+                    <h3 class="subtopic-name">${subtopic.name}</h3>
+                    <p class="subtopic-description">${subtopic.description}</p>
                 `;
-            } finally {
-                generateBtn.textContent = 'Generate Quiz';
-                generateBtn.disabled = false;
-            }
+                
+                card.addEventListener('click', function() {
+                    selectSubtopic(subtopic.id);
+                });
+                
+                subtopicGrid.appendChild(card);
+            });
         }
 
-        function parseQuizData(rawOutput) {
-            try {
-                console.log('Parsing raw output:', rawOutput);
-                
-                // More flexible parsing approach
-                let passage = '';
-                let questions = [];
-                
-                // Split by Answer Key (case insensitive)
-                const answerKeyRegex = /Answer\s*Key\s*:?/i;
-                const parts = rawOutput.split(answerKeyRegex);
-                const beforeAnswerKey = parts[0] || '';
-                const answerKeySection = parts[1] || '';
-
-                // Extract passage - everything before the first question number pattern
-                const passageMatch = beforeAnswerKey.match(/^([\s\S]*?)(?=\d+\.\d+)/);
-                if (passageMatch) {
-                    passage = passageMatch[1].trim();
-                    // Clean up passage
-                    passage = passage.replace(/^\d+\s+/, ''); // Remove leading number
-                    passage = passage.trim();
-                }
-
-                // Extract questions - more flexible regex
-                const questionPattern = /(\d+\.\d+)\s*(.*?)(?=\d+\.\d+|Answer\s*Key|$)/gs;
-                let questionMatch;
-                
-                while ((questionMatch = questionPattern.exec(beforeAnswerKey)) !== null) {
-                    const questionLabel = questionMatch[1];
-                    const questionContent = questionMatch[2].trim();
-                    
-                    if (!questionContent) continue;
-                    
-                    // Split question content into lines
-                    const lines = questionContent.split('\n').map(line => line.trim()).filter(line => line);
-                    
-                    if (lines.length < 5) continue; // Need at least question + 4 options
-                    
-                    // First line is the question
-                    const questionText = lines[0];
-                    
-                    // Extract options - look for (A), (B), (C), (D) patterns
-                    const options = [];
-                    for (let i = 1; i < lines.length && options.length < 4; i++) {
-                        const line = lines[i];
-                        // Match various option formats: (A), A), A., etc.
-                        if (line.match(/^\s*\(?[A-D]\)?\.?\s/)) {
-                            const optionText = line.replace(/^\s*\(?[A-D]\)?\.?\s*/, '').trim();
-                            if (optionText) {
-                                options.push(optionText);
-                            }
-                        }
-                    }
-                    
-                    if (options.length === 4) {
-                        questions.push({
-                            label: questionLabel,
-                            question: questionText,
-                            options: options,
-                            correct: 0, // Default to A, will be updated from answer key
-                            explanation: 'Explanation not available.'
-                        });
-                    }
-                }
-
-                // Parse answer key
-                if (answerKeySection && questions.length > 0) {
-                    const answerPattern = /(\d+\.\d+)\s*[–-]\s*\(([A-D])\)\s*(.*?)(?=\d+\.\d+|$)/gs;
-                    let answerMatch;
-                    
-                    while ((answerMatch = answerPattern.exec(answerKeySection)) !== null) {
-                        const label = answerMatch[1];
-                        const correctOption = answerMatch[2];
-                        const explanation = answerMatch[3].trim();
-                        
-                        // Find matching question and update
-                        const questionIndex = questions.findIndex(q => q.label === label);
-                        if (questionIndex !== -1) {
-                            questions[questionIndex].correct = correctOption.charCodeAt(0) - 65; // A=0, B=1, etc.
-                            questions[questionIndex].explanation = explanation || 'Explanation not available.';
-                        }
-                    }
-                }
-
-                console.log('Parsed data:', { passage, questions });
-                return { passage, questions };
-                
-            } catch (error) {
-                console.error('Error parsing quiz data:', error);
-                
-                // Fallback: try to extract at least some content
-                const lines = rawOutput.split('\n').filter(line => line.trim());
-                let passage = '';
-                let questions = [];
-                
-                // Simple fallback - take first few lines as passage
-                if (lines.length > 10) {
-                    passage = lines.slice(0, 5).join(' ').trim();
-                    
-                    // Create a simple question as fallback
-                    questions = [{
-                        label: '1.1',
-                        question: 'Based on the passage above, what can be concluded?',
-                        options: [
-                            'Option A - Analysis required',
-                            'Option B - Further calculation needed',
-                            'Option C - Data interpretation required',
-                            'Option D - Cannot be determined'
-                        ],
-                        correct: 0,
-                        explanation: 'This is a fallback question. Please try generating again for better content.'
-                    }];
-                }
-                
-                return { passage, questions };
-            }
+        function selectSubtopic(subtopicId) {
+            selectedSubtopic = subtopicId;
+            
+            // Update UI
+            document.querySelectorAll('.subtopic-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.querySelector(`[data-subtopic="${subtopicId}"]`).classList.add('selected');
+            
+            // Enable start practice button
+            document.getElementById('startPractice').disabled = false;
         }
 
-        function renderQuiz(passage, questions) {
+        function showSubtopicSection() {
+            document.getElementById('topicSection').style.display = 'none';
+            document.getElementById('subtopicSection').classList.add('show');
+        }
+
+        function showTopicSection() {
+            document.getElementById('subtopicSection').classList.remove('show');
+            document.getElementById('topicSection').style.display = 'block';
+            document.getElementById('questionArea').classList.remove('show');
+            
+            // Reset selections
+            selectedTopic = null;
+            selectedSubtopic = null;
+            document.getElementById('startPractice').disabled = true;
+        }
+
+        function startPractice() {
+            document.getElementById('subtopicSection').classList.remove('show');
+            document.getElementById('questionArea').classList.add('show');
+            
+            // Update question title
+            const topic = topicData[selectedTopic];
+            const subtopic = topic.subtopics.find(s => s.id === selectedSubtopic);
+            document.getElementById('questionTitle').textContent = `${topic.name} - ${subtopic.name}`;
+            
+            // Generate first question
+            generateQuestion();
+        }
+
+        function generateQuestion() {
+            const loadingContent = document.getElementById('loadingContent');
             const questionContainer = document.getElementById('questionContainer');
             
-            let html = `
-                <div class="question-section">
-                    <div class="section-title">📘 CLAT-Style Quantitative Aptitude Set</div>
-                    <div class="passage-output">${passage}</div>
-            `;
+            loadingContent.style.display = 'block';
+            questionContainer.style.display = 'none';
+            
+            // Simulate API call
+            setTimeout(() => {
+                loadingContent.style.display = 'none';
+                questionContainer.style.display = 'block';
+                
+                // Generate sample question
+                generateSampleQuestion();
+            }, 2000);
+        }
 
-            questions.forEach((q, index) => {
-                html += `
-                    <div class="single-question" id="q-${index}">
-                        <div class="question-label">${q.label}</div>
-                        <div class="question-text">${q.question}</div>
-                        <div class="options-list">
-                            ${q.options.map((option, optIndex) => `
-                                <div class="option" onclick="selectOption(${index}, ${optIndex})" id="q-${index}-opt-${optIndex}">
-                                    (${String.fromCharCode(65 + optIndex)}) ${option}
-                                </div>
-                            `).join('')}
+        function generateSampleQuestion() {
+            const questionContainer = document.getElementById('questionContainer');
+            
+            const sampleQuestion = {
+                text: "If a company's revenue increased by 25% from 2020 to 2021 and then decreased by 10% from 2021 to 2022, what was the overall percentage change in revenue from 2020 to 2022?",
+                options: [
+                    "12.5% increase",
+                    "15% increase", 
+                    "12.5% decrease",
+                    "15% decrease"
+                ],
+                correct: 0,
+                solution: "Let's solve this step by step:\n\n1. Let the initial revenue in 2020 be 100\n2. Revenue in 2021 = 100 + 25% of 100 = 125\n3. Revenue in 2022 = 125 - 10% of 125 = 125 - 12.5 = 112.5\n4. Overall change = 112.5 - 100 = 12.5\n5. Percentage change = (12.5/100) × 100 = 12.5% increase\n\nTherefore, the correct answer is 12.5% increase."
+            };
+            
+            currentQuestion = sampleQuestion;
+            displayQuestion(sampleQuestion);
+        }
+
+        function displayQuestion(question) {
+            const questionContainer = document.getElementById('questionContainer');
+            
+            questionContainer.innerHTML = `
+                <div class="question-text">${question.text}</div>
+                <div class="options-grid">
+                    ${question.options.map((option, index) => `
+                        <div class="option" data-index="${index}">
+                            ${String.fromCharCode(65 + index)}. ${option}
                         </div>
-                        <div class="answer-result" id="answer-${index}"></div>
-                    </div>
-                `;
+                    `).join('')}
+                </div>
+                <div class="action-section">
+                    <button class="btn" id="checkAnswer">Check Answer</button>
+                </div>
+                <div class="solution" id="solution">
+                    <div class="solution-title">Solution</div>
+                    <div class="solution-text">${question.solution}</div>
+                </div>
+            `;
+            
+            // Add event listeners
+            document.querySelectorAll('.option').forEach(option => {
+                option.addEventListener('click', function() {
+                    selectOption(this.dataset.index);
+                });
             });
-
-            html += `
-                    <div class="action-buttons">
-                        <button class="action-btn primary" onclick="submitAllAnswers()">📝 Submit All Answers</button>
-                    </div>
-                </div>
-            `;
-
-            questionContainer.innerHTML = html;
+            
+            document.getElementById('checkAnswer').addEventListener('click', function() {
+                checkAnswer();
+            });
         }
 
-        function selectOption(questionIndex, optionIndex) {
-            // Don't allow selection if answer already checked
-            if (document.getElementById(`answer-${questionIndex}`).classList.contains('show')) {
+        function selectOption(index) {
+            document.querySelectorAll('.option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            document.querySelector(`[data-index="${index}"]`).classList.add('selected');
+        }
+
+        function checkAnswer() {
+            const selectedOption = document.querySelector('.option.selected');
+            if (!selectedOption) {
+                alert('Please select an answer first.');
                 return;
             }
-
-            userAnswers[questionIndex] = optionIndex;
-
-            // Update visual selection
-            for (let i = 0; i < 4; i++) {
-                const optEl = document.getElementById(`q-${questionIndex}-opt-${i}`);
-                if (optEl) optEl.classList.remove('selected');
-            }
-            const selectedEl = document.getElementById(`q-${questionIndex}-opt-${optionIndex}`);
-            if (selectedEl) selectedEl.classList.add('selected');
-        }
-
-        function submitAllAnswers() {
-            for (let i = 0; i < quizData.length; i++) {
-                checkAnswer(i, true);
-            }
-        }
-
-        function checkAnswer(questionIndex, showAlways = false) {
-            const question = quizData[questionIndex];
-            const userSelected = userAnswers[questionIndex];
-            const resultEl = document.getElementById(`answer-${questionIndex}`);
-
-            if (userSelected === null || userSelected === undefined) {
-                if (showAlways) {
-                    resultEl.innerHTML = `<p style="color: #ef4444; font-weight: 600;">❗ No answer selected.</p>`;
-                    resultEl.classList.add('show');
+            
+            const selectedIndex = parseInt(selectedOption.dataset.index);
+            const correctIndex = currentQuestion.correct;
+            
+            // Show correct/incorrect states
+            document.querySelectorAll('.option').forEach((option, index) => {
+                if (index === correctIndex) {
+                    option.classList.add('correct');
+                } else if (index === selectedIndex && selectedIndex !== correctIndex) {
+                    option.classList.add('incorrect');
                 }
-                return;
-            }
-
-            // Disable all options for this question
-            for (let i = 0; i < 4; i++) {
-                const optEl = document.getElementById(`q-${questionIndex}-opt-${i}`);
-                if (optEl) {
-                    optEl.style.pointerEvents = 'none';
-                    if (i === question.correct) {
-                        optEl.classList.add('correct');
-                    } else if (i === userSelected && userSelected !== question.correct) {
-                        optEl.classList.add('incorrect');
-                    }
-                }
-            }
-
-            // Show result
-            const isCorrect = userSelected === question.correct;
-            resultEl.innerHTML = `
-                <div class="solution">
-                    <div style="margin-bottom: 12px;">
-                        <strong style="color: ${isCorrect ? '#10b981' : '#ef4444'};">
-                            ${isCorrect ? '✅ Correct!' : '❌ Incorrect'}
-                        </strong>
-                    </div>
-                    <div><strong>Correct Answer:</strong> (${String.fromCharCode(65 + question.correct)})</div>
-                    <div style="margin-top: 8px;"><strong>Explanation:</strong> ${question.explanation}</div>
-                </div>
-            `;
-            resultEl.classList.add('show');
-        }
-
-        // Keyboard shortcuts
-        document.addEventListener('keydown', e => {
-            if (e.ctrlKey && e.key === 'b') {
-                e.preventDefault();
-                toggleSidebar();
-            }
-        });
-
-        function checkScreenSize() {
-            const sidebar = document.getElementById('sidebar');
-            if (window.innerWidth <= 768) {
-                sidebar?.classList.add('collapsed');
+            });
+            
+            // Show solution
+            document.getElementById('solution').classList.add('show');
+            
+            // Disable check answer button
+            document.getElementById('checkAnswer').disabled = true;
+            
+            // Save progress
+            const isCorrect = selectedIndex === correctIndex;
+            const score = isCorrect ? 1 : 0;
+            const total = 1;
+            
+            // Map topic to section
+            const topicSectionMap = {
+                'data-interpretation': 'Quantitative Techniques',
+                'mathematics': 'Quantitative Techniques',
+                'advanced-topics': 'Quantitative Techniques'
+            };
+            
+            const section = topicSectionMap[selectedTopic] || 'Quantitative Techniques';
+            const subcategory = selectedSubtopic;
+            
+            // Save progress using shared system
+            const success = saveProgress(section, subcategory, score, total, {
+                testType: 'qt-mentor',
+                topic: selectedTopic,
+                subtopic: selectedSubtopic,
+                questionText: currentQuestion.text.substring(0, 100) + '...'
+            });
+            
+            if (success) {
+                console.log('✅ QT Mentor progress saved successfully');
             } else {
-                sidebar?.classList.remove('collapsed');
+                console.error('❌ Failed to save QT Mentor progress');
             }
-        }
-
-        // Initialize on page load
-        window.addEventListener('load', () => {
-            updateGreeting();
-            checkScreenSize();
-        });
-
-        window.addEventListener('resize', checkScreenSize);
-
-        // After mentor session is completed and score is calculated, add this:
-        function saveMentorProgress(section, subcategory, score, total) {
-            let progress = JSON.parse(localStorage.getItem('progress') || '[]');
-            progress.push({
-                date: new Date().toISOString(),
-                section,
-                subcategory,
-                score,
-                total
-            });
-            localStorage.setItem('progress', JSON.stringify(progress));
         }
     </script>
 </body>

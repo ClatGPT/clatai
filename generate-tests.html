@@ -171,36 +171,6 @@
             position: relative;
         }
 
-        .timer-container {
-            position: absolute;
-            top: 20px;
-            right: 40px;
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 12px;
-            font-size: 18px;
-            font-weight: 600;
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-            display: none;
-            z-index: 100;
-        }
-
-        .timer-container.warning {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            animation: pulse 1s infinite;
-        }
-
-        .timer-container.critical {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            animation: pulse 0.5s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
         .header {
             margin-bottom: 40px;
             animation: slideInFromTop 0.6s ease-out;
@@ -361,194 +331,35 @@
             display: none;
         }
 
-        /* Test Interface Styles */
-        .test-interface {
-            display: none;
-            animation: slideInFromBottom 0.6s ease-out;
-        }
-
-        .test-header {
-            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-            color: white;
-            padding: 24px;
-            border-radius: 16px;
-            margin-bottom: 24px;
-            text-align: center;
-            margin-right: 200px;
-        }
-
-        .test-title {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .test-info {
-            font-size: 16px;
-            opacity: 0.9;
-        }
-
-        .question-container {
+        .download-section {
             background: #f8fafc;
             border-radius: 16px;
             padding: 32px;
             border: 1px solid #e2e8f0;
-            margin-bottom: 24px;
-        }
-
-        .question-number {
-            font-size: 14px;
-            font-weight: 600;
-            color: #3b82f6;
-            margin-bottom: 16px;
-        }
-
-        .passage {
-            background: white;
-            padding: 24px;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
-            margin-bottom: 24px;
-            line-height: 1.6;
-            color: #374151;
-        }
-
-        .passage-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #1e293b;
-            margin-bottom: 16px;
-        }
-
-        .question {
-            font-size: 16px;
-            font-weight: 600;
-            color: #1e293b;
-            margin-bottom: 16px;
-        }
-
-        .options {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .option {
-            display: flex;
-            align-items: center;
-            padding: 12px 16px;
-            background: white;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .option:hover {
-            border-color: #3b82f6;
-            background: #f8fafc;
-        }
-
-        .option.selected {
-            border-color: #3b82f6;
-            background: #dbeafe;
-        }
-
-        .option input[type="radio"] {
-            margin-right: 12px;
-            accent-color: #3b82f6;
-        }
-
-        .test-navigation {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 32px;
-        }
-
-        .nav-button {
-            padding: 12px 24px;
-            border: 2px solid #3b82f6;
-            border-radius: 8px;
-            background: white;
-            color: #3b82f6;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .nav-button:hover {
-            background: #3b82f6;
-            color: white;
-        }
-
-        .nav-button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .submit-button {
-            background: #10b981;
-            color: white;
-            border-color: #10b981;
-        }
-
-        .submit-button:hover {
-            background: #059669;
-            border-color: #059669;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: #e2e8f0;
-            border-radius: 4px;
-            margin: 16px 0;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-            border-radius: 4px;
-            transition: width 0.3s ease;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 12px;
-            margin-top: 16px;
-            flex-wrap: wrap;
-        }
-
-        .action-button {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .new-test-button {
-            background: #6b7280;
-            color: white;
-        }
-
-        .new-test-button:hover {
-            background: #4b5563;
+            margin-top: 24px;
+            text-align: center;
+            display: none;
         }
 
         .download-button {
-            background: #059669;
+            padding: 16px 32px;
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
             color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 0 auto;
         }
 
         .download-button:hover {
-            background: #047857;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(5, 150, 105, 0.3);
         }
 
         .download-button.loading {
@@ -558,13 +369,28 @@
 
         .download-button.loading::after {
             content: '';
-            width: 16px;
-            height: 16px;
+            width: 20px;
+            height: 20px;
             border: 2px solid transparent;
             border-top: 2px solid white;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin-left: 8px;
+        }
+
+        .new-test-button {
+            padding: 12px 24px;
+            background: #6b7280;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 16px;
+        }
+
+        .new-test-button:hover {
+            background: #4b5563;
         }
 
         /* Animations */
@@ -585,17 +411,6 @@
             }
             to {
                 opacity: 1;
-            }
-        }
-
-        @keyframes slideInFromBottom {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
             }
         }
 
@@ -620,33 +435,13 @@
                 padding: 20px;
             }
 
-            .timer-container {
-                top: 10px;
-                right: 20px;
-                font-size: 16px;
-                padding: 8px 16px;
-            }
-
-            .test-header {
-                margin-right: 0;
-            }
-
             .test-generator {
                 max-width: 100%;
             }
 
             .form-section,
-            .question-container {
+            .download-section {
                 padding: 24px;
-            }
-
-            .test-navigation {
-                flex-direction: column;
-                gap: 12px;
-            }
-
-            .action-buttons {
-                justify-content: center;
             }
         }
     </style>
@@ -660,6 +455,7 @@
                 <div class="hamburger-line"></div>
             </button>
             
+        
             <div class="logo">CLAT.GPT.1</div>
             
             <button class="nav-item home" onclick="navigateTo('home')">
@@ -696,11 +492,6 @@
         </nav>
 
         <main class="main-content">
-            <!-- Timer -->
-            <div class="timer-container" id="timerContainer">
-                <span id="timerDisplay">00:00</span>
-            </div>
-
             <!-- Error/Success Messages -->
             <div class="error-message" id="errorMessage"></div>
             <div class="success-message" id="successMessage"></div>
@@ -709,12 +500,12 @@
             <div id="testGenerator" class="test-generator">
                 <header class="header">
                     <h1 class="greeting">Hey Student! 👋</h1>
-                    <p class="page-subtitle">Let's create a customized test for your CLAT preparation</p>
+                    <p class="page-subtitle">Generate and download customized CLAT practice tests with professional formatting</p>
                 </header>
 
                 <div class="form-section">
                     <div class="icon-wrapper">📝</div>
-                    <h2 class="section-title">Generate Sectional Test</h2>
+                    <h2 class="section-title">Generate & Download Test</h2>
                     
                     <form id="testForm">
                         <div class="form-group">
@@ -747,38 +538,19 @@
                         </div>
 
                         <button type="submit" class="build-button" id="buildButton">
-                            <span id="buttonText">Build Test</span>
+                            <span id="buttonText">Generate & Download Test</span>
                         </button>
                     </form>
                 </div>
-            </div>
 
-            <!-- Test Interface -->
-            <div id="testInterface" class="test-interface">
-                <div class="test-header">
-                    <h2 class="test-title" id="testTitle">Test Session</h2>
-                    <p class="test-info" id="testInfo">Subcategory • Passages • Questions</p>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
-                    </div>
-                </div>
-
-                <div class="question-container" id="questionContainer">
-                    <!-- Questions will be dynamically loaded here -->
-                </div>
-
-                <div class="test-navigation">
-                    <button class="nav-button" id="prevButton" onclick="previousQuestion()" disabled>Previous</button>
-                    <span id="questionCounter">Question 1 of 15</span>
-                    <button class="nav-button" id="nextButton" onclick="nextQuestion()">Next</button>
-                    <button class="nav-button submit-button" id="submitButton" onclick="submitTest()" style="display: none;">Submit Test</button>
-                </div>
-
-                <div class="action-buttons">
-                    <button class="action-button download-button" id="downloadButton" onclick="downloadTestPDF()">
+                <!-- Download Section -->
+                <div id="downloadSection" class="download-section">
+                    <h3 style="margin-bottom: 16px; color: #1e293b;">Test Generated Successfully! 🎉</h3>
+                    <p style="margin-bottom: 24px; color: #64748b;">Your customized CLAT practice test is ready for download. The PDF includes all questions with proper formatting, watermark, and instructions.</p>
+                    <button class="download-button" id="downloadButton" onclick="downloadTestPDF()">
                         📄 Download Test PDF
                     </button>
-                    <button class="action-button new-test-button" onclick="startNewTest()">
+                    <button class="new-test-button" onclick="startNewTest()">
                         🔄 Generate New Test
                     </button>
                 </div>
@@ -786,16 +558,12 @@
         </main>
     </div>
 
+    <script src="progress-tracker.js"></script>
     <script>
         // API Configuration
         const API_BASE_URL = window.location.origin; // Use relative URL for production
 
         let currentTest = null;
-        let currentQuestionIndex = 0;
-        let userAnswers = {};
-        let timerInterval = null;
-        let timeRemaining = 0;
-        let totalTime = 0;
         let testMetadata = {};
 
         // Section configurations - Updated with correct subcategories
@@ -939,57 +707,6 @@
             }
         }
 
-        // Timer functions
-        function startTimer(totalSeconds) {
-            timeRemaining = totalSeconds;
-            totalTime = totalSeconds;
-            
-            const timerContainer = document.getElementById('timerContainer');
-            timerContainer.style.display = 'block';
-            
-            updateTimerDisplay();
-            
-            timerInterval = setInterval(() => {
-                timeRemaining--;
-                updateTimerDisplay();
-                
-                if (timeRemaining <= totalTime * 0.25 && timeRemaining > totalTime * 0.1) {
-                    timerContainer.className = 'timer-container warning';
-                } else if (timeRemaining <= totalTime * 0.1) {
-                    timerContainer.className = 'timer-container critical';
-                }
-                
-                if (timeRemaining <= 0) {
-                    clearInterval(timerInterval);
-                    handleTimeUp();
-                }
-            }, 1000);
-        }
-
-        function updateTimerDisplay() {
-            const minutes = Math.floor(timeRemaining / 60);
-            const seconds = timeRemaining % 60;
-            document.getElementById('timerDisplay').textContent = 
-                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        }
-
-        function stopTimer() {
-            if (timerInterval) {
-                clearInterval(timerInterval);
-                timerInterval = null;
-            }
-            document.getElementById('timerContainer').style.display = 'none';
-        }
-
-        function handleTimeUp() {
-            alert('Time is up! Moving to the next question.');
-            if (currentQuestionIndex < currentTest.length - 1) {
-                nextQuestion();
-            } else {
-                submitTest();
-            }
-        }
-
         // Sidebar toggle functionality
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
@@ -1015,110 +732,10 @@
             }
         }
 
-        // Display current question
-        function displayQuestion() {
-            if (!currentTest || currentQuestionIndex >= currentTest.length) return;
-
-            const question = currentTest[currentQuestionIndex];
-            const container = document.getElementById('questionContainer');
-            
-            console.log('Displaying question:', question); // Debug log
-            
-            container.innerHTML = `
-                <div class="question-number">Question ${currentQuestionIndex + 1} of ${currentTest.length}</div>
-                <div class="passage">
-                    <div class="passage-title">Passage:</div>
-                    ${question.passage}
-                </div>
-                <div class="question">${question.question}</div>
-                <div class="options">
-  ${question.options.map((option, index) => `
-    <label class="option ${userAnswers[question.id] === index ? 'selected' : ''}" onclick="selectOption(${index})">
-        <input type="radio" name="question-${question.id}" value="${index}" ${userAnswers[question.id] === index ? 'checked' : ''}>
-        ${String.fromCharCode(65 + index)}. ${option}
-    </label>
-  `).join('')}
-</div>
-            `;
-
-            // Update progress
-            const progress = ((currentQuestionIndex + 1) / currentTest.length) * 100;
-            document.getElementById('progressFill').style.width = `${progress}%`;
-            
-            // Update question counter
-            document.getElementById('questionCounter').textContent = `Question ${currentQuestionIndex + 1} of ${currentTest.length}`;
-            
-            // Update navigation buttons
-            document.getElementById('prevButton').disabled = currentQuestionIndex === 0;
-            document.getElementById('nextButton').style.display = currentQuestionIndex === currentTest.length - 1 ? 'none' : 'block';
-            document.getElementById('submitButton').style.display = currentQuestionIndex === currentTest.length - 1 ? 'block' : 'none';
-
-            // Start timer for this question
-            const section = testMetadata.section;
-            if (section && sectionConfig[section]) {
-                startTimer(sectionConfig[section].timePerQuestion);
-            }
-        }
-
-        // Select option
-        function selectOption(optionIndex) {
-            const question = currentTest[currentQuestionIndex];
-            userAnswers[question.id] = optionIndex;
-            
-            // Update UI
-            document.querySelectorAll('.option').forEach((option, index) => {
-                option.classList.toggle('selected', index === optionIndex);
-                const radio = option.querySelector('input[type="radio"]');
-                radio.checked = index === optionIndex;
-            });
-        }
-
-        // Navigation functions
-        function nextQuestion() {
-            if (currentQuestionIndex < currentTest.length - 1) {
-                stopTimer();
-                currentQuestionIndex++;
-                displayQuestion();
-            }
-        }
-
-        function previousQuestion() {
-            if (currentQuestionIndex > 0) {
-                stopTimer();
-                currentQuestionIndex--;
-                displayQuestion();
-            }
-        }
-
-        // Submit test
-        function submitTest() {
-            stopTimer();
-            
-            let score = 0;
-            let totalQuestions = currentTest.length;
-            
-            currentTest.forEach(question => {
-                if (userAnswers[question.id] === question.correct) {
-                    score++;
-                }
-            });
-            
-            const percentage = Math.round((score / totalQuestions) * 100);
-            
-            alert(`Test Completed!\n\nScore: ${score}/${totalQuestions} (${percentage}%)\n\nCorrect Answers: ${score}\nIncorrect Answers: ${totalQuestions - score}`);
-            
-            saveTestProgress(testMetadata.section, testMetadata.subcategory, score, totalQuestions);
-            startNewTest();
-        }
-
         // Start new test
         function startNewTest() {
-            stopTimer();
-            document.getElementById('testInterface').style.display = 'none';
-            document.getElementById('testGenerator').style.display = 'block';
+            document.getElementById('downloadSection').style.display = 'none';
             currentTest = null;
-            currentQuestionIndex = 0;
-            userAnswers = {};
             testMetadata = {};
             
             // Reset form
@@ -1128,8 +745,8 @@
             document.getElementById('passages').innerHTML = '<option value="">Select number of passages</option>';
         }
 
-        // PDF Download Function
-        function downloadTestPDF() {
+        // PDF Download Function with Watermark, Header, and Footer
+        async function downloadTestPDF() {
             if (!currentTest || currentTest.length === 0) {
                 showError('No test available to download.');
                 return;
@@ -1157,28 +774,149 @@
                 }
 
                 function checkNewPage(requiredSpace) {
-                    if (yPosition + requiredSpace > pageHeight - margin) {
+                    if (yPosition + requiredSpace > pageHeight - margin - 30) { // Extra space for footer
                         doc.addPage();
-                        yPosition = margin;
+                        yPosition = margin + 40; // Extra space for header
+                        addHeader();
+                        addWatermarkSync();
                     }
                 }
 
-                // Add header
-                doc.setFontSize(20);
+                function addHeader() {
+                    // Add header line
+                    doc.setDrawColor(59, 130, 246);
+                    doc.setLineWidth(2);
+                    doc.line(margin, margin + 20, pageWidth - margin, margin + 20);
+                    
+                    // Add header text
+                    doc.setFontSize(10);
+                    doc.setFont(undefined, 'normal');
+                    doc.setTextColor(59, 130, 246);
+                    doc.text('For more material go to- https://discord.gg/9kFymfz7qN', margin, margin + 10);
+                    doc.text('CONTACT US:- 7702832727', pageWidth - margin, margin + 10, { align: 'right' });
+                    
+                    // Reset text color
+                    doc.setTextColor(0, 0, 0);
+                }
+
+                function addFooter() {
+                    const footerY = pageHeight - 15;
+                    
+                    // Add footer line
+                    doc.setDrawColor(59, 130, 246);
+                    doc.setLineWidth(1);
+                    doc.line(margin, footerY - 5, pageWidth - margin, footerY - 5);
+                    
+                    // Add footer text
+                    doc.setFontSize(8);
+                    doc.setTextColor(107, 114, 128);
+                    doc.text('Also, find us on Discord: - https://discord.gg/9kFymfz7qN', pageWidth / 2, footerY, { align: 'center' });
+                    doc.text('Telegram: - https://t.me/CLAT_Community and Instagram: - https://www.instagram.com/clat_community/', pageWidth / 2, footerY + 8, { align: 'center' });
+                }
+
+                function addWatermarkSync() {
+                    // Add text watermark with 30% opacity (synchronous version)
+                    // Use a very light gray color to simulate 30% opacity
+                    doc.setTextColor(240, 240, 240); // Very light gray for 30% opacity effect
+                    doc.setFontSize(60);
+                    doc.setFont(undefined, 'bold');
+                    
+                    // Reset text color
+                    doc.setTextColor(0, 0, 0);
+                }
+
+                async function addWatermark() {
+                    try {
+                        // Try to add the CLAT logo as watermark
+                        const logoPath = 'images/CLAT COMMUNITY ILLUSTRATED LOGO .png';
+                        
+                        // Create an image element to check if the logo exists
+                        const img = new Image();
+                        img.crossOrigin = 'anonymous';
+                        
+                        await new Promise((resolve, reject) => {
+                            img.onload = resolve;
+                            img.onerror = () => {
+                                // If logo fails to load, use text watermark
+                                addTextWatermark();
+                                resolve();
+                            };
+                            img.src = logoPath;
+                        });
+                        
+                        if (img.complete && img.naturalWidth > 0) {
+                            // Logo loaded successfully, add it as watermark
+                            // Note: jsPDF doesn't support opacity directly, so we'll use the image as-is
+                            const logoWidth = 80;
+                            const logoHeight = (logoWidth * img.naturalHeight) / img.naturalWidth;
+                            const logoX = (pageWidth - logoWidth) / 2;
+                            const logoY = (pageHeight - logoHeight) / 2;
+                            
+                            doc.addImage(img, 'PNG', logoX, logoY, logoWidth, logoHeight, undefined, 'FAST', 0);
+                        }
+                    } catch (error) {
+                        // Fallback to text watermark
+                        addTextWatermark();
+                    }
+                }
+
+                function addTextWatermark() {
+                    // Add text watermark as fallback with 30% opacity effect
+                    // Use a very light gray color to simulate 30% opacity
+                    doc.setTextColor(240, 240, 240); // Very light gray for 30% opacity effect
+                    doc.setFontSize(60);
+                    doc.setFont(undefined, 'bold');
+                    doc.text('CLAT.GPT.1', pageWidth / 2, pageHeight / 2, { align: 'center', angle: 45 });
+                    
+                    // Reset text color
+                    doc.setTextColor(0, 0, 0);
+                }
+
+                // Add header to first page
+                addHeader();
+                yPosition += 40; // Space after header
+
+                // Add watermark to first page
+                await addWatermark();
+
+                // Add main title
+                doc.setFontSize(24);
                 doc.setFont(undefined, 'bold');
                 doc.text('CLAT Practice Test', pageWidth / 2, yPosition, { align: 'center' });
-                yPosition += 15;
+                yPosition += 20;
 
                 // Add test info
-                doc.setFontSize(14);
+                doc.setFontSize(16);
                 doc.setFont(undefined, 'normal');
                 const testInfoText = `${testMetadata.sectionName} - ${testMetadata.subcategoryName}`;
                 doc.text(testInfoText, pageWidth / 2, yPosition, { align: 'center' });
-                yPosition += 10;
+                yPosition += 15;
 
-                doc.setFontSize(12);
+                doc.setFontSize(14);
                 const detailsText = `${testMetadata.passages} Passage${testMetadata.passages > 1 ? 's' : ''} • ${currentTest.length} Question${currentTest.length > 1 ? 's' : ''}`;
                 doc.text(detailsText, pageWidth / 2, yPosition, { align: 'center' });
+                yPosition += 25;
+
+                // Add instructions
+                doc.setFontSize(12);
+                doc.setFont(undefined, 'bold');
+                doc.text('Instructions:', margin, yPosition);
+                yPosition += 10;
+                
+                doc.setFont(undefined, 'normal');
+                const instructions = [
+                    '1. Read each passage carefully before answering the questions.',
+                    '2. Choose the best answer from the given options.',
+                    '3. Each question has only one correct answer.',
+                    '4. Manage your time effectively during the test.',
+                    '5. Review your answers before submitting.'
+                ];
+                
+                instructions.forEach(instruction => {
+                    yPosition = addWrappedText(instruction, margin, yPosition, pageWidth - 2 * margin, 11);
+                    yPosition += 3;
+                });
+                
                 yPosition += 15;
 
                 // Add questions
@@ -1223,6 +961,15 @@
                     yPosition += 8;
                     questionNumber++;
                 });
+
+                // Add header, footer, and watermark to all pages
+                const totalPages = doc.internal.getNumberOfPages();
+                for (let i = 1; i <= totalPages; i++) {
+                    doc.setPage(i);
+                    addHeader();
+                    addFooter();
+                    addWatermarkSync();
+                }
 
                 const fileName = `CLAT_${testMetadata.sectionName}_${testMetadata.subcategoryName}_${new Date().toISOString().split('T')[0]}.pdf`;
                 doc.save(fileName);
@@ -1294,24 +1041,16 @@
 
                 currentTest = data.test;
 
-                document.getElementById('testGenerator').style.display = 'none';
-                document.getElementById('testInterface').style.display = 'block';
-                
-                document.getElementById('testTitle').textContent = `${testMetadata.sectionName} Test`;
-                document.getElementById('testInfo').textContent = `${testMetadata.subcategoryName} • ${passages} Passage${passages > 1 ? 's' : ''} • ${currentTest.length} Question${currentTest.length > 1 ? 's' : ''}`;
-                
-                currentQuestionIndex = 0;
-                userAnswers = {};
-                
-                displayQuestion();
-                showSuccess('Test generated successfully!');
+                // Show download section
+                document.getElementById('downloadSection').style.display = 'block';
+                showSuccess('Test generated successfully! Ready for download.');
 
             } catch (error) {
                 console.error('Error generating test:', error);
                 showError(error.message || 'Failed to generate test. Please try again.');
             } finally {
                 buildButton.classList.remove('loading');
-                buttonText.textContent = 'Build Test';
+                buttonText.textContent = 'Generate & Download Test';
                 buildButton.disabled = false;
             }
         });
@@ -1321,19 +1060,6 @@
             const username = localStorage.getItem('username') || 'Student';
             document.querySelector('.greeting').textContent = `Hey ${username}! 👋`;
         });
-
-        // After test is completed and score is calculated, add this:
-        function saveTestProgress(section, subcategory, score, total) {
-            let progress = JSON.parse(localStorage.getItem('progress') || '[]');
-            progress.push({
-                date: new Date().toISOString(),
-                section,
-                subcategory,
-                score,
-                total
-            });
-            localStorage.setItem('progress', JSON.stringify(progress));
-        }
     </script>
 </body>
 </html>

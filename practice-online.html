@@ -463,12 +463,17 @@
             display: block;
         }
 
+        .questions-container {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
         .question-container {
             background: #f8fafc;
             border-radius: 16px;
             padding: 32px;
             border: 1px solid #e2e8f0;
-            margin-bottom: 24px;
         }
 
         .question-number {
@@ -546,9 +551,10 @@
 
         .practice-navigation {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             margin-top: 32px;
+            gap: 16px;
         }
 
         .nav-button {
@@ -572,15 +578,23 @@
             cursor: not-allowed;
         }
 
-        .check-answer-button {
+        .submit-button {
             background: #3b82f6;
             color: white;
             border-color: #3b82f6;
+            padding: 16px 32px;
+            font-size: 18px;
         }
 
-        .check-answer-button:hover {
+        .submit-button:hover {
             background: #2563eb;
             border-color: #2563eb;
+        }
+
+        .submit-button:disabled {
+            background: #9ca3af;
+            border-color: #9ca3af;
+            cursor: not-allowed;
         }
 
         .explanation {
@@ -836,21 +850,20 @@
                     </div>
                 </div>
 
-                <div class="question-container" id="questionContainer">
+                <div class="questions-container" id="questionsContainer">
                     <!-- Questions will be dynamically loaded here -->
                 </div>
 
                 <div class="practice-navigation">
-                    <button class="nav-button" id="prevButton" onclick="previousQuestion()" disabled>Previous</button>
-                    <button class="nav-button check-answer-button" id="checkButton" onclick="checkAnswer()">Check Answer</button>
-                    <button class="nav-button" id="nextButton" onclick="nextQuestion()" style="display: none;">Next Question</button>
+                    <button class="nav-button submit-button" id="submitButton">Submit Answers</button>
                 </div>
 
-                <button class="new-practice-button" onclick="startNewPractice()">Start New Practice</button>
+                <button class="new-practice-button" onclick="startNewPractice()" style="display: none;">Start New Practice</button>
             </div>
         </main>
     </div>
 
+    <script src="progress-tracker.js"></script>
     <script>
         const subcategoryMap = {
     // English
@@ -1062,7 +1075,7 @@
         // API call function - Fixed to use correct endpoint
         async function generatePractice(section, subcategory, numPassages) {
             try {
-                showMessage('Loading practice questions from server...', 'success');
+                showMessage('Generating practice questions...', 'success');
                 
                 console.log('Making API call with:', { section, subcategory, passages: numPassages });
                 
@@ -1204,14 +1217,10 @@
         }
 
         function handleTimeUp() {
-            showMessage('Time is up! Moving to the next question.', 'error');
+            showMessage('Time is up! Practice session completed.', 'error');
             setTimeout(() => {
-                if (currentQuestionIndex < currentPractice.length - 1) {
-                    nextQuestion();
-                } else {
-                    showMessage('Practice session completed!', 'success');
-                    setTimeout(() => startNewPractice(), 2000);
-                }
+                showMessage('Practice session completed!', 'success');
+                setTimeout(() => startNewPractice(), 2000);
             }, 1500);
         }
 
@@ -1223,125 +1232,144 @@
         // Update greeting with username
         function updateGreeting() {
             const username = getUsername();
-            document.querySelector('.greeting').textContent = `Hello ${username}! 👋`;
+            document.querySelector('.greeting').textContent = `Hello, ${username}`;
         }
 
-        // Display question function
-        function displayQuestion() {
-            if (!currentPractice || currentQuestionIndex >= currentPractice.length) return;
+        // Display all questions function
+        function displayAllQuestions() {
+            if (!currentPractice || currentPractice.length === 0) return;
 
-            const question = currentPractice[currentQuestionIndex];
-            const container = document.getElementById('questionContainer');
+            const container = document.getElementById('questionsContainer');
+            let questionsHTML = '';
 
-            container.innerHTML = `
-                <div class="question-number">Question ${currentQuestionIndex + 1} of ${currentPractice.length}</div>
-                <div class="passage">
-                    <div class="passage-title">Passage:</div>
-                    ${question.passage}
-                </div>
-                <div class="question">${question.question}</div>
-                <div class="options">
-                    ${question.options.map((option, index) => `
-                        <label class="option" onclick="selectOption(${index})">
-                            <input type="radio" name="question-${question.id}" value="${index}">
-                            ${String.fromCharCode(65 + index)}. ${option}
-                        </label>
-                    `).join('')}
-                </div>
-                <div class="explanation" id="explanation">
-                    <div class="explanation-title">Explanation:</div>
-                    ${question.explanation || 'No explanation available.'}
-                </div>
-            `;
+            currentPractice.forEach((question, index) => {
+                questionsHTML += `
+                    <div class="question-container" id="question-${question.id}">
+                        <div class="question-number">Question ${index + 1} of ${currentPractice.length}</div>
+                        <div class="passage">
+                            <div class="passage-title">Passage:</div>
+                            ${question.passage}
+                        </div>
+                        <div class="question">${question.question}</div>
+                        <div class="options">
+                            ${question.options.map((option, optionIndex) => `
+                                <label class="option" onclick="selectOption(${index}, ${optionIndex})">
+                                    <input type="radio" name="question-${question.id}" value="${optionIndex}">
+                                    ${String.fromCharCode(65 + optionIndex)}. ${option}
+                                </label>
+                            `).join('')}
+                        </div>
+                        <div class="explanation" id="explanation-${question.id}" style="display: none;">
+                            <div class="explanation-title">Explanation:</div>
+                            ${question.explanation || 'No explanation available.'}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = questionsHTML;
 
             // Update UI elements
-            document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
-            document.getElementById('checkButton').style.display = 'block';
-            document.getElementById('nextButton').style.display = 'none';
-            document.getElementById('prevButton').disabled = currentQuestionIndex === 0;
+            document.getElementById('currentQuestion').textContent = '1';
+            document.getElementById('submitButton').style.display = 'block';
+            document.getElementById('submitButton').disabled = false;
             isAnswerChecked = false;
-
-            // Start timer
-            const section = document.getElementById('section').value;
-            if (section && sectionConfig[section]) {
-                startTimer(sectionConfig[section].timePerQuestion);
-            }
         }
 
-        function selectOption(optionIndex) {
+        function selectOption(questionIndex, optionIndex) {
             if (isAnswerChecked) return;
 
-            const question = currentPractice[currentQuestionIndex];
+            const question = currentPractice[questionIndex];
             userAnswers[question.id] = optionIndex;
 
-            document.querySelectorAll('.option').forEach((option, index) => {
+            // Update the selected option for this specific question
+            const questionContainer = document.getElementById(`question-${question.id}`);
+            const options = questionContainer.querySelectorAll('.option');
+            
+            options.forEach((option, index) => {
                 option.classList.toggle('selected', index === optionIndex);
                 const radio = option.querySelector('input[type="radio"]');
                 radio.checked = index === optionIndex;
             });
+
+            // Check if all questions are answered
+            checkAllQuestionsAnswered();
         }
 
-        function checkAnswer() {
-            const question = currentPractice[currentQuestionIndex];
-            const userAnswer = userAnswers[question.id];
+        function checkAllQuestionsAnswered() {
+            const allAnswered = currentPractice.every(question => userAnswers[question.id] !== undefined);
+            const submitButton = document.getElementById('submitButton');
+            
+            if (allAnswered) {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Submit Answers';
+            } else {
+                submitButton.disabled = true;
+                submitButton.textContent = `Submit Answers (${Object.keys(userAnswers).length}/${currentPractice.length} answered)`;
+            }
+        }
 
-            if (userAnswer === undefined) {
-                showMessage('Please select an answer first!', 'error');
+        function submitAllAnswers() {
+            const unansweredQuestions = currentPractice.filter(question => userAnswers[question.id] === undefined);
+            
+            if (unansweredQuestions.length > 0) {
+                showMessage(`Please answer all questions before submitting. You have ${unansweredQuestions.length} unanswered question(s).`, 'error');
                 return;
             }
 
             stopTimer();
             isAnswerChecked = true;
-            totalAnswered++;
+            totalAnswered = currentPractice.length;
 
-            // Show correct/incorrect options
-            document.querySelectorAll('.option').forEach((option, index) => {
-                if (index === question.correct) {
-                    option.classList.add('correct');
-                } else if (index === userAnswer && userAnswer !== question.correct) {
-                    option.classList.add('incorrect');
+            // Check all answers and show results
+            currentPractice.forEach((question, index) => {
+                const userAnswer = userAnswers[question.id];
+                const questionContainer = document.getElementById(`question-${question.id}`);
+                const options = questionContainer.querySelectorAll('.option');
+                
+                // Show correct/incorrect options
+                options.forEach((option, optionIndex) => {
+                    if (optionIndex === question.correct) {
+                        option.classList.add('correct');
+                    } else if (optionIndex === userAnswer && userAnswer !== question.correct) {
+                        option.classList.add('incorrect');
+                    }
+                    option.style.pointerEvents = 'none';
+                });
+
+                // Show explanation
+                const explanation = document.getElementById(`explanation-${question.id}`);
+                explanation.style.display = 'block';
+
+                // Update statistics
+                if (userAnswer === question.correct) {
+                    correctCount++;
                 }
-                option.style.pointerEvents = 'none';
             });
 
-            // Update statistics
-            if (userAnswer === question.correct) {
-                correctCount++;
-                showMessage('Correct! Well done!', 'success');
-            } else {
-                showMessage('Incorrect. Check the explanation below.', 'error');
-            }
-            
+            // Update final statistics
             document.getElementById('correctAnswers').textContent = correctCount;
-            const accuracy = totalAnswered > 0 ? Math.round((correctCount / totalAnswered) * 100) : 0;
+            const accuracy = Math.round((correctCount / totalAnswered) * 100);
             document.getElementById('accuracy').textContent = `${accuracy}%`;
-            
-            // Show explanation and navigation
-            document.getElementById('explanation').classList.add('show');
-            document.getElementById('checkButton').style.display = 'none';
-            if (currentQuestionIndex < currentPractice.length - 1) {
-                document.getElementById('nextButton').style.display = 'block';
-            }
-        }
 
-        function nextQuestion() {
-            if (currentQuestionIndex < currentPractice.length - 1) {
-                currentQuestionIndex++;
-                displayQuestion();
-                hideMessages();
+            // Show final message
+            if (correctCount === totalAnswered) {
+                showMessage('Perfect score! Excellent work!', 'success');
+            } else if (accuracy >= 80) {
+                showMessage(`Great job! You scored ${accuracy}%`, 'success');
+            } else if (accuracy >= 60) {
+                showMessage(`Good effort! You scored ${accuracy}%`, 'success');
             } else {
-                showMessage('Practice session completed! Great job!', 'success');
-                setTimeout(() => startNewPractice(), 3000);
+                showMessage(`Keep practicing! You scored ${accuracy}%`, 'error');
             }
-        }
 
-        function previousQuestion() {
-            if (currentQuestionIndex > 0) {
-                stopTimer();
-                currentQuestionIndex--;
-                displayQuestion();
-                hideMessages();
-            }
+            // Hide submit button and show new practice button
+            document.getElementById('submitButton').style.display = 'none';
+            document.querySelector('.new-practice-button').style.display = 'block';
+
+            // Save progress
+            const section = document.getElementById('section').value;
+            savePracticeProgress(section, subcategory, correctCount, totalAnswered);
         }
 
         function startNewPractice() {
@@ -1362,6 +1390,9 @@
             document.getElementById('passageValue').textContent = '3';
             document.getElementById('subcategory').disabled = true;
             document.getElementById('subcategory').innerHTML = '<option value="">Select a subcategory</option>';
+            
+            // Reset new practice button visibility
+            document.querySelector('.new-practice-button').style.display = 'none';
         }
 
         // Sidebar toggle functionality
@@ -1439,20 +1470,36 @@ const passages = parseInt(document.getElementById('passages').value);
                 document.getElementById('totalQuestions').textContent = currentPractice.length;
 
                 currentQuestionIndex = 0;
-                displayQuestion();
-                startTimer(sectionConfig[section]?.timePerQuestion || 60);
+                displayAllQuestions();
+                
+                // Start timer for entire test (1 minute per question) - no timer for GK
+                if (section !== 'gk') {
+                    const totalTimeSeconds = currentPractice.length * 60; // 1 minute per question
+                    startTimer(totalTimeSeconds);
+                }
             } catch (error) {
                 console.error("API Error:", error);
                 showMessage(`Server connection failed: ${error.message}. Using sample questions instead.`, 'error');
                 // Return sample questions as fallback
                 currentPractice = generateSampleQuestions(section, subcategory);
                 currentQuestionIndex = 0;
-                displayQuestion();
+                displayAllQuestions();
+                
+                // Start timer for sample questions too (no timer for GK)
+                if (section !== 'gk') {
+                    const totalTimeSeconds = currentPractice.length * 60; // 1 minute per question
+                    startTimer(totalTimeSeconds);
+                }
             } finally {
                 startButton.classList.remove('loading');
                 buttonText.textContent = 'Start Practice';
                 startButton.disabled = false;
             }
+        });
+
+        // Submit button event listener
+        document.getElementById('submitButton').addEventListener('click', function() {
+            submitAllAnswers();
         });
 
         // Update slider value display
@@ -1476,29 +1523,11 @@ const passages = parseInt(document.getElementById('passages').value);
                 toggleSidebar();
             }
             
-            // Navigation shortcuts during practice
+            // Submit shortcut during practice
             if (document.getElementById('practiceInterface').style.display !== 'none') {
-                if (e.key === 'ArrowLeft') {
+                if (e.key === 'Enter' && !isAnswerChecked) {
                     e.preventDefault();
-                    previousQuestion();
-                } else if (e.key === 'ArrowRight') {
-                    e.preventDefault();
-                    if (isAnswerChecked) nextQuestion();
-                } else if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    if (!isAnswerChecked) {
-                        checkAnswer();
-                    } else {
-                        nextQuestion();
-                    }
-                }
-                // Number keys to select options
-                else if (e.key >= '1' && e.key <= '4') {
-                    e.preventDefault();
-                    const optionIndex = parseInt(e.key) - 1;
-                    if (!isAnswerChecked) {
-                        selectOption(optionIndex);
-                    }
+                    submitAllAnswers();
                 }
             }
         });
@@ -1522,15 +1551,30 @@ const passages = parseInt(document.getElementById('passages').value);
 
         // After practice is completed and score is calculated, add this:
         function savePracticeProgress(section, subcategory, score, total) {
-            let progress = JSON.parse(localStorage.getItem('progress') || '[]');
-            progress.push({
-                date: new Date().toISOString(),
-                section,
-                subcategory,
-                score,
-                total
+            // Map section names to standardized names
+            const sectionMap = {
+                'legal': 'Legal Reasoning',
+                'logical': 'Logical Reasoning',
+                'english': 'English Language',
+                'gk': 'General Knowledge',
+                'quantitative': 'Quantitative Techniques'
+            };
+            
+            const mappedSection = sectionMap[section] || section;
+            
+            // Save progress using shared system
+            const success = saveProgress(mappedSection, subcategory, score, total, {
+                testType: 'practice',
+                section: section,
+                subcategory: subcategory,
+                timeTaken: timeLeft > 0 ? (currentPractice.length * 60 - timeLeft) : null
             });
-            localStorage.setItem('progress', JSON.stringify(progress));
+            
+            if (success) {
+                console.log('✅ Practice progress saved successfully');
+            } else {
+                console.error('❌ Failed to save practice progress');
+            }
         }
     </script>
 </body>

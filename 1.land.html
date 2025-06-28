@@ -135,6 +135,14 @@
             font-weight: 500;
             font-size: 0.8rem;
             border: 1px solid rgba(59, 130, 246, 0.2);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .announcement-badge:hover {
+            background: rgba(219, 234, 254, 1);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
         }
 
         .new-badge {
@@ -680,7 +688,7 @@
         </nav>
 
         <div class="auth-buttons" id="auth-buttons">
-            <button class="btn-signup" onclick="openModal('signup')">SignUp</button>
+
             <button class="btn-login" onclick="openModal('login')">Log In</button>
         </div>
 
@@ -695,7 +703,7 @@
     <main class="container">
         <!-- Announcement Banner -->
         <section class="announcement">
-            <div class="announcement-badge">
+            <div class="announcement-badge" onclick="handleAnnouncementClick()">
                 <span class="new-badge">New!</span>
                 <span>introducing Lexa, your AI chatbot assistant →</span>
             </div>
@@ -712,7 +720,7 @@
 
                 <div class="cta-buttons">
                     <button class="btn-primary" onclick="handleGetStarted()">Get Started</button>
-                    <button class="btn-secondary" onclick="handleWatchDemo()">Watch Demo</button>
+                    <button class="btn-secondary" onclick="handleWatchDemo()">Free Trial</button>
                 </div>
 
                 <div class="feature-item">
@@ -930,6 +938,15 @@
         }
 
         function handleWatchDemo() {
+            if (!currentUser) {
+                openModal('login');
+            } else {
+                window.location.href = '2.homepage.html';
+            }
+        }
+
+        // Announcement click handler
+        function handleAnnouncementClick() {
             if (!currentUser) {
                 openModal('login');
             } else {

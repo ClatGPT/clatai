@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QT Mentor Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        button {
+            background: #007aff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056cc;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f5f5f5;
+            border-radius: 5px;
+            white-space: pre-wrap;
+        }
+        .error {
+            background: #ffebee;
+            color: #c62828;
+        }
+        .success {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+    </style>
+</head>
+<body>
+    <h1>QT Mentor API Test</h1>
+    
+    <div class="test-section">
+        <h2>Test QT Question Generation</h2>
+        <button onclick="testQTGeneration('percentages')">Test Percentages</button>
+        <button onclick="testQTGeneration('ratios')">Test Ratios</button>
+        <button onclick="testQTGeneration('averages')">Test Averages</button>
+        <div id="qtResult" class="result"></div>
+    </div>
+
+    <script>
+        async function testQTGeneration(topic) {
+            const resultDiv = document.getElementById('qtResult');
+            resultDiv.textContent = 'Generating question...';
+            resultDiv.className = 'result';
+            
+            try {
+                const response = await fetch('/qt/generate-question', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        topic: topic
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    resultDiv.textContent = `✅ Success! Generated content for topic: ${topic}\n\nContent length: ${data.contentLength} characters\n\nRaw output preview:\n${data.rawOutput.substring(0, 500)}...`;
+                    resultDiv.className = 'result success';
+                } else {
+                    resultDiv.textContent = `❌ Error: ${data.error || 'Unknown error'}`;
+                    resultDiv.className = 'result error';
+                }
+            } catch (error) {
+                resultDiv.textContent = `❌ Network error: ${error.message}`;
+                resultDiv.className = 'result error';
+            }
+        }
+    </script>
+</body>
+</html> 

@@ -442,6 +442,18 @@
             border: 1px solid rgba(0, 0, 0, 0.05);
         }
 
+        .question-passage {
+            background: white;
+            border: 1px solid #e5e5e7;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #1d1d1f;
+            border-left: 4px solid #007aff;
+        }
+
         .question-text {
             font-size: 18px;
             color: #1d1d1f;
@@ -728,31 +740,27 @@
             'data-interpretation': {
                 name: 'Data Interpretation',
                 subtopics: [
+                    { id: 'tables', name: 'Data Tables', description: 'Work with tabular data' },
                     { id: 'bar-charts', name: 'Bar Charts', description: 'Analyze bar chart data and trends' },
                     { id: 'line-graphs', name: 'Line Graphs', description: 'Interpret line graph patterns' },
-                    { id: 'pie-charts', name: 'Pie Charts', description: 'Understand pie chart proportions' },
-                    { id: 'tables', name: 'Data Tables', description: 'Work with tabular data' },
-                    { id: 'mixed-charts', name: 'Mixed Charts', description: 'Complex multi-chart analysis' }
+                    { id: 'pie-charts', name: 'Pie Charts', description: 'Understand pie chart proportions' }
                 ]
             },
             'mathematics': {
                 name: 'Mathematics',
                 subtopics: [
-                    { id: 'arithmetic', name: 'Arithmetic', description: 'Basic mathematical operations' },
-                    { id: 'algebra', name: 'Algebra', description: 'Algebraic expressions and equations' },
-                    { id: 'geometry', name: 'Geometry', description: 'Geometric shapes and calculations' },
-                    { id: 'number-systems', name: 'Number Systems', description: 'Different number bases and properties' },
-                    { id: 'percentages', name: 'Percentages', description: 'Percentage calculations and applications' }
+                    { id: 'percentages', name: 'Percentages', description: 'Percentage calculations and applications' },
+                    { id: 'ratios', name: 'Ratios & Proportions', description: 'Ratios, proportions, and comparative relationships' },
+                    { id: 'averages', name: 'Averages', description: 'Mean, median, mode, and weighted averages' },
+                    { id: 'profit-loss', name: 'Profit & Loss', description: 'Profit and loss calculations' },
+                    { id: 'compound-interest', name: 'Compound Interest', description: 'Compound interest and banking calculations' }
                 ]
             },
             'advanced-topics': {
                 name: 'Advanced Topics',
                 subtopics: [
-                    { id: 'speed-math', name: 'Speed Mathematics', description: 'Fast calculation techniques' },
-                    { id: 'complex-problems', name: 'Complex Problems', description: 'Multi-step problem solving' },
-                    { id: 'logical-reasoning', name: 'Logical Reasoning', description: 'Mathematical logic and reasoning' },
-                    { id: 'advanced-algebra', name: 'Advanced Algebra', description: 'Complex algebraic concepts' },
-                    { id: 'statistics', name: 'Statistics', description: 'Statistical analysis and probability' }
+                    { id: 'time-work', name: 'Time & Work', description: 'Time and work problems' },
+                    { id: 'speed-distance', name: 'Speed & Distance', description: 'Speed, distance, time problems' }
                 ]
             }
         };
@@ -898,46 +906,359 @@
             generateQuestion();
         }
 
-        function generateQuestion() {
+        async function generateQuestion() {
             const loadingContent = document.getElementById('loadingContent');
             const questionContainer = document.getElementById('questionContainer');
             
             loadingContent.style.display = 'block';
             questionContainer.style.display = 'none';
             
-            // Simulate API call
-            setTimeout(() => {
+            try {
+                // Call the backend API
+                const response = await fetch('/qt/generate-question', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        topic: selectedSubtopic
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Debug: Log the raw content to understand the format
+                    console.log('=== RAW CONTENT DEBUG ===');
+                    console.log('Full raw content:', data.rawOutput);
+                    console.log('Content length:', data.rawOutput.length);
+                    console.log('=== END DEBUG ===');
+                    
+                    // Parse the generated content
+                    const parsedQuestion = parseQTContent(data.rawOutput);
+                    if (parsedQuestion) {
+                        currentQuestion = parsedQuestion;
+                        displayQuestion(parsedQuestion);
+                    } else {
+                        // Fallback: Create a simple question from the raw content
+                        console.log('Parsing failed, creating fallback question...');
+                        const fallbackQuestion = createFallbackQuestion(data.rawOutput);
+                        if (fallbackQuestion) {
+                            currentQuestion = fallbackQuestion;
+                            displayQuestion(fallbackQuestion);
+                        } else {
+                            throw new Error('Failed to parse generated content and fallback failed');
+                        }
+                    }
+                } else {
+                    throw new Error(data.error || 'Failed to generate question');
+                }
+            } catch (error) {
+                console.error('Error generating question:', error);
+                alert('Failed to generate question. Please try again.');
+            } finally {
                 loadingContent.style.display = 'none';
                 questionContainer.style.display = 'block';
-                
-                // Generate sample question
-                generateSampleQuestion();
-            }, 2000);
+            }
         }
 
-        function generateSampleQuestion() {
-            const questionContainer = document.getElementById('questionContainer');
-            
-            const sampleQuestion = {
-                text: "If a company's revenue increased by 25% from 2020 to 2021 and then decreased by 10% from 2021 to 2022, what was the overall percentage change in revenue from 2020 to 2022?",
-                options: [
-                    "12.5% increase",
-                    "15% increase", 
-                    "12.5% decrease",
-                    "15% decrease"
-                ],
-                correct: 0,
-                solution: "Let's solve this step by step:\n\n1. Let the initial revenue in 2020 be 100\n2. Revenue in 2021 = 100 + 25% of 100 = 125\n3. Revenue in 2022 = 125 - 10% of 125 = 125 - 12.5 = 112.5\n4. Overall change = 112.5 - 100 = 12.5\n5. Percentage change = (12.5/100) × 100 = 12.5% increase\n\nTherefore, the correct answer is 12.5% increase."
-            };
-            
-            currentQuestion = sampleQuestion;
-            displayQuestion(sampleQuestion);
+        function createFallbackQuestion(rawContent) {
+            try {
+                // Extract the first question manually
+                const questionMatch = rawContent.match(/1\.1\s*(.*?)(?=\n\(A\)|\nA\.|\n1\.2|\Z)/s);
+                if (!questionMatch) {
+                    return null;
+                }
+                
+                const questionText = questionMatch[1].trim();
+                
+                // Extract options manually
+                const options = [];
+                const afterQuestion = rawContent.substring(rawContent.indexOf(questionMatch[0]) + questionMatch[0].length);
+                
+                // Find A, B, C, D options
+                const optionAMatch = afterQuestion.match(/\(A\)\s*(.*?)(?=\n\(B\)|\n1\.2|\Z)/s);
+                const optionBMatch = afterQuestion.match(/\(B\)\s*(.*?)(?=\n\(C\)|\n1\.2|\Z)/s);
+                const optionCMatch = afterQuestion.match(/\(C\)\s*(.*?)(?=\n\(D\)|\n1\.2|\Z)/s);
+                const optionDMatch = afterQuestion.match(/\(D\)\s*(.*?)(?=\n1\.2|\Z)/s);
+                
+                if (optionAMatch) options.push(optionAMatch[1].trim());
+                if (optionBMatch) options.push(optionBMatch[1].trim());
+                if (optionCMatch) options.push(optionCMatch[1].trim());
+                if (optionDMatch) options.push(optionDMatch[1].trim());
+                
+                // Extract answer key and solution
+                const answerMatch = rawContent.match(/1\.1\s*[–-]\s*\(([A-D])\)(.*?)(?=\n1\.2|\Z)/s);
+                let correctAnswer = 0;
+                let solution = 'Solution will be provided after answering.';
+                
+                if (answerMatch) {
+                    correctAnswer = answerMatch[1].charCodeAt(0) - 65;
+                    solution = answerMatch[2].trim();
+                }
+                
+                // Extract passage
+                const passageMatch = rawContent.match(/^(.+?)(?=\n1\.1|\Z)/s);
+                const passage = passageMatch ? passageMatch[1].trim() : '';
+                
+                if (options.length === 4) {
+                    return {
+                        text: questionText,
+                        options: options,
+                        correct: correctAnswer,
+                        solution: solution,
+                        passage: passage
+                    };
+                }
+                
+                return null;
+            } catch (error) {
+                console.error('Error in fallback question creation:', error);
+                return null;
+            }
+        }
+
+        function parseQTContent(rawContent) {
+            try {
+                console.log('Parsing QT content:', rawContent.substring(0, 200) + '...');
+                
+                // Split content into passage and questions
+                const parts = rawContent.split('**MCQs**');
+                if (parts.length < 2) {
+                    console.error('No MCQs section found in content');
+                    // Try alternative parsing if MCQs marker is missing
+                    return parseAlternativeFormat(rawContent);
+                }
+
+                const passage = parts[0].trim();
+                const questionsText = parts[1].trim();
+
+                console.log('Passage:', passage.substring(0, 100) + '...');
+                console.log('Questions text:', questionsText.substring(0, 200) + '...');
+
+                // Extract questions using regex
+                const questionRegex = /(\d+\.\d+)\s*(.*?)(?=\n\(A\)|\nA\.)/gs;
+                const questions = [];
+                let match;
+
+                while ((match = questionRegex.exec(questionsText)) !== null) {
+                    const questionId = match[1];
+                    const questionText = match[2].trim();
+                    
+                    console.log(`Found question ${questionId}:`, questionText.substring(0, 50) + '...');
+                    
+                    // Extract options for this question
+                    const optionsRegex = new RegExp(`${questionId.replace('.', '\\.')}\\s*.*?(?=\n\\(A\\)|\nA\\.)(.*?)(?=\n\\d+\\.\\d+|\\n\\*\\*ANSWER KEY\\*\\*|$)`, 'gs');
+                    const optionsMatch = optionsRegex.exec(questionsText);
+                    
+                    if (optionsMatch) {
+                        const optionsText = optionsMatch[1];
+                        const options = [];
+                        
+                        // Extract A, B, C, D options
+                        const optionRegex = /\(([A-D])\)\s*(.*?)(?=\n\([A-D]\)|\n\d+\.\d+|\n\*\*ANSWER KEY\*\*|$)/gs;
+                        let optionMatch;
+                        
+                        while ((optionMatch = optionRegex.exec(optionsText)) !== null) {
+                            options.push(optionMatch[2].trim());
+                        }
+                        
+                        console.log(`Options for ${questionId}:`, options);
+                        
+                        if (options.length === 4) {
+                            questions.push({
+                                id: questionId,
+                                text: questionText,
+                                options: options
+                            });
+                        }
+                    }
+                }
+
+                // Extract answer key
+                const answerKeyMatch = questionsText.match(/\*\*ANSWER KEY\*\*(.*)/s);
+                let answerKey = null;
+                let correctAnswer = 0;
+                
+                if (answerKeyMatch) {
+                    answerKey = answerKeyMatch[1].trim();
+                    console.log('Answer key found:', answerKey.substring(0, 100) + '...');
+                    
+                    // Try to extract the correct answer for the first question
+                    const firstAnswerMatch = answerKey.match(/1\.1\s*[–-]\s*\(([A-D])\)/);
+                    if (firstAnswerMatch) {
+                        const correctLetter = firstAnswerMatch[1];
+                        correctAnswer = correctLetter.charCodeAt(0) - 65; // Convert A=0, B=1, C=2, D=3
+                        console.log(`Correct answer for 1.1: ${correctLetter} (index ${correctAnswer})`);
+                    }
+                }
+
+                // For now, return the first question with a simple structure
+                if (questions.length > 0) {
+                    const firstQuestion = questions[0];
+                    return {
+                        text: firstQuestion.text,
+                        options: firstQuestion.options,
+                        correct: correctAnswer,
+                        solution: answerKey || 'Solution will be provided after answering.',
+                        passage: passage
+                    };
+                }
+
+                console.error('No valid questions found');
+                return null;
+            } catch (error) {
+                console.error('Error parsing QT content:', error);
+                return null;
+            }
+        }
+
+        function parseAlternativeFormat(rawContent) {
+            try {
+                console.log('Trying alternative parsing format...');
+                
+                // First, try to find the passage (everything before the first numbered question)
+                const passageMatch = rawContent.match(/^(.+?)(?=\n\d+\.\d+\s|$)/s);
+                const passage = passageMatch ? passageMatch[1].trim() : '';
+                
+                console.log('Extracted passage:', passage.substring(0, 100) + '...');
+                
+                // Look for questions with 1.1, 1.2 format
+                const questionRegex = /(\d+\.\d+)\s*(.*?)(?=\n\(A\)|\nA\.|\n\d+\.\d+|\Z)/gs;
+                const questions = [];
+                let match;
+
+                while ((match = questionRegex.exec(rawContent)) !== null) {
+                    const questionId = match[1];
+                    const questionText = match[2].trim();
+                    
+                    // Skip if this looks like an answer key entry or very short text
+                    if (questionText.match(/^[–-]\s*\([A-D]\)/) || questionText.length < 10) {
+                        console.log(`Skipping invalid entry: ${questionId} - ${questionText.substring(0, 30)}`);
+                        continue;
+                    }
+                    
+                    console.log(`Found question ${questionId}:`, questionText.substring(0, 50) + '...');
+                    
+                    // Extract options that follow this question
+                    const options = [];
+                    const afterQuestion = rawContent.substring(match.index + match[0].length);
+                    
+                    // Look for the next question number to determine where options end
+                    const nextQuestionMatch = afterQuestion.match(/\n\d+\.\d+\s/);
+                    const endIndex = nextQuestionMatch ? nextQuestionMatch.index : afterQuestion.length;
+                    const optionsText = afterQuestion.substring(0, endIndex);
+                    
+                    console.log(`Options text for ${questionId}:`, optionsText.substring(0, 100) + '...');
+                    
+                    // Extract A, B, C, D options - improved regex
+                    const optionRegex = /\(([A-D])\)\s*(.*?)(?=\n\([A-D]\)|\n\d+\.\d+|\Z)/gs;
+                    let optionMatch;
+                    
+                    while ((optionMatch = optionRegex.exec(optionsText)) !== null) {
+                        const optionText = optionMatch[2].trim();
+                        if (optionText.length > 0) {
+                            options.push(optionText);
+                        }
+                    }
+                    
+                    // If the above didn't work, try a simpler approach
+                    if (options.length === 0) {
+                        const simpleOptionRegex = /\(A\)\s*(.*?)(?=\n\(B\)|\n\d+\.\d+|\Z)/s;
+                        const optionAMatch = optionsText.match(simpleOptionRegex);
+                        if (optionAMatch) {
+                            options.push(optionAMatch[1].trim());
+                            
+                            const optionBRegex = /\(B\)\s*(.*?)(?=\n\(C\)|\n\d+\.\d+|\Z)/s;
+                            const optionBMatch = optionsText.match(optionBRegex);
+                            if (optionBMatch) {
+                                options.push(optionBMatch[1].trim());
+                                
+                                const optionCRegex = /\(C\)\s*(.*?)(?=\n\(D\)|\n\d+\.\d+|\Z)/s;
+                                const optionCMatch = optionsText.match(optionCRegex);
+                                if (optionCMatch) {
+                                    options.push(optionCMatch[1].trim());
+                                    
+                                    const optionDRegex = /\(D\)\s*(.*?)(?=\n\d+\.\d+|\Z)/s;
+                                    const optionDMatch = optionsText.match(optionDRegex);
+                                    if (optionDMatch) {
+                                        options.push(optionDMatch[1].trim());
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    console.log(`Options for ${questionId}:`, options);
+                    
+                    if (options.length === 4) {
+                        questions.push({
+                            id: questionId,
+                            text: questionText,
+                            options: options
+                        });
+                    }
+                }
+
+                // Extract answer key - look for patterns like "1.1 – (B)" or "1.1 - (B)"
+                const answerKeyRegex = /(\d+\.\d+)\s*[–-]\s*\(([A-D])\)(.*?)(?=\n\d+\.\d+\s*[–-]|\Z)/gs;
+                const answerKeyMatches = [];
+                let answerKey = null;
+                let correctAnswer = 0;
+                let solution = 'Solution will be provided after answering.';
+                
+                while ((answerKeyMatch = answerKeyRegex.exec(rawContent)) !== null) {
+                    answerKeyMatches.push({
+                        question: answerKeyMatch[1],
+                        answer: answerKeyMatch[2],
+                        solution: answerKeyMatch[3].trim()
+                    });
+                }
+                
+                if (answerKeyMatches.length > 0) {
+                    answerKey = answerKeyMatches.map(match => `${match.question} – (${match.answer})`).join('\n');
+                    console.log('Answer key found:', answerKey);
+                    
+                    // Find the correct answer and solution for the first question (1.1)
+                    const firstAnswer = answerKeyMatches.find(match => match.question === '1.1');
+                    if (firstAnswer) {
+                        correctAnswer = firstAnswer.answer.charCodeAt(0) - 65; // Convert A=0, B=1, C=2, D=3
+                        solution = firstAnswer.solution;
+                        console.log(`Correct answer for question 1.1: ${firstAnswer.answer} (index ${correctAnswer})`);
+                        console.log(`Solution for question 1.1:`, solution.substring(0, 100) + '...');
+                    }
+                }
+
+                if (questions.length > 0) {
+                    const firstQuestion = questions[0];
+                    return {
+                        text: firstQuestion.text,
+                        options: firstQuestion.options,
+                        correct: correctAnswer,
+                        solution: solution,
+                        passage: passage
+                    };
+                }
+
+                console.error('No valid questions found in alternative format');
+                return null;
+            } catch (error) {
+                console.error('Error in alternative parsing:', error);
+                return null;
+            }
         }
 
         function displayQuestion(question) {
             const questionContainer = document.getElementById('questionContainer');
             
-            questionContainer.innerHTML = `
+            let questionHTML = '';
+            
+            // Add passage if available
+            if (question.passage) {
+                questionHTML += `<div class="question-passage">${question.passage}</div>`;
+            }
+            
+            questionHTML += `
                 <div class="question-text">${question.text}</div>
                 <div class="options-grid">
                     ${question.options.map((option, index) => `
@@ -955,6 +1276,8 @@
                 </div>
             `;
             
+            questionContainer.innerHTML = questionHTML;
+            
             // Add event listeners
             document.querySelectorAll('.option').forEach(option => {
                 option.addEventListener('click', function() {
@@ -964,6 +1287,14 @@
             
             document.getElementById('checkAnswer').addEventListener('click', function() {
                 checkAnswer();
+            });
+            
+            // Debug: Log the question details
+            console.log('Displaying question:', {
+                text: question.text,
+                options: question.options,
+                correct: question.correct,
+                correctLetter: String.fromCharCode(65 + question.correct)
             });
         }
 
@@ -983,6 +1314,8 @@
             
             const selectedIndex = parseInt(selectedOption.dataset.index);
             const correctIndex = currentQuestion.correct;
+            
+            console.log(`Selected: ${selectedIndex}, Correct: ${correctIndex}`);
             
             // Show correct/incorrect states
             document.querySelectorAll('.option').forEach((option, index) => {

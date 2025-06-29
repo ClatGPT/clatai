@@ -805,9 +805,9 @@
                     doc.line(margin, margin + 20, pageWidth - margin, margin + 20);
                     
                     // Add header text
-                    doc.setFontSize(10);
-                    doc.setFont(undefined, 'normal');
-                    doc.setTextColor(59, 130, 246);
+                    doc.setFontSize(12);
+                    doc.setFont('Times New Roman', 'normal');
+                    doc.setTextColor(0, 0, 0); // Black color
                     doc.text('For more material go to- https://discord.gg/9kFymfz7qN', margin, margin + 10);
                     doc.text('CONTACT US:- 7702832727', pageWidth - margin, margin + 10, { align: 'right' });
                     
@@ -824,8 +824,9 @@
                     doc.line(margin, footerY - 5, pageWidth - margin, footerY - 5);
                     
                     // Add footer text
-                    doc.setFontSize(8);
-                    doc.setTextColor(107, 114, 128);
+                    doc.setFontSize(12);
+                    doc.setFont('Times New Roman', 'normal');
+                    doc.setTextColor(0, 0, 0); // Black color
                     doc.text('Also, find us on Discord: - https://discord.gg/9kFymfz7qN', pageWidth / 2, footerY, { align: 'center' });
                     doc.text('Telegram: - https://t.me/CLAT_Community and Instagram: - https://www.instagram.com/clat_community/', pageWidth / 2, footerY + 8, { align: 'center' });
                 }

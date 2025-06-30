@@ -13,8 +13,9 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f1f5f9;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+            background: #000 !important;
+            color: #fff !important;
             height: 100vh;
             overflow: hidden;
         }
@@ -23,13 +24,13 @@
             display: flex;
             width: 100vw;
             height: 100vh;
-            background: white;
+            background: #000 !important;
         }
 
         .sidebar {
             width: 280px;
-            background: #1e293b;
-            color: white;
+            background: #1e293b !important;
+            color: white !important;
             padding: 24px 0;
             display: flex;
             flex-direction: column;
@@ -149,7 +150,6 @@
         .nav-item.tests::before { content: '📝'; }
         .nav-item.progress::before { content: '📊'; }
         .nav-item.settings::before { content: '⚙️'; }
-        .nav-item.appearance::before { content: '🎨'; }
 
         .nav-text {
             transition: opacity 0.3s ease;
@@ -173,7 +173,8 @@
         .main-content {
             flex: 1;
             padding: 40px;
-            background: white;
+            background: #000 !important;
+            color: #fff !important;
             overflow-y: auto;
             transition: all 0.3s ease;
             position: relative;
@@ -217,7 +218,7 @@
         .greeting {
             font-size: 36px;
             font-weight: 600;
-            color: #1e293b;
+            color: #fff !important;
             margin-bottom: 8px;
         }
 
@@ -234,17 +235,18 @@
         }
 
         .form-section {
-            background: #f8fafc;
+            background: #181818 !important;
             border-radius: 16px;
             padding: 32px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid #333 !important;
             margin-bottom: 24px;
+            color: #fff !important;
         }
 
         .section-title {
             font-size: 24px;
             font-weight: 600;
-            color: #1e293b;
+            color: #fff !important;
             margin-bottom: 24px;
             text-align: center;
         }
@@ -257,30 +259,30 @@
             display: block;
             font-size: 16px;
             font-weight: 600;
-            color: #374151;
+            color: #fff !important;
             margin-bottom: 8px;
         }
 
         .form-select {
             width: 100%;
             padding: 12px 16px;
-            border: 2px solid #e2e8f0;
+            border: 2px solid #333 !important;
             border-radius: 8px;
             font-size: 16px;
-            background: white;
-            color: #374151;
+            background: #222 !important;
+            color: #fff !important;
             cursor: pointer;
             transition: all 0.2s;
             outline: none;
         }
 
         .form-select:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            border-color: #fff !important;
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.1);
         }
 
         .form-select:hover {
-            border-color: #94a3b8;
+            border-color: #fff !important;
         }
 
         .slider-container {
@@ -291,31 +293,19 @@
             width: 100%;
             height: 8px;
             border-radius: 4px;
-            background: #e2e8f0;
+            background: #333 !important;
             outline: none;
             -webkit-appearance: none;
             appearance: none;
             cursor: pointer;
         }
 
-        .slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
+        .slider::-webkit-slider-thumb, .slider::-moz-range-thumb {
             width: 20px;
             height: 20px;
             border-radius: 50%;
-            background: #3b82f6;
+            background: #fff !important;
             cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-
-        .slider::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: #3b82f6;
-            cursor: pointer;
-            border: none;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
@@ -325,21 +315,21 @@
             align-items: center;
             margin-top: 8px;
             font-size: 14px;
-            color: #6b7280;
+            color: #aaa !important;
         }
 
         .current-value {
             font-weight: 600;
-            color: #3b82f6;
+            color: #fff !important;
             font-size: 16px;
         }
 
         .start-button {
             width: 100%;
             padding: 16px 24px;
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            border: none;
+            background: #222 !important;
+            color: #fff !important;
+            border: 1px solid #fff !important;
             border-radius: 12px;
             font-size: 18px;
             font-weight: 600;
@@ -363,25 +353,6 @@
             pointer-events: none;
         }
 
-        .start-button.loading::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 20px;
-            height: 20px;
-            margin: -10px 0 0 -10px;
-            border: 2px solid transparent;
-            border-top: 2px solid white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
         .form-description {
             font-size: 14px;
             color: #6b7280;
@@ -401,9 +372,9 @@
         }
 
         .error-message {
-            background: #fef2f2;
-            border: 1px solid #fecaca;
-            color: #dc2626;
+            background: #330000 !important;
+            border: 1px solid #ff3b30 !important;
+            color: #ff3b30 !important;
             padding: 12px;
             border-radius: 8px;
             margin: 16px 0;
@@ -411,9 +382,9 @@
         }
 
         .success-message {
-            background: #f0fdf4;
-            border: 1px solid #bbf7d0;
-            color: #16a34a;
+            background: #181818 !important;
+            border: 1px solid #333 !important;
+            color: #16a34a !important;
             padding: 12px;
             border-radius: 8px;
             margin: 16px 0;
@@ -427,8 +398,8 @@
         }
 
         .practice-header {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
+            background: #111 !important;
+            color: #fff !important;
             padding: 24px;
             border-radius: 16px;
             margin-bottom: 24px;
@@ -472,40 +443,41 @@
         }
 
         .question-container {
-            background: #f8fafc;
+            background: #181818 !important;
             border-radius: 16px;
             padding: 32px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid #333 !important;
+            color: #fff !important;
         }
 
         .question-number {
             font-size: 14px;
             font-weight: 600;
-            color: #10b981;
+            color: #fff !important;
             margin-bottom: 16px;
         }
 
         .passage {
-            background: white;
+            background: #222 !important;
             padding: 24px;
             border-radius: 12px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid #333 !important;
             margin-bottom: 24px;
             line-height: 1.6;
-            color: #374151;
+            color: #fff !important;
         }
 
         .passage-title {
             font-size: 18px;
             font-weight: 600;
-            color: #1e293b;
+            color: #fff !important;
             margin-bottom: 16px;
         }
 
         .question {
             font-size: 16px;
             font-weight: 600;
-            color: #1e293b;
+            color: #fff !important;
             margin-bottom: 16px;
         }
 
@@ -519,36 +491,29 @@
             display: flex;
             align-items: center;
             padding: 12px 16px;
-            background: white;
-            border: 2px solid #e2e8f0;
+            background: #222 !important;
+            border: 2px solid #333 !important;
             border-radius: 8px;
+            color: #fff !important;
             cursor: pointer;
             transition: all 0.2s;
         }
 
-        .option:hover {
-            border-color: #10b981;
-            background: #f0fdf4;
-        }
-
-        .option.selected {
-            border-color: #10b981;
-            background: #dcfce7;
-        }
-
-        .option.correct {
-            border-color: #10b981;
-            background: #dcfce7;
+        .option:hover, .option.selected, .option.correct {
+            border-color: #fff !important;
+            background: #333 !important;
+            color: #fff !important;
         }
 
         .option.incorrect {
-            border-color: #ef4444;
-            background: #fef2f2;
+            border-color: #ff3b30 !important;
+            background: #330000 !important;
+            color: #fff !important;
         }
 
         .option input[type="radio"] {
             margin-right: 12px;
-            accent-color: #10b981;
+            accent-color: #fff !important;
         }
 
         .practice-navigation {
@@ -561,18 +526,18 @@
 
         .nav-button {
             padding: 12px 24px;
-            border: 2px solid #10b981;
+            border: 2px solid #fff !important;
             border-radius: 8px;
-            background: white;
-            color: #10b981;
+            background: #222 !important;
+            color: #fff !important;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
         }
 
         .nav-button:hover {
-            background: #10b981;
-            color: white;
+            background: #fff !important;
+            color: #000 !important;
         }
 
         .nav-button:disabled {
@@ -600,8 +565,9 @@
         }
 
         .explanation {
-            background: #f0f9ff;
-            border: 1px solid #bae6fd;
+            background: #181818 !important;
+            border: 1px solid #333 !important;
+            color: #fff !important;
             border-radius: 8px;
             padding: 16px;
             margin-top: 16px;
@@ -615,7 +581,7 @@
 
         .explanation-title {
             font-weight: 600;
-            color: #0369a1;
+            color: #fff !important;
             margin-bottom: 8px;
         }
 
@@ -717,6 +683,28 @@
                 gap: 16px;
             }
         }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #fff;
+            border-top: 2px solid #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            vertical-align: middle;
+            margin-left: 10px;
+        }
+
+        /* Scrollbar styling for dark mode */
+        ::-webkit-scrollbar {
+            width: 8px;
+            background: #111;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
@@ -758,9 +746,6 @@
             <div class="sidebar-bottom">
                 <button class="nav-item settings" onclick="navigateTo('settings')">
                     <span class="nav-text">Settings</span>
-                </button>
-                <button class="nav-item appearance" onclick="navigateTo('appearance')">
-                    <span class="nav-text">Appearance</span>
                 </button>
 
             
@@ -825,6 +810,7 @@
 
                         <button type="submit" class="start-button" id="startButton">
                             <span id="buttonText">Start Practice</span>
+                            <span class="spinner" id="spinner" style="display: none; margin-left: 10px; vertical-align: middle;"></span>
                         </button>
                     </form>
                 </div>
@@ -837,12 +823,16 @@
                     <p class="practice-info" id="practiceInfo">Subcategory • Passages</p>
                     <div class="practice-stats">
                         <div class="stat">
-                            <span class="stat-value" id="currentQuestion">1</span>
-                            <span>Current</span>
+                            <span class="stat-value" id="totalQuestions">0</span>
+                            <span>Total</span>
                         </div>
                         <div class="stat">
-                            <span class="stat-value" id="totalQuestions">25</span>
-                            <span>Total</span>
+                            <span class="stat-value" id="wrongAnswers">0</span>
+                            <span>Wrong</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value" id="naAnswers">0</span>
+                            <span>NA</span>
                         </div>
                         <div class="stat">
                             <span class="stat-value" id="correctAnswers">0</span>
@@ -951,10 +941,13 @@
         let currentQuestionIndex = 0;
         let userAnswers = {};
         let correctCount = 0;
+        let wrongCount = 0;
+        let naCount = 0;
         let totalAnswered = 0;
         let isAnswerChecked = false;
         let timerInterval = null;
         let timeRemaining = 0;
+        let timeLeft = 0;
         let totalTime = 0;
 
         // Section configurations - Updated to match API
@@ -1275,9 +1268,20 @@
             container.innerHTML = questionsHTML;
 
             // Update UI elements
-            document.getElementById('currentQuestion').textContent = '1';
-            document.getElementById('submitButton').style.display = 'block';
-            document.getElementById('submitButton').disabled = false;
+            const totalQuestions = currentPractice.length;
+            let correctCount = 0, wrongCount = 0, naCount = 0;
+            currentPractice.forEach((question) => {
+                const userAnswer = userAnswers[question.id];
+                if (userAnswer === undefined) naCount++;
+                else if (userAnswer === question.correct) correctCount++;
+                else wrongCount++;
+            });
+            document.getElementById('totalQuestions').textContent = totalQuestions;
+            document.getElementById('correctAnswers').textContent = correctCount;
+            document.getElementById('wrongAnswers').textContent = wrongCount;
+            document.getElementById('naAnswers').textContent = naCount;
+            const accuracy = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0;
+            document.getElementById('accuracy').textContent = `${accuracy}%`;
             isAnswerChecked = false;
         }
 
@@ -1349,11 +1353,15 @@
                 // Update statistics
                 if (userAnswer === question.correct) {
                     correctCount++;
+                } else {
+                    wrongCount++;
                 }
             });
 
             // Update final statistics
             document.getElementById('correctAnswers').textContent = correctCount;
+            document.getElementById('wrongAnswers').textContent = wrongCount;
+            document.getElementById('naAnswers').textContent = totalAnswered - correctCount - wrongCount;
             const accuracy = Math.round((correctCount / totalAnswered) * 100);
             document.getElementById('accuracy').textContent = `${accuracy}%`;
 
@@ -1388,6 +1396,8 @@
             currentQuestionIndex = 0;
             userAnswers = {};
             correctCount = 0;
+            wrongCount = 0;
+            naCount = 0;
             totalAnswered = 0;
 
             // Reset form
@@ -1418,7 +1428,6 @@
                 'generate-tests': 'generate-tests.html',
                 'progress': 'progress.html',
                 'settings': 'settings.html',
-                'appearance': 'appearance.html',
             };
 
             if (pages[page]) {
@@ -1454,6 +1463,7 @@ const passages = parseInt(document.getElementById('passages').value);
             // Show loading state
             startButton.classList.add('loading');
             buttonText.textContent = 'Loading Practice...';
+            document.getElementById('spinner').style.display = 'inline-block';
             startButton.disabled = true;
 
             try {
@@ -1499,6 +1509,7 @@ const passages = parseInt(document.getElementById('passages').value);
             } finally {
                 startButton.classList.remove('loading');
                 buttonText.textContent = 'Start Practice';
+                document.getElementById('spinner').style.display = 'none';
                 startButton.disabled = false;
             }
         });

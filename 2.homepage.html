@@ -14,7 +14,7 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f1f5f9;
+            background: #000000;
             height: 100vh;
             overflow: hidden;
         }
@@ -23,12 +23,12 @@
             display: flex;
             width: 100vw;
             height: 100vh;
-            background: white;
+            background: #000000;
         }
 
         .sidebar {
             width: 280px;
-            background: #1e293b;
+            background: #2d3748;
             color: white;
             padding: 24px 0;
             display: flex;
@@ -78,7 +78,7 @@
             font-size: 20px;
             font-weight: 700;
             color: white;
-            border-bottom: 1px solid #334155;
+            border-bottom: 1px solid #4a5568;
             margin-bottom: 24px;
             transition: all 0.3s ease;
             white-space: nowrap;
@@ -98,7 +98,7 @@
             display: flex;
             align-items: center;
             padding: 16px 24px;
-            color: #94a3b8;
+            color: #e2e8f0;
             text-decoration: none;
             transition: all 0.2s;
             cursor: pointer;
@@ -122,7 +122,7 @@
         }
 
         .nav-item:hover {
-            background: #334155;
+            background: #4a5568;
             color: white;
         }
 
@@ -149,7 +149,6 @@
         .nav-item.tests::before { content: '📝'; }
         .nav-item.progress::before { content: '📊'; }
         .nav-item.settings::before { content: '⚙️'; }
-        .nav-item.appearance::before { content: '🎨'; }
 
         .nav-text {
             transition: opacity 0.3s ease;
@@ -157,7 +156,7 @@
 
         .sidebar-bottom {
             margin-top: auto;
-            border-top: 1px solid #334155;
+            border-top: 1px solid #4a5568;
             padding-top: 24px;
             transition: all 0.3s ease;
         }
@@ -173,7 +172,7 @@
         .main-content {
             flex: 1;
             padding: 40px;
-            background: white;
+            background: #000000;
             overflow-y: auto;
             transition: all 0.3s ease;
         }
@@ -185,7 +184,7 @@
         .greeting {
             font-size: 36px;
             font-weight: 600;
-            color: #1e293b;
+            color: white;
             margin-bottom: 24px;
             display: flex;
             align-items: center;
@@ -243,22 +242,23 @@
         .search-input {
             width: 100%;
             padding: 16px 60px 16px 20px;
-            border: 2px solid #e2e8f0;
+            border: 2px solid #4a5568;
             border-radius: 12px;
             font-size: 16px;
             outline: none;
             transition: all 0.2s;
-            background: #f8fafc;
+            background: #1a202c;
+            color: white;
         }
 
         .search-input:focus {
             border-color: #3b82f6;
-            background: white;
+            background: #2d3748;
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
 
         .search-input::placeholder {
-            color: #94a3b8;
+            color: #a0aec0;
         }
 
         .send-button {
@@ -313,16 +313,16 @@
         }
 
         .section {
-            background: #f8fafc;
+            background: #1a202c;
             border-radius: 16px;
             padding: 32px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid #4a5568;
         }
 
         .section-title {
             font-size: 24px;
             font-weight: 600;
-            color: #1e293b;
+            color: white;
             margin-bottom: 24px;
         }
 
@@ -337,14 +337,14 @@
         .todo-section-title {
             font-size: 24px;
             font-weight: 600;
-            color: #1e293b;
+            color: white;
         }
 
         .todo-menu-btn {
             background: none;
             border: none;
             font-size: 20px;
-            color: #64748b;
+            color: #a0aec0;
             cursor: pointer;
             padding: 8px;
             border-radius: 6px;
@@ -357,8 +357,8 @@
         }
 
         .todo-menu-btn:hover {
-            background: rgba(100, 116, 139, 0.1);
-            color: #1e293b;
+            background: rgba(160, 174, 192, 0.1);
+            color: white;
         }
 
         .todo-menu-btn:active {
@@ -369,8 +369,8 @@
             position: absolute;
             top: 100%;
             right: 0;
-            background: white;
-            border: 1px solid #e2e8f0;
+            background: #2d3748;
+            border: 1px solid #4a5568;
             border-radius: 8px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
             min-width: 160px;
@@ -392,7 +392,7 @@
             align-items: center;
             gap: 10px;
             padding: 12px 16px;
-            color: #374151;
+            color: #e2e8f0;
             text-decoration: none;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -413,17 +413,17 @@
         }
 
         .todo-dropdown-item:hover {
-            background: #f8fafc;
-            color: #1e293b;
+            background: #4a5568;
+            color: white;
         }
 
         .todo-dropdown-item.danger {
-            color: #dc2626;
+            color: #fc8181;
         }
 
         .todo-dropdown-item.danger:hover {
-            background: #fef2f2;
-            color: #b91c1c;
+            background: #742a2a;
+            color: #fed7d7;
         }
 
         .todo-menu-container {
@@ -622,7 +622,7 @@
         }
 
         .overlay-content {
-            background: white;
+            background: #2d3748;
             border-radius: 20px;
             padding: 40px;
             max-width: 500px;
@@ -639,7 +639,100 @@
             transform: scale(1) translateY(0);
         }
 
-        /* PDF Overlay Styles */
+        .close-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 35px;
+            height: 35px;
+            border: none;
+            background: #4a5568;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #a0aec0;
+            transition: all 0.2s ease;
+        }
+
+        .close-button:hover {
+            background: #2d3748;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .word-detail-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #4a5568;
+        }
+
+        .word-detail-word {
+            font-size: 36px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .word-detail-pronunciation {
+            font-size: 18px;
+            color: #a0aec0;
+            font-style: italic;
+            margin-bottom: 12px;
+        }
+
+        .word-detail-type {
+            display: inline-block;
+            background: #3b82f6;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .word-detail-meaning {
+            margin-bottom: 25px;
+        }
+
+        .word-detail-meaning h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 12px;
+        }
+
+        .word-detail-meaning p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #e2e8f0;
+        }
+
+        .word-detail-example {
+            background: #4a5568;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .word-detail-example h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .word-detail-example p {
+            font-size: 15px;
+            line-height: 1.5;
+            color: #cbd5e0;
+            font-style: italic;
+        }
+
         .pdf-overlay {
             position: fixed;
             top: 0;
@@ -661,7 +754,7 @@
         }
 
         .pdf-header {
-            background: white;
+            background: #2d3748;
             padding: 20px;
             display: flex;
             align-items: center;
@@ -672,7 +765,7 @@
         .pdf-title {
             font-size: 20px;
             font-weight: 600;
-            color: #1e293b;
+            color: white;
             display: flex;
             align-items: center;
             gap: 12px;
@@ -719,7 +812,7 @@
 
         .pdf-viewer {
             flex: 1;
-            background: #f1f5f9;
+            background: #1a202c;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -748,7 +841,7 @@
             align-items: center;
             justify-content: center;
             height: 100%;
-            color: #64748b;
+            color: #a0aec0;
             text-align: center;
             padding: 40px;
         }
@@ -762,7 +855,7 @@
         .pdf-fallback h3 {
             font-size: 24px;
             margin-bottom: 12px;
-            color: #1e293b;
+            color: white;
         }
 
         .pdf-fallback p {
@@ -771,108 +864,14 @@
             margin-bottom: 24px;
         }
 
-        .close-button {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            width: 35px;
-            height: 35px;
-            border: none;
-            background: #f1f5f9;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            color: #64748b;
-            transition: all 0.2s ease;
-        }
-
-        .close-button:hover {
-            background: #e2e8f0;
-            color: #1e293b;
-            transform: scale(1.1);
-        }
-
-        .word-detail-header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #f1f5f9;
-        }
-
-        .word-detail-word {
-            font-size: 36px;
-            font-weight: 700;
-            color: #1e293b;
-            margin-bottom: 8px;
-        }
-
-        .word-detail-pronunciation {
-            font-size: 18px;
-            color: #64748b;
-            font-style: italic;
-            margin-bottom: 12px;
-        }
-
-        .word-detail-type {
-            display: inline-block;
-            background: #3b82f6;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .word-detail-meaning {
-            margin-bottom: 25px;
-        }
-
-        .word-detail-meaning h3 {
-            font-size: 18px;
-            font-weight: 600;
-            color: #1e293b;
-            margin-bottom: 12px;
-        }
-
-        .word-detail-meaning p {
-            font-size: 16px;
-            line-height: 1.6;
-            color: #374151;
-        }
-
-        .word-detail-example {
-            background: #f8fafc;
-            padding: 20px;
-            border-radius: 12px;
-            border-left: 4px solid #3b82f6;
-        }
-
-        .word-detail-example h3 {
-            font-size: 16px;
-            font-weight: 600;
-            color: #1e293b;
-            margin-bottom: 8px;
-        }
-
-        .word-detail-example p {
-            font-size: 15px;
-            line-height: 1.5;
-            color: #4b5563;
-            font-style: italic;
-        }
-
         .todo-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 16px 0;
-            border-bottom: 1px solid #e2e8f0;
-            transition: all 0.2s ease;
-            opacity: 1;
+            border-bottom: 1px solid #4a5568;
+            transition: all 0.2s;
+            color: white;
         }
 
         .todo-item:last-child {
@@ -885,7 +884,7 @@
 
         .todo-item.completed .todo-text {
             text-decoration: line-through;
-            color: #9ca3af;
+            color: #a0aec0;
         }
 
         .todo-left {
@@ -897,34 +896,32 @@
         .todo-checkbox {
             width: 20px;
             height: 20px;
-            border: 2px solid #d1d5db;
+            border: 2px solid #4a5568;
             border-radius: 4px;
-            margin-right: 12px;
+            background: #2d3748;
             cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .todo-checkbox:checked {
+            background: #3b82f6;
+            border-color: #3b82f6;
+        }
+
+        .todo-checkbox:checked::after {
+            content: '✓';
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s ease;
-            background: white;
-        }
-
-        .todo-checkbox.checked {
-            background: #10b981;
-            border-color: #10b981;
-        }
-
-        .todo-checkbox.checked::after {
-            content: '✓';
-            color: white;
-            font-size: 12px;
-            font-weight: bold;
+            height: 100%;
         }
 
         .todo-text {
-            color: #374151;
-            font-weight: 500;
+            color: #e2e8f0;
             font-size: 16px;
-            flex: 1;
         }
 
         .todo-right {
@@ -934,7 +931,7 @@
         }
 
         .todo-time {
-            color: #6b7280;
+            color: #a0aec0;
             font-size: 14px;
             min-width: 80px;
             text-align: right;
@@ -985,9 +982,9 @@
         .add-todo-container {
             margin-bottom: 20px;
             padding: 16px;
-            background: white;
+            background: #2d3748;
             border-radius: 8px;
-            border: 2px dashed #d1d5db;
+            border: 2px dashed #4a5568;
             transition: all 0.2s ease;
         }
 
@@ -1007,10 +1004,12 @@
         .add-todo-input {
             flex: 1;
             padding: 8px 12px;
-            border: 1px solid #d1d5db;
+            border: 1px solid #4a5568;
             border-radius: 6px;
             font-size: 14px;
             outline: none;
+            background: #1a202c;
+            color: white;
         }
 
         .add-todo-input:focus {
@@ -1020,10 +1019,12 @@
         .add-todo-time {
             width: 100px;
             padding: 8px 12px;
-            border: 1px solid #d1d5db;
+            border: 1px solid #4a5568;
             border-radius: 6px;
             font-size: 14px;
             outline: none;
+            background: #1a202c;
+            color: white;
         }
 
         .add-todo-btn {
@@ -1061,7 +1062,7 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            color: #6b7280;
+            color: #a0aec0;
             cursor: pointer;
             padding: 12px;
             transition: color 0.2s ease;
@@ -1073,7 +1074,7 @@
 
         .todo-empty {
             text-align: center;
-            color: #9ca3af;
+            color: #a0aec0;
             font-style: italic;
             padding: 32px 0;
         }
@@ -1082,7 +1083,7 @@
         .toppers-timetable-container {
             margin-top: 24px;
             padding-top: 20px;
-            border-top: 1px solid #e2e8f0;
+            border-top: 1px solid #4a5568;
         }
 
         .toppers-timetable-btn {
@@ -1132,15 +1133,15 @@
         .todo-management {
             margin-top: 16px;
             padding: 12px 16px;
-            background: #f8fafc;
+            background: #2d3748;
             border-radius: 8px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid #4a5568;
         }
 
         .todo-stats {
             margin-bottom: 8px;
             font-size: 14px;
-            color: #64748b;
+            color: #a0aec0;
             font-weight: 500;
         }
 
@@ -1154,19 +1155,19 @@
             align-items: center;
             gap: 6px;
             padding: 6px 12px;
-            background: white;
-            border: 1px solid #d1d5db;
+            background: #1a202c;
+            border: 1px solid #4a5568;
             border-radius: 6px;
             font-size: 12px;
             font-weight: 500;
-            color: #374151;
+            color: #e2e8f0;
             cursor: pointer;
             transition: all 0.2s ease;
         }
 
         .todo-action-btn:hover {
-            background: #f3f4f6;
-            border-color: #9ca3af;
+            background: #4a5568;
+            border-color: #a0aec0;
             transform: translateY(-1px);
         }
 
@@ -1186,11 +1187,11 @@
             align-items: center;
             justify-content: center;
             padding: 24px;
-            background: white;
-            border: 2px solid #e2e8f0;
+            background: #2d3748;
+            border: 2px solid #4a5568;
             border-radius: 16px;
             text-decoration: none;
-            color: #374151;
+            color: white;
             transition: all 0.2s;
             cursor: pointer;
             min-height: 120px;
@@ -1271,7 +1272,7 @@
             .pdf-viewer {
     flex: 1;
     padding: 0;
-    background: #f1f5f9;
+    background: #1a202c;
 }
 
         }
@@ -1306,7 +1307,6 @@
     font-size: 11px;
     opacity: 0.8;
 }
-
     </style>
 </head>
 <body>
@@ -1349,9 +1349,7 @@
                 <button class="nav-item settings" onclick="navigateTo('settings')">
                     <span class="nav-text">Settings</span>
                 </button>
-                <button class="nav-item appearance" onclick="navigateTo('appearance')">
-                    <span class="nav-text">Appearance</span>
-                </button>
+
             </div>
         </nav>
 
@@ -1391,14 +1389,14 @@
                             <div class="date-info" id="dateInfo">Day 1 of 365</div>
                         </div>
 
-                        <div class="daily-newspaper" onclick="openNewspaperOverlay()">
+                        <div class="daily-newspaper" onclick="window.open('https://discord.com/channels/1172163555810881616/1318350879753240678', '_blank')">
                             <div class="newspaper-header">
                                 <span class="newspaper-title">Daily Highlighted Newspaper</span>
                                 <span class="newspaper-icon">📰</span>
                             </div>
-                            <div class="newspaper-name" id="newspaperName">CLAT Daily</div>
-                            <div class="newspaper-date" id="newspaperDate">Loading...</div>
-                            <div class="newspaper-status" id="newspaperStatus">Checking for today's edition...</div>
+                            <div class="newspaper-name" id="newspaperName">Go to Discord for Daily Newspaper</div>
+                            <div class="newspaper-date" id="newspaperDate">Click to open</div>
+                            <div class="newspaper-status" id="newspaperStatus">Get the latest edition on Discord</div>
                         </div>
                     </div>
 
@@ -1428,7 +1426,7 @@
                         </div>
                         <div class="add-todo-form" id="addTodoForm">
                             <input type="text" class="add-todo-input" id="todoInput" placeholder="Enter task..." />
-                            <input type="text" class="add-todo-time" id="todoTime" placeholder="Time/Note" />
+                            <input type="time" class="add-todo-time" id="todoTime" placeholder="Time" />
                             <button class="add-todo-btn" onclick="addTodo()">Add</button>
                             <button class="cancel-btn" onclick="hideAddTodoForm()">Cancel</button>
                         </div>
@@ -1627,25 +1625,20 @@
             }
         }
 
-        // Get display name from Supabase user - Updated to use shared system
+        // Replace getDisplayName function with a unified version
         function getDisplayName() {
-            if (!currentUser) {
-                // Use shared username system
-                const username = getUsername();
-                return username;
-            }
+            // Use $username from localStorage if available
+            const stored = localStorage.getItem('$username');
+            if (stored && stored.trim()) return stored;
 
-            // Priority: full_name > display_name > email prefix
+            // Otherwise, fallback to Supabase user logic
+            if (!currentUser) return 'User';
             const fullName = currentUser.user_metadata?.full_name;
             const displayName = currentUser.user_metadata?.display_name;
             const email = currentUser.email;
-            
             const finalName = fullName || displayName || (email ? email.split('@')[0] : 'User');
-
-            // Store in localStorage as $username for access in all pages
-            setUsername(finalName);
-            console.log('✅ $username set in localStorage:', finalName);
-
+            // Store for future use
+            localStorage.setItem('$username', finalName);
             return finalName;
         }
 
@@ -2029,7 +2022,6 @@
                 'generate-tests': 'generate-tests.html',
                 'progress': 'progress.html',
                 'settings': 'settings.html',
-                'appearance': 'appearance.html',
             };
 
             document.querySelectorAll('.nav-item').forEach(item => {
@@ -2289,7 +2281,7 @@
                         <span class="todo-text">${todo.text}</span>
                     </div>
                     <div class="todo-right">
-                        <span class="todo-time">${todo.time}</span>
+                        <span class="todo-time">${formatTimeTo12Hour(todo.time)}</span>
                         <div class="todo-actions">
                             <button class="todo-btn todo-edit" onclick="editTodo(${todo.id})" title="Edit">✏️</button>
                             <button class="todo-btn todo-delete" onclick="deleteTodo(${todo.id})" title="Delete">🗑️</button>
@@ -2380,6 +2372,17 @@
 
         // Optional: Add double-click on greeting to go to settings
         document.getElementById('greetingText').addEventListener('dblclick', goToSettings);
+
+        function formatTimeTo12Hour(time24) {
+            if (!time24 || time24 === 'No time set') return 'No time set';
+            const [hourStr, minuteStr] = time24.split(":");
+            let hour = parseInt(hourStr, 10);
+            const minute = minuteStr || '00';
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            hour = hour % 12;
+            if (hour === 0) hour = 12;
+            return `${hour}:${minute.padStart(2, '0')} ${ampm}`;
+        }
     </script>
 </body>
 </html>

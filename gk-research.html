@@ -14,7 +14,8 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f1f5f9;
+            background: #000 !important;
+            color: #fff !important;
             height: 100vh;
             overflow: hidden;
         }
@@ -23,13 +24,13 @@
             display: flex;
             width: 100vw;
             height: 100vh;
-            background: white;
+            background: #000 !important;
         }
 
         .sidebar {
             width: 280px;
-            background: #1e293b;
-            color: white;
+            background: #1e293b !important;
+            color: white !important;
             padding: 24px 0;
             display: flex;
             flex-direction: column;
@@ -146,7 +147,6 @@
         .nav-item.tests::before { content: '📝'; }
         .nav-item.progress::before { content: '📊'; }
         .nav-item.settings::before { content: '⚙️'; }
-        .nav-item.appearance::before { content: '🎨'; }
 
         .nav-text {
             transition: opacity 0.3s ease;
@@ -171,16 +171,17 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            background: white;
+            background: #000 !important;
+            color: #fff !important;
             overflow: hidden;
             min-width: 0;
         }
 
         .header {
             padding: 24px 40px;
-            border-bottom: 1px solid #e2e8f0;
-            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-            color: white;
+            border-bottom: 1px solid #222 !important;
+            background: #111 !important;
+            color: #fff !important;
             animation: slideInFromTop 0.6s ease-out;
             flex-shrink: 0;
         }
@@ -203,15 +204,18 @@
             gap: 0;
             overflow: hidden;
             min-height: 0;
+            background: #000 !important;
+            color: #fff !important;
         }
 
         .chat-section {
             display: flex;
             flex-direction: column;
-            background: white;
-            border-right: 1px solid #e2e8f0;
+            background: #181818 !important;
+            border-right: 1px solid #222 !important;
             overflow: hidden;
             min-height: 0;
+            color: #fff !important;
         }
 
         .chat-messages {
@@ -222,6 +226,8 @@
             flex-direction: column;
             gap: 16px;
             min-height: 0;
+            background: #181818 !important;
+            color: #fff !important;
         }
 
         .message {
@@ -233,31 +239,29 @@
             animation: messageSlideIn 0.3s ease-out;
             white-space: pre-wrap;
             word-wrap: break-word;
+            color: #fff !important;
         }
 
         .message.user {
             align-self: flex-end;
-            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-            color: white;
+            background: #222 !important;
+            color: #fff !important;
             border-bottom-right-radius: 6px;
         }
 
         .message.assistant {
             align-self: flex-start;
-            background: #f1f5f9;
-            color: #1e293b;
-            border: 1px solid #e2e8f0;
+            background: #333 !important;
+            color: #fff !important;
+            border: 1px solid #444 !important;
             border-bottom-left-radius: 6px;
         }
 
         .typing-indicator {
             align-self: flex-start;
-            background: #f1f5f9;
-            border: 1px solid #e2e8f0;
-            padding: 16px 20px;
-            border-radius: 18px;
-            border-bottom-left-radius: 6px;
-            display: none;
+            background: #222 !important;
+            border: 1px solid #444 !important;
+            color: #fff !important;
         }
 
         .typing-dots {
@@ -268,7 +272,7 @@
         .typing-dot {
             width: 8px;
             height: 8px;
-            background: #94a3b8;
+            background: #fff !important;
             border-radius: 50%;
             animation: typingPulse 1.4s infinite ease-in-out;
         }
@@ -283,8 +287,8 @@
 
         .chat-input-container {
             padding: 20px 24px;
-            border-top: 1px solid #e2e8f0;
-            background: white;
+            border-top: 1px solid #222 !important;
+            background: #111 !important;
             flex-shrink: 0;
         }
 
@@ -292,16 +296,16 @@
             display: flex;
             align-items: flex-end;
             gap: 12px;
-            background: #f8fafc;
-            border: 2px solid #e2e8f0;
+            background: #222 !important;
+            border: 2px solid #333 !important;
             border-radius: 24px;
             padding: 8px;
             transition: all 0.2s ease;
         }
 
         .chat-input-wrapper:focus-within {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            border-color: #fff !important;
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.1);
         }
 
         .chat-input {
@@ -311,7 +315,7 @@
             background: transparent;
             padding: 12px 16px;
             font-size: 16px;
-            color: #1e293b;
+            color: #fff !important;
             resize: none;
             max-height: 120px;
             min-height: 24px;
@@ -319,16 +323,16 @@
         }
 
         .chat-input::placeholder {
-            color: #94a3b8;
+            color: #aaa !important;
         }
 
         .send-button {
             width: 40px;
             height: 40px;
-            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            background: #fff !important;
             border: none;
             border-radius: 50%;
-            color: white;
+            color: #000 !important;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -339,7 +343,7 @@
 
         .send-button:hover {
             transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            box-shadow: 0 4px 12px rgba(255,255,255,0.2);
         }
 
         .send-button:disabled {
@@ -350,7 +354,7 @@
 
         .welcome-message {
             text-align: center;
-            color: #64748b;
+            color: #aaa !important;
             font-size: 16px;
             margin: 40px 0;
             padding: 0 20px;
@@ -359,319 +363,82 @@
         .welcome-title {
             font-size: 24px;
             font-weight: 600;
-            color: #1e293b;
+            color: #fff !important;
             margin-bottom: 8px;
         }
 
         .sidebar-panel {
-            background: #f8fafc;
+            background: #181818 !important;
             display: flex;
             flex-direction: column;
             overflow-y: auto;
             min-height: 0;
+            color: #fff !important;
         }
 
         .panel-section {
             padding: 24px;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid #222 !important;
             flex-shrink: 0;
+            color: #fff !important;
         }
 
         .panel-title {
             font-size: 18px;
             font-weight: 600;
-            color: #1e293b;
+            color: #fff !important;
             margin-bottom: 16px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
-        /* Upload Container Styles */
-        .upload-container {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
+        /* Button Styles */
+        .discord-section,
+        .practice-section,
+        .material-section {
+            margin-top: 16px;
         }
 
-        .upload-area {
-            position: relative;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            border: 3px dashed #cbd5e1;
-            border-radius: 16px;
-            padding: 32px 24px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            overflow: hidden;
-        }
-
-        .upload-area::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, transparent 30%, rgba(59, 130, 246, 0.1) 50%, transparent 70%);
-            transform: translateX(-100%);
-            transition: transform 0.6s ease;
-        }
-
-        .upload-area:hover::before {
-            transform: translateX(100%);
-        }
-
-        .upload-area:hover {
-            border-color: #3b82f6;
-            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
-        }
-
-        .upload-area.dragover {
-            border-color: #3b82f6;
-            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-            transform: scale(1.02);
-        }
-
-        .upload-icon {
-            margin-bottom: 16px;
-            color: #64748b;
-            transition: all 0.3s ease;
-        }
-
-        .upload-area:hover .upload-icon {
-            color: #3b82f6;
-            transform: scale(1.1);
-        }
-
-        .upload-text h4 {
-            font-size: 18px;
-            font-weight: 600;
-            color: #1e293b;
-            margin-bottom: 4px;
-        }
-
-        .upload-text p {
-            font-size: 14px;
-            color: #64748b;
-            margin: 0;
-        }
-
-        .file-input {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            cursor: pointer;
-        }
-
-        .upload-actions {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .upload-btn {
+        .discord-btn,
+        .practice-btn,
+        .material-btn {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
+            width: 100%;
             padding: 12px 16px;
             border: none;
-            border-radius: 12px;
+            border-radius: 8px;
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            background: #222 !important;
+            color: #fff !important;
+            border: 1px solid #fff !important;
         }
 
-        .upload-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s ease;
+        .discord-btn:hover,
+        .practice-btn:hover,
+        .material-btn:hover {
+            background: #fff !important;
+            color: #000 !important;
+            border: 1px solid #fff !important;
         }
 
-        .upload-btn:hover::before {
-            left: 100%;
-        }
-
-        .upload-btn.primary {
-            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-            color: white;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-        }
-
-        .upload-btn.primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
-        }
-
-        .upload-btn.secondary {
-            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-            color: #475569;
-            border: 2px solid #cbd5e1;
-        }
-
-        .upload-btn.secondary:hover {
-            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn-icon {
+        .discord-btn .btn-icon,
+        .practice-btn .btn-icon,
+        .material-btn .btn-icon {
             font-size: 16px;
         }
 
-        .btn-text {
-            font-size: 13px;
-        }
-
-        .newspapers-list {
-            max-height: none;
-            overflow-y: visible;
-        }
-
-        .newspaper-item {
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .newspaper-item:hover {
-            border-color: #ef4444;
-            background: #fef2f2;
-        }
-
-        .newspaper-icon {
-            font-size: 20px;
-            color: #ef4444;
-            flex-shrink: 0;
-        }
-
-        .newspaper-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .newspaper-date {
-            font-size: 14px;
-            font-weight: 600;
-            color: #1e293b;
-            margin-bottom: 2px;
-        }
-
-        .newspaper-size {
-            font-size: 12px;
-            color: #64748b;
-        }
-
-        .loading-text {
-            text-align: center;
-            color: #64748b;
-            font-size: 14px;
-            padding: 20px;
-        }
-
-        .error-text {
-            text-align: center;
-            color: #ef4444;
-            font-size: 14px;
-            padding: 20px;
-        }
-
-        /* PDF Modal */
-        .pdf-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            animation: fadeIn 0.3s ease-out;
-        }
-
-        .pdf-modal.show {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .pdf-viewer {
-            background: white;
-            border-radius: 12px;
-            width: 90%;
-            height: 90%;
-            max-width: 1000px;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .pdf-header {
-            padding: 20px;
-            border-bottom: 1px solid #e2e8f0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-shrink: 0;
-        }
-
-        .pdf-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #1e293b;
-        }
-
-        .close-pdf {
-            width: 32px;
-            height: 32px;
-            border: none;
-            background: #f1f5f9;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #64748b;
-            font-size: 18px;
-        }
-
-        .close-pdf:hover {
-            background: #e2e8f0;
-        }
-
-        .pdf-content {
-            flex: 1;
-            padding: 20px;
-            overflow: hidden;
-            background: #f8fafc;
-        }
-
-        .pdf-embed {
-            width: 100%;
-            height: 100%;
-            border: none;
-            border-radius: 8px;
+        .discord-btn .btn-text,
+        .practice-btn .btn-text,
+        .material-btn .btn-text {
+            font-weight: 500;
         }
 
         /* Animations */
@@ -704,15 +471,6 @@
             }
             30% {
                 transform: scale(1.2);
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
                 opacity: 1;
             }
         }
@@ -763,10 +521,6 @@
                 grid-template-rows: 1fr auto;
             }
 
-            .topics-grid {
-                grid-template-columns: 1fr;
-            }
-
             .header {
                 padding: 16px 20px;
             }
@@ -784,30 +538,15 @@
             }
         }
 
-        /* Scrollbar styling */
-        .chat-messages::-webkit-scrollbar,
-        .sidebar-panel::-webkit-scrollbar,
-        .sidebar::-webkit-scrollbar {
-            width: 6px;
+        /* Scrollbar styling for dark mode */
+        ::-webkit-scrollbar {
+            width: 8px;
+            background: #111;
         }
 
-        .chat-messages::-webkit-scrollbar-track,
-        .sidebar-panel::-webkit-scrollbar-track,
-        .sidebar::-webkit-scrollbar-track {
-            background: #f1f5f9;
-        }
-
-        .chat-messages::-webkit-scrollbar-thumb,
-        .sidebar-panel::-webkit-scrollbar-thumb,
-        .sidebar::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 3px;
-        }
-
-        .chat-messages::-webkit-scrollbar-thumb:hover,
-        .sidebar-panel::-webkit-scrollbar-thumb:hover,
-        .sidebar::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
         }
     </style>
 </head>
@@ -822,7 +561,6 @@
             
             <div class="logo">CLAT.GPT.1</div>
             
-
             <button class="nav-item events" onclick="navigateTo('events')">
                 <span class="nav-text">Upcoming Events</span>
             </button>
@@ -852,9 +590,6 @@
                 <button class="nav-item settings" onclick="navigateTo('settings')">
                     <span class="nav-text">Settings</span>
                 </button>
-                <button class="nav-item appearance" onclick="navigateTo('appearance')">
-                    <span class="nav-text">Appearance</span>
-                </button>
 
             </div>
         </nav>
@@ -862,7 +597,7 @@
         <main class="main-content">
             <header class="header">
                 <h1 class="greeting">GK Research Engine 🔍</h1>
-                <p class="page-subtitle">Generate CLAT-style GK passages and MCQs, explore topics, and access daily newspapers</p>
+                <p class="page-subtitle">Generate CLAT-style GK passages and MCQs, explore topics, and access resources</p>
             </header>
 
             <div class="content-area">
@@ -871,7 +606,7 @@
                     <div class="chat-messages" id="chatMessages">
                         <div class="welcome-message">
                             <div class="welcome-title">Welcome to GK Research! 🎯</div>
-                            <p>I can generate CLAT-style GK passages with challenging MCQs on any topic. Select a topic from the sidebar, ask about current affairs, or request passages on specific subjects!</p>
+                            <p>I can generate CLAT-style GK passages with challenging MCQs on any topic. Ask about current affairs, or request passages on specific subjects!</p>
                         </div>
                     </div>
 
@@ -903,44 +638,30 @@
 
                 <!-- Sidebar Panel -->
                 <div class="sidebar-panel">
-
-                    <!-- Newspapers Section -->
+                    <!-- Practice and Resources Section -->
                     <div class="panel-section">
-                        <h3 class="panel-title">📰 Daily Newspapers</h3>
-                        <div class="newspapers-list" id="newspapersList">
-                            <div class="loading-text">Loading newspapers...</div>
+                        <!-- Discord Redirect Button -->
+                        <div class="discord-section">
+                            <button class="discord-btn" onclick="window.open('https://discord.com/channels/1172163555810881616/1318350879753240678', '_blank')">
+                                <span class="btn-icon">💬</span>
+                                <span class="btn-text">Get Latest Newspapers on Discord</span>
+                            </button>
                         </div>
-                    </div>
-
-                    <!-- PDF Upload Section -->
-                    <div class="panel-section">
-                        <h3 class="panel-title">📤 Upload & Analyze PDF</h3>
-                        <div class="upload-container">
-                            <div class="upload-area" id="uploadArea">
-                                <div class="upload-icon">
-                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                        <polyline points="7,10 12,15 17,10"></polyline>
-                                        <line x1="12" y1="15" x2="12" y2="3"></line>
-                                    </svg>
-                                </div>
-                                <div class="upload-text">
-                                    <h4>Drop your PDF here</h4>
-                                    <p>or click to browse files</p>
-                                </div>
-                                <input type="file" id="pdfFileInput" accept="application/pdf" class="file-input" />
-                            </div>
-                            
-                            <div class="upload-actions">
-                                <button class="upload-btn primary" onclick="uploadPDFToBackend()">
-                                    <span class="btn-icon">🚀</span>
-                                    <span class="btn-text">Analyze & Generate</span>
-                                </button>
-                                <button class="upload-btn secondary" onclick="uploadPDF()">
-                                    <span class="btn-icon">📁</span>
-                                    <span class="btn-text">Store PDF</span>
-                                </button>
-                            </div>
+                        
+                        <!-- Practice GK Online Button -->
+                        <div class="practice-section">
+                            <button class="practice-btn" onclick="window.location.href='practice-online.html'">
+                                <span class="btn-icon">🎯</span>
+                                <span class="btn-text">Practice GK Online</span>
+                            </button>
+                        </div>
+                        
+                        <!-- Study Material Button -->
+                        <div class="material-section">
+                            <button class="material-btn" onclick="window.open('https://drive.google.com/file/d/15-ASrBeur2cgy20bvsyNMC3kThXVJtlJ/view', '_blank')">
+                                <span class="btn-icon">📚</span>
+                                <span class="btn-text">Study Material</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -948,129 +669,14 @@
         </main>
     </div>
 
-    <!-- PDF Modal -->
-    <div class="pdf-modal" id="pdfModal">
-        <div class="pdf-viewer">
-            <div class="pdf-header">
-                <h3 class="pdf-title" id="pdfTitle">Daily Newspaper</h3>
-                <button class="close-pdf" onclick="closePDF()">×</button>
-            </div>
-            <div class="pdf-content">
-                <iframe class="pdf-embed" id="pdfEmbed" src=""></iframe>
-            </div>
-        </div>
-    </div>
-
     <script src="progress-tracker.js"></script>
     <script>
-        // Supabase configuration
-        const SUPABASE_URL = 'https://agmdmagahkpuzafnsprx.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFnbWRtYWdhaGtwdXphZm5zcHJ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA2ODgyMjgsImV4cCI6MjA2NjI2NDIyOH0.IFV-zakRlvt1q-ZhF7JTCoSjhEK8Ubu1jmqvJI1xVtY';
-        
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
         // API Configuration
-        const BACKEND_URL = window.location.origin; // Use relative URL for production
+        const BACKEND_URL = window.location.origin;
         const API_ENDPOINTS = {
             assistant: `${BACKEND_URL}/gk/assistant`,
-            uploadPdf: `${BACKEND_URL}/gk/upload-pdf`,
             health: `${BACKEND_URL}/gk/health`
         };
-
-        // Load newspapers from Supabase
-        async function loadNewspapers() {
-            const newspapersList = document.getElementById('newspapersList');
-            
-            try {
-                const { data: files, error } = await supabase.storage
-                    .from('news-pdf')
-                    .list('', { 
-                        limit: 50, 
-                        sortBy: { column: 'created_at', order: 'desc' } 
-                    });
-
-                if (error) throw error;
-
-                newspapersList.innerHTML = '';
-
-                if (!files || files.length === 0) {
-                    newspapersList.innerHTML = '<div class="error-text">No newspapers found</div>';
-                    return;
-                }
-
-                const validFiles = files.filter(file => 
-                    file.name !== '.emptyFolderPlaceholder' && 
-                    file.name.endsWith('.pdf')
-                );
-
-                if (validFiles.length === 0) {
-                    newspapersList.innerHTML = '<div class="error-text">No PDF files found</div>';
-                    return;
-                }
-
-                validFiles.forEach(file => {
-                    const newspaperItem = document.createElement('div');
-                    newspaperItem.className = 'newspaper-item';
-                    newspaperItem.onclick = () => openNewspaper(file);
-                    
-                    // Parse date from filename (ddmmyy.pdf format)
-                    const fileName = file.name.replace('.pdf', '');
-                    let displayDate = fileName;
-                    
-                    if (fileName.match(/^\d{6}$/)) {
-                        const day = fileName.substring(0, 2);
-                        const month = fileName.substring(2, 4);
-                        const year = '20' + fileName.substring(4, 6);
-                        displayDate = `${day}/${month}/${year}`;
-                    }
-                    
-                    newspaperItem.innerHTML = `
-                        <div class="newspaper-icon">📰</div>
-                        <div class="newspaper-info">
-                            <div class="newspaper-date">${displayDate}</div>
-                            <div class="newspaper-size">${formatFileSize(file.metadata?.size || 0)}</div>
-                        </div>
-                    `;
-                    
-                    newspapersList.appendChild(newspaperItem);
-                });
-
-            } catch (error) {
-                console.error('Error loading newspapers:', error);
-                newspapersList.innerHTML = '<div class="error-text">Error loading newspapers</div>';
-            }
-        }
-
-        function formatFileSize(bytes) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-        }
-
-        // Open newspaper in PDF modal
-        async function openNewspaper(file) {
-            try {
-                const { data: urlData } = supabase.storage
-                    .from('news-pdf')
-                    .getPublicUrl(file.name);
-                
-                document.getElementById('pdfTitle').textContent = `Daily Newspaper - ${file.name}`;
-                document.getElementById('pdfEmbed').src = urlData.publicUrl;
-                document.getElementById('pdfModal').classList.add('show');
-                
-            } catch (error) {
-                console.error('Error opening newspaper:', error);
-                alert('Error opening newspaper. Please try again.');
-            }
-        }
-
-        // Close PDF modal
-        function closePDF() {
-            document.getElementById('pdfModal').classList.remove('show');
-            document.getElementById('pdfEmbed').src = '';
-        }
 
         // Chat functionality
         function addMessage(type, content) {
@@ -1114,11 +720,9 @@
         }
 
         async function sendToBackend(message) {
-            // Show typing indicator
             showTypingIndicator();
-            // http://127.0.0.1:5000/gk/generate
+            
             try {
-                // Send request to Flask backend
                 const response = await fetch(API_ENDPOINTS.assistant, {
                     method: 'POST',
                     headers: {
@@ -1166,7 +770,6 @@
                 'generate-tests': 'generate-tests.html',
                 'progress': 'progress.html',
                 'settings': 'settings.html',
-                'appearance': 'appearance.html',
             };
 
             if (pages[page]) {
@@ -1196,13 +799,6 @@
             }
         });
 
-        // Close PDF modal when clicking outside
-        document.getElementById('pdfModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closePDF();
-            }
-        });
-
         // Auto-collapse sidebar on mobile
         function checkScreenSize() {
             if (window.innerWidth <= 768) {
@@ -1212,161 +808,10 @@
 
         // Initialize page
         window.addEventListener('load', function() {
-            loadNewspapers();
             checkScreenSize();
-            setupDragAndDrop();
         });
 
         window.addEventListener('resize', checkScreenSize);
-
-        // Drag and drop functionality
-        function setupDragAndDrop() {
-            const uploadArea = document.getElementById('uploadArea');
-            const fileInput = document.getElementById('pdfFileInput');
-
-            // Prevent default drag behaviors
-            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-                uploadArea.addEventListener(eventName, preventDefaults, false);
-                document.body.addEventListener(eventName, preventDefaults, false);
-            });
-
-            // Highlight drop area when item is dragged over it
-            ['dragenter', 'dragover'].forEach(eventName => {
-                uploadArea.addEventListener(eventName, highlight, false);
-            });
-
-            ['dragleave', 'drop'].forEach(eventName => {
-                uploadArea.addEventListener(eventName, unhighlight, false);
-            });
-
-            // Handle dropped files
-            uploadArea.addEventListener('drop', handleDrop, false);
-
-            // Handle file input change
-            fileInput.addEventListener('change', handleFileSelect);
-
-            function preventDefaults(e) {
-                e.preventDefault();
-                e.stopPropagation();
-            }
-
-            function highlight(e) {
-                uploadArea.classList.add('dragover');
-            }
-
-            function unhighlight(e) {
-                uploadArea.classList.remove('dragover');
-            }
-
-            function handleDrop(e) {
-                const dt = e.dataTransfer;
-                const files = dt.files;
-                handleFiles(files);
-            }
-
-            function handleFileSelect(e) {
-                const files = e.target.files;
-                handleFiles(files);
-            }
-
-            function handleFiles(files) {
-                if (files.length > 0) {
-                    const file = files[0];
-                    if (file.type === 'application/pdf') {
-                        fileInput.files = files;
-                        // Update upload area text to show selected file
-                        const uploadText = uploadArea.querySelector('.upload-text h4');
-                        uploadText.textContent = `Selected: ${file.name}`;
-                        uploadText.style.color = '#3b82f6';
-                    } else {
-                        alert('Please select a PDF file.');
-                    }
-                }
-            }
-        }
-
-        async function uploadPDF() {
-            const fileInput = document.getElementById('pdfFileInput');
-            const file = fileInput.files[0];
-
-            if (!file) {
-                alert("Please select a PDF file to upload.");
-                return;
-            }
-
-            const fileName = file.name;
-
-            const { data, error } = await supabase.storage
-                .from('news-pdf')
-                .upload(fileName, file, {
-                    contentType: 'application/pdf',
-                    upsert: true  // Overwrites if file with same name exists
-                });
-
-            if (error) {
-                console.error("Upload error:", error);
-                alert("Failed to upload PDF.");
-            } else {
-                alert("PDF uploaded successfully!");
-                loadNewspapers();  // Refresh newspaper list
-                // Reset upload area
-                const uploadText = document.querySelector('.upload-text h4');
-                uploadText.textContent = 'Drop your PDF here';
-                uploadText.style.color = '#1e293b';
-                fileInput.value = '';
-            }
-        }
-
-        async function uploadPDFToBackend() {
-            const fileInput = document.getElementById('pdfFileInput');
-            const file = fileInput.files[0];
-
-            if (!file || file.type !== "application/pdf") {
-                alert("Please select a valid PDF file.");
-                return;
-            }
-
-            const formData = new FormData();
-            formData.append("file", file);
-
-            try {
-                // Show typing effect or loader if needed
-                showTypingIndicator();
-
-                const response = await fetch(API_ENDPOINTS.uploadPdf, {
-                    method: "POST",
-                    body: formData
-                });
-
-                const result = await response.json();
-                hideTypingIndicator();
-
-                if (response.ok) {
-                    addMessage("assistant", result.response);
-                    // Track GK research activity for PDF upload
-                    saveGKProgress('gk', 'pdf-research', 1, 1);
-                } else {
-                    addMessage("assistant", `❌ Error: ${result.error}`);
-                }
-
-                // Reset upload area
-                const uploadText = document.querySelector('.upload-text h4');
-                uploadText.textContent = 'Drop your PDF here';
-                uploadText.style.color = '#1e293b';
-                fileInput.value = '';
-
-            } catch (error) {
-                hideTypingIndicator();
-                console.error("Error uploading PDF:", error);
-                addMessage("assistant", "❌ Error uploading PDF. Check your backend or file size.");
-                
-                // Reset upload area on error too
-                const uploadText = document.querySelector('.upload-text h4');
-                uploadText.textContent = 'Drop your PDF here';
-                uploadText.style.color = '#1e293b';
-                fileInput.value = '';
-            }
-        }
 
         function saveGKProgress(section, subcategory, score, total) {
             // Map section names to standardized names
@@ -1391,7 +836,6 @@
                 console.error('❌ Failed to save GK Research progress');
             }
         }
-
     </script>
 </body>
-</html>
+</html> 

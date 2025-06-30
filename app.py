@@ -12,6 +12,20 @@ import tempfile
 from flask import send_from_directory
 from dotenv import load_dotenv
 
+# Try to import PyMuPDF for PDF processing
+try:
+    import fitz  # PyMuPDF for PDF processing
+    PDF_PROCESSING_AVAILABLE = True
+    print("✅ PyMuPDF successfully imported - PDF processing enabled")
+except ImportError as e:
+    PDF_PROCESSING_AVAILABLE = False
+    print(f"❌ Warning: PyMuPDF not available. PDF processing will be disabled. Error: {e}")
+    print("💡 Try running: pip install PyMuPDF==1.24.3")
+except Exception as e:
+    PDF_PROCESSING_AVAILABLE = False
+    print(f"❌ Unexpected error importing PyMuPDF: {e}")
+    print("💡 Try running: pip install PyMuPDF==1.24.3")
+
 app = Flask(__name__)
 CORS(app)
 
@@ -1390,6 +1404,19 @@ def gk_get_topics():
 def gk_upload_pdf():
     """Upload PDF for GK generation"""
     try:
+        print(f"PDF upload request received. PDF_PROCESSING_AVAILABLE: {PDF_PROCESSING_AVAILABLE}")
+        
+        if not PDF_PROCESSING_AVAILABLE:
+            print("❌ PDF processing not available - PyMuPDF import failed")
+            return jsonify({
+                'error': 'PDF processing not available',
+                'message': 'PyMuPDF library is not installed or not accessible. Please install it to enable PDF processing.',
+                'debug_info': {
+                    'pdf_processing_available': False,
+                    'suggestion': 'Run: pip install PyMuPDF==1.24.3'
+                }
+            }), 400
+
         if 'file' not in request.files:
             return jsonify({'error': 'No file uploaded'}), 400
 
@@ -1397,15 +1424,89 @@ def gk_upload_pdf():
         if not file.filename or not file.filename.endswith('.pdf'):
             return jsonify({'error': 'Only PDF files are allowed'}), 400
 
-        # For now, return a placeholder response since PyMuPDF isn't imported
-        return jsonify({
-            'error': 'PDF processing not available in this version',
-            'message': 'Please use text input instead'
-        }), 400
+        print(f"Processing PDF: {file.filename}")
+
+        # Save the uploaded file temporarily
+        temp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.pdf')
+        file.save(temp_file.name)
+        temp_file.close()
+
+        try:
+            # Extract text from PDF using PyMuPDF
+            print("Opening PDF with PyMuPDF...")
+            doc = fitz.open(temp_file.name)
+            text_content = ""
+            
+            print(f"PDF has {len(doc)} pages")
+            for page_num in range(len(doc)):
+                page = doc.load_page(page_num)
+                page_text = page.get_text()
+                text_content += page_text
+                print(f"Page {page_num + 1}: {len(page_text)} characters")
+            
+            doc.close()
+            
+            # Clean up temporary file
+            os.unlink(temp_file.name)
+            
+            print(f"Total extracted text: {len(text_content)} characters")
+            
+            # Limit text content to reasonable length (first 2000 characters)
+            if len(text_content) > 2000:
+                text_content = text_content[:2000] + "..."
+            
+            # Generate GK content based on the PDF text
+            user_prompt = f"""Based on the following PDF content, generate a CLAT-style GK passage with 5 MCQs and answer key. 
+            
+PDF Content:
+{text_content}
+
+Please create:
+1. A 600-750 word passage on the main topic from the PDF
+2. 5 challenging MCQs (1.1 to 1.5) based on the content
+3. A clean answer key
+
+Focus on the most important facts and current affairs from the PDF content."""
+
+            messages = [
+                {"role": "system", "content": GK_SYSTEM_PROMPT},
+                {"role": "user", "content": user_prompt}
+            ]
+            
+            print("Generating GK content with Groq API...")
+            response = call_groq_api(messages, temperature=0.7, max_tokens=4000)
+            
+            if response is None:
+                return jsonify({'error': 'Failed to generate content from PDF'}), 500
+            
+            # Clean up formatting artifacts
+            cleaned_response = clean_formatting_artifacts(response)
+            
+            print("✅ PDF processing completed successfully")
+            
+            return jsonify({
+                'response': cleaned_response,
+                'pdf_filename': file.filename,
+                'extracted_text_length': len(text_content),
+                'status': 'success'
+            })
+            
+        except Exception as pdf_error:
+            # Clean up temporary file on error
+            if os.path.exists(temp_file.name):
+                os.unlink(temp_file.name)
+            print(f"❌ PDF processing error: {pdf_error}")
+            raise pdf_error
 
     except Exception as e:
-        print(f"PDF upload error: {e}")
-        return jsonify({'error': 'Server error processing PDF'}), 500
+        print(f"❌ PDF upload error: {e}")
+        return jsonify({
+            'error': f'Error processing PDF: {str(e)}',
+            'debug_info': {
+                'pdf_processing_available': PDF_PROCESSING_AVAILABLE,
+                'error_type': type(e).__name__
+            }
+        }), 500
 
 # =============================================================================
 # LEXA CHATBOT ROUTES
@@ -1775,14 +1876,72 @@ def health_check():
 # Legacy health endpoints for backward compatibility
 @app.route('/gk/health', methods=['GET'])
 def gk_health_check():
-    """GK Research Engine health check"""
+    """Health check for GK Research Engine"""
     return jsonify({
-        'status': 'healthy', 
-        'message': 'GK Research Engine API is running',
+        'status': 'healthy',
         'service': 'gk_research',
-        'groq_configured': bool(GROQ_API_KEY),
+        'pdf_processing_available': PDF_PROCESSING_AVAILABLE,
+        'groq_api_available': bool(GROQ_API_KEY),
         'timestamp': datetime.now().isoformat()
     })
+
+@app.route('/gk/test-pdf', methods=['GET'])
+def test_pdf_processing():
+    """Test PDF processing capability"""
+    try:
+        if not PDF_PROCESSING_AVAILABLE:
+            return jsonify({
+                'status': 'error',
+                'message': 'PDF processing not available',
+                'pdf_processing_available': False,
+                'error_details': 'PyMuPDF library is not properly installed or accessible'
+            }), 400
+        
+        # Test if we can create a simple PDF and extract text
+        import tempfile
+        import os
+        
+        # Create a simple test PDF
+        test_pdf_content = b'%PDF-1.4\n1 0 obj\n<<\n/Type /Catalog\n/Pages 2 0 R\n>>\nendobj\n2 0 obj\n<<\n/Type /Pages\n/Kids [3 0 R]\n/Count 1\n>>\nendobj\n3 0 obj\n<<\n/Type /Page\n/Parent 2 0 R\n/MediaBox [0 0 612 792]\n/Contents 4 0 R\n>>\nendobj\n4 0 obj\n<<\n/Length 44\n>>\nstream\nBT\n/F1 12 Tf\n72 720 Td\n(Test PDF Content) Tj\nET\nendstream\nendobj\nxref\n0 5\n0000000000 65535 f \n0000000009 00000 n \n0000000058 00000 n \n0000000115 00000 n \n0000000204 00000 n \ntrailer\n<<\n/Size 5\n/Root 1 0 R\n>>\nstartxref\n297\n%%EOF'
+        
+        # Create temporary file
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as temp_file:
+            temp_file.write(test_pdf_content)
+            temp_file_path = temp_file.name
+        
+        try:
+            # Test PDF processing
+            doc = fitz.open(temp_file_path)
+            text_content = ""
+            for page_num in range(len(doc)):
+                page = doc.load_page(page_num)
+                text_content += page.get_text()
+            doc.close()
+            
+            # Clean up
+            os.unlink(temp_file_path)
+            
+            return jsonify({
+                'status': 'success',
+                'message': 'PDF processing is working correctly',
+                'pdf_processing_available': True,
+                'test_result': 'Successfully extracted text from test PDF',
+                'extracted_text': text_content[:100] + '...' if len(text_content) > 100 else text_content
+            })
+            
+        except Exception as e:
+            # Clean up on error
+            if os.path.exists(temp_file_path):
+                os.unlink(temp_file_path)
+            raise e
+            
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'message': 'PDF processing test failed',
+            'pdf_processing_available': PDF_PROCESSING_AVAILABLE,
+            'error_details': str(e)
+        }), 500
 
 @app.route('/lexa/health', methods=['GET'])
 def lexa_health_check():

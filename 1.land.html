@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lexa AI - AI built for CLAT students</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -14,11 +15,11 @@
         html, body {
             height: 100%;
             overflow: hidden;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            background: url('images/background-land.jpg') center center / cover no-repeat;
             line-height: 1.6;
             display: flex;
             flex-direction: column;
@@ -30,17 +31,18 @@
             justify-content: space-between;
             align-items: center;
             padding: 0.75rem 2rem;
-            background: rgba(255, 255, 255, 0.95);
+            background: linear-gradient(135deg, #464646 0%, #353535 100%);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(226, 232, 240, 0.5);
             flex-shrink: 0;
             height: 60px;
+            color: #fff;
         }
 
         .logo {
             font-size: 1.5rem;
             font-weight: 700;
-            color: #1e293b;
+            color: #fff;
             text-decoration: none;
         }
 
@@ -51,7 +53,7 @@
         }
 
         .nav-item {
-            color: #64748b;
+            color: #fff;
             text-decoration: none;
             font-weight: 500;
             padding: 0.5rem 0.75rem;
@@ -61,8 +63,8 @@
         }
 
         .nav-item:hover {
-            color: #3b82f6;
-            background: rgba(59, 130, 246, 0.1);
+            color: #fff;
+            background: rgba(255,255,255,0.15);
         }
 
         .auth-buttons {
@@ -72,7 +74,7 @@
 
         .btn-signup {
             background: #1e293b;
-            color: white;
+            color: #fff;
             padding: 0.6rem 1.2rem;
             border: none;
             border-radius: 0.5rem;
@@ -84,13 +86,14 @@
         }
 
         .btn-signup:hover {
-            background: #334155;
+            background: #fff;
+            color: #1e293b;
             transform: translateY(-1px);
         }
 
         .btn-login {
-            background: #dc2626;
-            color: white;
+            background: #1e1d1d;
+            color: #fff;
             padding: 0.6rem 1.2rem;
             border: none;
             border-radius: 0.5rem;
@@ -102,7 +105,8 @@
         }
 
         .btn-login:hover {
-            background: #b91c1c;
+            background: #262424;
+            color: #dc2626;
             transform: translateY(-1px);
         }
 
@@ -122,14 +126,17 @@
             text-align: center;
             padding: 1rem 0 0.5rem;
             flex-shrink: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .announcement-badge {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            background: rgba(219, 234, 254, 0.8);
-            color: #1e40af;
+            background: rgba(8, 8, 8, 0.8);
+            color: #1f2022;
             padding: 0.5rem 1rem;
             border-radius: 2rem;
             font-weight: 500;
@@ -137,10 +144,12 @@
             border: 1px solid rgba(59, 130, 246, 0.2);
             cursor: pointer;
             transition: all 0.2s ease;
+            justify-content: center;
+            margin: 0 auto;
         }
 
         .announcement-badge:hover {
-            background: rgba(219, 234, 254, 1);
+            background: rgba(40, 39, 39, 0.8);
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
         }
@@ -157,39 +166,51 @@
         /* Hero Section */
         .hero {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr auto 1fr;
             gap: 2rem;
-            align-items: center;
+            align-items: flex-start;
             flex: 1;
             min-height: 0;
+            padding: 0;
         }
 
         .hero-content {
-            max-width: 600px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
+            align-items: flex-start;
+            text-align: left;
+            padding: 6rem 0 0 0;
+            margin: 0 0 0 0;
+            justify-self: start;
+            width: 100%;
         }
 
         .hero-title {
             font-size: 2.8rem;
             font-weight: 800;
-            color: #1e293b;
+            color: #fff;
             line-height: 1.1;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.01em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
         }
 
         .hero-subtitle {
             font-size: 1.1rem;
-            color: #64748b;
-            margin-bottom: 1.5rem;
+            color: #fff;
+            margin-bottom: 2rem;
             line-height: 1.6;
+            letter-spacing: 0.01em;
         }
 
         .cta-buttons {
             display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
 
         .btn-primary {
@@ -266,31 +287,84 @@
             opacity: 0.9;
         }
 
-        /* Hero Visual - Cropped Image */
+        /* Hero Visual - Centered Image */
         .hero-visual {
             display: flex;
             justify-content: center;
             align-items: center;
-            position: relative;
             height: 100%;
-            overflow: hidden;
+            width: 100%;
         }
 
         .hero-image-container {
-            width: 100%;
-            height: 100%;
-            max-height: 500px;
+            max-width: 800px;
+            max-height: 1000px;
             position: relative;
             overflow: hidden;
-            border-radius: 1rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+            background: transparent;
         }
 
         .hero-image {
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            object-position: center top;
+            object-fit: contain;
+            object-position: center center;
             filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.1));
+        }
+
+        /* Right side text */
+        .hero-right-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: flex-end;
+            text-align: right;
+            padding: 0 0 6rem 0;
+            margin: 4rem 0 0 0;
+            justify-self: end;
+            width: 100%;
+            gap: 1.2rem;
+        }
+
+        .hero-right-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.01em;
+        }
+
+        .hero-right-text {
+            font-size: 1.1rem;
+            color: #fff;
+            line-height: 1.5;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.01em;
+        }
+
+        .countdown-timer {
+            text-align: right;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.01em;
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #fff;
+            margin-top: -1.2rem;
+            align-self: flex-end;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+        }
+
+        .countdown-label, .hero-right-text {
+            text-align: right;
+            align-self: flex-end;
+            margin-left: 0;
+            padding-left: 0;
+            font-size: 1.1rem;
+            margin-top: 0.2rem;
         }
 
         /* Modal Overlay Styles */
@@ -627,6 +701,11 @@
                 max-height: 300px;
             }
 
+            .hero-right-content {
+                text-align: center;
+                align-items: center;
+            }
+
             .announcement {
                 padding: 0.5rem 0;
             }
@@ -672,12 +751,44 @@
                 max-width: 250px;
             }
         }
+
+        @media (max-width: 900px) {
+            .hero-title {
+                font-size: 2.1rem;
+                white-space: normal;
+            }
+        }
+
+        /* Make all text white globally */
+        body, h1, h2, h3, h4, h5, h6, p, a, span, label, button, .hero-title, .hero-subtitle, .hero-right-title, .hero-right-text, .countdown-label, .countdown-timer {
+            color: #fff !important;
+        }
+
+        .modal-overlay#login-modal .modal,
+        .modal-overlay#login-modal .modal *,
+        .modal-overlay#login-modal .modal label,
+        .modal-overlay#login-modal .modal input,
+        .modal-overlay#login-modal .modal button,
+        .modal-overlay#login-modal .modal .modal-title,
+        .modal-overlay#login-modal .modal .modal-subtitle,
+        .modal-overlay#login-modal .modal .divider span {
+            color: #111 !important;
+        }
+
+        .modal-overlay#login-modal .modal input::placeholder {
+            color: #222 !important;
+            opacity: 1;
+        }
+
+        .modal-overlay#login-modal .modal button {
+            color: #111 !important;
+        }
     </style>
 </head>
 <body>
     <!-- Header -->
     <header class="header">
-        <a href="C:\Users\yashw\Desktop\ClatAI\images\CLAT COMMUNITY ILLUSTRATED LOGO .png" class="logo">Lexa AI</a>
+        <a href="C:\Users\yashw\Desktop\ClatAI\images\CLAT COMMUNITY ILLUSTRATED LOGO .png" class="logo">CLAT COMMUNITY</a>
         
         <nav class="nav-menu">
             <a href="https://drive.google.com/file/d/15-ASrBeur2cgy20bvsyNMC3kThXVJtlJ/view?usp=drivesdk" class="nav-item" target="_blank">Courses</a>
@@ -711,37 +822,35 @@
         <!-- Hero Section -->
         <section class="hero">
             <div class="hero-content">
-                <h1 class="hero-title">AI built for CLAT students</h1>
+                <h1 class="hero-title">CLAT.GPT.1 <br>By CLAT Community</h1>
                 <p class="hero-subtitle">
-                    Lexa AI is the AI platform that helps you improve, 
-                    stay informed, and manage your prep – at scale.
+                    The AI engine built to redefine how India <br>prepares for CLAT.<br> Har ghar ka bachha CLAT phodega!
                 </p>
 
                 <div class="cta-buttons">
                     <button class="btn-primary" onclick="handleGetStarted()">Get Started</button>
                     <button class="btn-secondary" onclick="handleWatchDemo()">Free Trial</button>
                 </div>
-
-                <div class="feature-item">
-                    <div class="feature-text">• Prepare with daily tasks<br>and streaks</div>
-                </div>
-
-                <div class="countdown-box">
-                    <div class="countdown-time" id="countdown-time">4 months 22 days</div>
-                    <div class="countdown-label">until CLAT 2026</div>
-                </div>
             </div>
 
             <div class="hero-visual">
-                <div class="hero-image-container">
-                    <img src="images\CLAT COMMUNITY ILLUSTRATED LOGO .png" 
+                <div class="hero-image-container" style="margin: auto; max-width: 300px;">
+                    <img src="images\iamge2.png" 
                          alt="Lady Justice illustration representing CLAT legal studies" 
                          class="hero-image">
                 </div>
             </div>
+
+            <div class="hero-right-content">
+                <div class="countdown-timer" id="countdown-timer" text-align="right">
+                    <span id="months">0</span> MONTHS <br><span id="days">0</span> DAYS<br><span id="hours">0</span> HOURS <br>0 EXCUSES
+                </div>
+
+                <p class="hero-right-text">The countdown is on, time to <br>dominate with Clat community.</p>
+            </div>
         </section>
     </main>
-
+    
     <!-- Modal Overlays -->
     <!-- Sign Up Modal -->
     <div class="modal-overlay" id="signup-modal">
@@ -838,6 +947,9 @@
             </div>
         </div>
     </div>
+
+    <!-- Add this before other scripts -->
+    <script src="user-utils.js"></script>
 
     <!-- Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -1142,7 +1254,7 @@
                     userAvatar.textContent = displayName.charAt(0).toUpperCase();
                 }
                 
-                usernameDisplay.textContent = displayName;
+                usernameDisplay.textContent = getDisplayName();
             } else {
                 // Show auth buttons, hide user status
                 authButtons.style.display = 'flex';
@@ -1181,23 +1293,51 @@
 
         // Dynamic countdown timer
         function updateCountdown() {
-            const targetDate = new Date('2026-05-10'); // CLAT 2026 estimated date
+            const targetDate = new Date('2025-12-03T09:00:00'); // CLAT 2025 exam date at 9 AM
             const now = new Date();
             const difference = targetDate - now;
 
             if (difference > 0) {
+                // Calculate months (approximate)
                 const months = Math.floor(difference / (1000 * 60 * 60 * 24 * 30.44));
-                const days = Math.floor((difference % (1000 * 60 * 60 * 24 * 30.44)) / (1000 * 60 * 60 * 24));
+                
+                // Calculate remaining days after months
+                const remainingAfterMonths = difference % (1000 * 60 * 60 * 24 * 30.44);
+                const days = Math.floor(remainingAfterMonths / (1000 * 60 * 60 * 24));
+                
+                // Calculate remaining hours after days
+                const remainingAfterDays = remainingAfterMonths % (1000 * 60 * 60 * 24);
+                const hours = Math.floor(remainingAfterDays / (1000 * 60 * 60));
 
-                const countdownElement = document.getElementById('countdown-time');
-                if (countdownElement) {
-                    countdownElement.textContent = `${months} months ${days} days`;
+                // Update the countdown display
+                const monthsElement = document.getElementById('months');
+                const daysElement = document.getElementById('days');
+                const hoursElement = document.getElementById('hours');
+                
+                if (monthsElement && daysElement && hoursElement) {
+                    monthsElement.textContent = months;
+                    daysElement.textContent = days;
+                    hoursElement.textContent = hours;
+                }
+            } else {
+                // Exam has passed
+                const monthsElement = document.getElementById('months');
+                const daysElement = document.getElementById('days');
+                const hoursElement = document.getElementById('hours');
+                
+                if (monthsElement && daysElement && hoursElement) {
+                    monthsElement.textContent = '0';
+                    daysElement.textContent = '0';
+                    hoursElement.textContent = '0';
                 }
             }
         }
 
-        // Update countdown daily
-        setInterval(updateCountdown, 24 * 60 * 60 * 1000);
+        // Update countdown every second for real-time display
+        setInterval(updateCountdown, 1000);
+        
+        // Initial call
+        updateCountdown();
 
         // Add smooth hover effects
         document.querySelectorAll('.feature-item, .countdown-box').forEach(element => {

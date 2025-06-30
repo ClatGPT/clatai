@@ -12,8 +12,9 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f1f5f9;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+            background: #000 !important;
+            color: #fff !important;
             height: 100vh;
             overflow: hidden;
         }
@@ -22,13 +23,13 @@
             display: flex;
             width: 100vw;
             height: 100vh;
-            background: white;
+            background: #000 !important;
         }
 
         .sidebar {
             width: 280px;
-            background: #1e293b;
-            color: white;
+            background: #1e293b !important;
+            color: white !important;
             padding: 24px 0;
             display: flex;
             flex-direction: column;
@@ -144,7 +145,6 @@
         .nav-item.tests::before { content: '📝'; }
         .nav-item.progress::before { content: '📊'; }
         .nav-item.settings::before { content: '⚙️'; }
-        .nav-item.appearance::before { content: '🎨'; }
 
         .nav-text {
             transition: opacity 0.3s ease;
@@ -168,7 +168,8 @@
         .main-content {
             flex: 1;
             padding: 40px;
-            background: white;
+            background: #000 !important;
+            color: #fff !important;
             overflow-y: auto;
             transition: all 0.3s ease;
         }
@@ -180,14 +181,14 @@
         .greeting {
             font-size: 36px;
             font-weight: 600;
-            color: #1e293b;
+            color: #fff !important;
             margin-bottom: 8px;
         }
 
         .page-title {
             font-size: 28px;
             font-weight: 600;
-            color: #3b82f6;
+            color: #fff !important;
             margin-bottom: 32px;
             display: flex;
             align-items: center;
@@ -202,10 +203,11 @@
         }
 
         .progress-section {
-            background: #f8fafc;
+            background: #181818 !important;
             border-radius: 16px;
             padding: 32px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid #333 !important;
+            color: #fff !important;
         }
 
         .progress-section.full-width {
@@ -222,7 +224,7 @@
         .section-title {
             font-size: 20px;
             font-weight: 600;
-            color: #1e293b;
+            color: #fff !important;
         }
 
         .section-icon {
@@ -233,11 +235,12 @@
         .chart-container {
             width: 100%;
             height: 300px;
-            background: white;
+            background: #222 !important;
             border-radius: 12px;
             padding: 20px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid #333 !important;
             position: relative;
+            color: #fff !important;
         }
 
         .chart-canvas {
@@ -259,7 +262,7 @@
             align-items: center;
             gap: 8px;
             font-size: 12px;
-            color: #6b7280;
+            color: #aaa !important;
         }
 
         .legend-color {
@@ -282,18 +285,18 @@
 
         .skill-name {
             font-weight: 600;
-            color: #374151;
+            color: #fff !important;
         }
 
         .skill-score {
             font-weight: 700;
-            color: #3b82f6;
+            color: #3b82f6 !important;
         }
 
         .skill-bar {
             width: 100%;
             height: 8px;
-            background: #e5e7eb;
+            background: #333 !important;
             border-radius: 4px;
             overflow: hidden;
         }
@@ -336,12 +339,13 @@
         }
 
         .stat-card {
-            background: white;
+            background: #181818 !important;
             padding: 20px;
             border-radius: 12px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid #333 !important;
             text-align: center;
             transition: all 0.2s ease;
+            color: #fff !important;
         }
 
         .stat-card:hover {
@@ -352,13 +356,13 @@
         .stat-number {
             font-size: 32px;
             font-weight: 700;
-            color: #3b82f6;
+            color: #3b82f6 !important;
             margin-bottom: 8px;
         }
 
         .stat-label {
             font-size: 14px;
-            color: #6b7280;
+            color: #aaa !important;
             font-weight: 500;
         }
 
@@ -366,20 +370,21 @@
         .empty-state {
             text-align: center;
             padding: 40px 20px;
-            color: #6b7280;
+            color: #aaa !important;
         }
 
         .empty-icon {
             font-size: 48px;
             margin-bottom: 16px;
             opacity: 0.5;
+            color: #fff !important;
         }
 
         .empty-title {
             font-size: 18px;
             font-weight: 600;
             margin-bottom: 8px;
-            color: #374151;
+            color: #fff !important;
         }
 
         .empty-description {
@@ -389,8 +394,8 @@
 
         /* Download Button */
         .download-section {
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-            color: white;
+            background: #222 !important;
+            color: #fff !important;
             border-radius: 16px;
             padding: 32px;
             text-align: center;
@@ -398,9 +403,9 @@
         }
 
         .download-button {
-            background: white;
-            color: #3b82f6;
-            border: none;
+            background: #fff !important;
+            color: #000 !important;
+            border: 1px solid #fff !important;
             padding: 16px 32px;
             border-radius: 12px;
             font-size: 16px;
@@ -414,8 +419,8 @@
         }
 
         .download-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
+            background: #3b82f6 !important;
+            color: #fff !important;
         }
 
         .download-button:active {
@@ -471,22 +476,23 @@
             from { width: 0; }
         }
 
-        /* Scrollbar styling */
-        .main-content::-webkit-scrollbar {
-            width: 6px;
+        /* Scrollbar styling for dark mode */
+        ::-webkit-scrollbar {
+            width: 8px;
+            background: #111;
         }
 
-        .main-content::-webkit-scrollbar-track {
-            background: #f1f5f9;
+        ::-webkit-scrollbar-track {
+            background: #111;
         }
 
-        .main-content::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 3px;
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
         }
 
         .main-content::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
+            background: #666;
         }
 
         /* Activity List Styles */
@@ -526,7 +532,7 @@
         .activity-title {
             font-size: 14px;
             font-weight: 600;
-            color: #1e293b;
+            color: #fff !important;
             margin-bottom: 4px;
         }
 
@@ -576,9 +582,6 @@
             <div class="sidebar-bottom">
                 <button class="nav-item settings" onclick="navigateTo('settings')">
                     <span class="nav-text">Settings</span>
-                </button>
-                <button class="nav-item appearance" onclick="navigateTo('appearance')">
-                    <span class="nav-text">Appearance</span>
                 </button>
 
             </div>
@@ -782,7 +785,6 @@
                 'generate-tests': 'generate-tests.html',
                 'progress': 'progress.html',
                 'settings': 'settings.html',
-                'appearance': 'appearance.html',
             };
 
             if (pages[page]) {
@@ -909,24 +911,24 @@ continue using CLAT.GPT.1 platform.
 
         // Update progress bars with calculated data
         function updateProgressBars(stats) {
-            const sections = ['Legal Reasoning', 'Logical Reasoning', 'English Language', 'General Knowledge', 'Quantitative Techniques'];
-            
+            const sections = ['Legal Reasoning', 'Logical Reasoning', 'English Language', 'General Knowledge', 'Quantitative Techniques', 'Other'];
             sections.forEach((section, index) => {
-                const sectionStats = stats.sectionStats[section];
-                const percentage = sectionStats.percentage;
-                
+                const sectionStats = stats.sectionStats[section] || { percentage: 0 };
                 // Update score display
                 const scoreElements = document.querySelectorAll('.skill-score');
                 if (scoreElements[index]) {
-                    scoreElements[index].textContent = percentage + '%';
+                    scoreElements[index].textContent = sectionStats.percentage + '%';
                 }
-                
                 // Update progress bar
                 const progressElements = document.querySelectorAll('.skill-progress');
                 if (progressElements[index]) {
-                    progressElements[index].style.width = percentage + '%';
+                    progressElements[index].style.width = sectionStats.percentage + '%';
                 }
             });
+            // Warn if 'Other' section has data
+            if (stats.sectionStats['Other'] && stats.sectionStats['Other'].count > 0) {
+                alert('Some progress data could not be mapped to a known section. Please check your test section names.');
+            }
         }
 
         // Update chart with new data
@@ -1206,10 +1208,10 @@ ${recent.map(test =>
         }
 
         // Example: After a test is completed
-        saveProgress('Legal Reasoning', 'General', 8, 10, {
-            testType: 'practice',
-            timeTaken: '15:30'
-        });
+        // saveProgress('Legal Reasoning', 'General', 8, 10, {
+        //     testType: 'practice',
+        //     timeTaken: '15:30'
+        // });
 
         const stats = getProgressStats();
         console.log('Total tests:', stats.totalTests);

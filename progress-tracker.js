@@ -75,8 +75,10 @@ function updateStreak() {
 // Get progress statistics
 function getProgressStats() {
     try {
-        const progressData = JSON.parse(localStorage.getItem('clatProgress') || '[]');
-        
+        let progressData = JSON.parse(localStorage.getItem('clatProgress') || '[]');
+        // Data migration: remove entries with missing/invalid section or total
+        progressData = progressData.filter(test => test.section && test.total && !isNaN(test.total));
+        localStorage.setItem('clatProgress', JSON.stringify(progressData));
         if (progressData.length === 0) {
             return {
                 totalTests: 0,
@@ -86,41 +88,44 @@ function getProgressStats() {
                     'Logical Reasoning': { percentage: 0, count: 0 },
                     'English Language': { percentage: 0, count: 0 },
                     'General Knowledge': { percentage: 0, count: 0 },
-                    'Quantitative Techniques': { percentage: 0, count: 0 }
+                    'Quantitative Techniques': { percentage: 0, count: 0 },
+                    'Other': { percentage: 0, count: 0 }
                 }
             };
         }
-        
-        // Calculate overall stats
         const totalTests = progressData.length;
         const averageScore = Math.round(
             progressData.reduce((sum, test) => sum + test.percentage, 0) / totalTests
         );
-        
-        // Calculate section-wise stats
         const sectionStats = {
             'Legal Reasoning': { total: 0, correct: 0, count: 0 },
             'Logical Reasoning': { total: 0, correct: 0, count: 0 },
             'English Language': { total: 0, correct: 0, count: 0 },
             'General Knowledge': { total: 0, correct: 0, count: 0 },
-            'Quantitative Techniques': { total: 0, correct: 0, count: 0 }
+            'Quantitative Techniques': { total: 0, correct: 0, count: 0 },
+            'Other': { total: 0, correct: 0, count: 0 }
         };
-        
+        let unmappedSections = new Set();
         progressData.forEach(test => {
             const section = mapSectionName(test.section);
             if (sectionStats[section]) {
                 sectionStats[section].total += test.total;
                 sectionStats[section].correct += test.score;
                 sectionStats[section].count += 1;
+            } else {
+                sectionStats['Other'].total += test.total;
+                sectionStats['Other'].correct += test.score;
+                sectionStats['Other'].count += 1;
+                unmappedSections.add(test.section);
             }
         });
-        
-        // Calculate percentages
         Object.keys(sectionStats).forEach(section => {
             const stats = sectionStats[section];
             stats.percentage = stats.count > 0 ? Math.round((stats.correct / stats.total) * 100) : 0;
         });
-        
+        if (unmappedSections.size > 0) {
+            console.warn('Unmapped sections found in progress data:', Array.from(unmappedSections));
+        }
         return {
             totalTests,
             averageScore,

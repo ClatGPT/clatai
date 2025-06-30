@@ -203,7 +203,6 @@
         .nav-item.tests::before { content: '📝'; }
         .nav-item.progress::before { content: '📊'; }
         .nav-item.settings::before { content: '⚙️'; }
-        .nav-item.appearance::before { content: '🎨'; }
 
         .nav-text {
             transition: opacity 0.3s ease;
@@ -610,9 +609,7 @@
                 <button class="nav-item settings active" onclick="navigateTo('settings')">
                     <span class="nav-text">Settings</span>
                 </button>
-                <button class="nav-item appearance" onclick="navigateTo('appearance')">
-                    <span class="nav-text">Appearance</span>
-                </button>
+
 
             </div>
         </nav>
@@ -913,7 +910,6 @@
                 'generate-tests': 'generate-tests.html',
                 'progress': 'progress.html',
                 'settings': 'settings.html',
-                'appearance': 'appearance.html',
             };
 
             if (pages[page]) {

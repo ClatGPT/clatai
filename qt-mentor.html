@@ -13,8 +13,8 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
-            background: #fbfbfd;
-            color: #1d1d1f;
+            background: #000 !important;
+            color: #fff !important;
             line-height: 1.5;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
@@ -24,13 +24,13 @@
             display: flex;
             width: 100vw;
             height: 100vh;
-            background: white;
+            background: #000 !important;
         }
 
         .sidebar {
             width: 280px;
-            background: #1e293b;
-            color: white;
+            background: #1e293b !important;
+            color: white !important;
             padding: 24px 0;
             display: flex;
             flex-direction: column;
@@ -150,7 +150,6 @@
         .nav-item.tests::before { content: '📝'; }
         .nav-item.progress::before { content: '📊'; }
         .nav-item.settings::before { content: '⚙️'; }
-        .nav-item.appearance::before { content: '🎨'; }
 
         .nav-text {
             transition: opacity 0.3s ease;
@@ -176,7 +175,8 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            background: #fbfbfd;
+            background: #000 !important;
+            color: #fff !important;
             overflow-y: auto;
         }
 
@@ -186,12 +186,14 @@
             margin: 0 auto;
             padding: 60px 24px;
             width: 100%;
+            background: #000 !important;
+            color: #fff !important;
         }
 
         /* Hero Section */
         .hero {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: #111 !important;
+            color: #fff !important;
             padding: 80px 24px;
             text-align: center;
         }
@@ -223,12 +225,13 @@
 
         /* Topic Selection */
         .topic-section {
-            background: white;
+            background: #181818 !important;
+            color: #fff !important;
             border-radius: 20px;
             padding: 40px;
             margin-bottom: 40px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: none !important;
+            border: 1px solid #333 !important;
         }
 
         .section-header {
@@ -239,7 +242,7 @@
         .section-title {
             font-size: 32px;
             font-weight: 700;
-            color: #1d1d1f;
+            color: #fff !important;
             margin-bottom: 12px;
             letter-spacing: -0.02em;
         }
@@ -258,8 +261,9 @@
         }
 
         .topic-card {
-            background: #fbfbfd;
-            border: 2px solid transparent;
+            background: #222 !important;
+            color: #fff !important;
+            border: 2px solid #333 !important;
             border-radius: 16px;
             padding: 24px;
             cursor: pointer;
@@ -271,18 +275,19 @@
         .topic-card:hover {
             transform: translateY(-4px);
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
-            border-color: #007aff;
+            border-color: #fff !important;
         }
 
         .topic-card.selected {
-            border-color: #007aff;
-            background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
+            border-color: #fff !important;
+            background: #333 !important;
         }
 
         .topic-icon {
             width: 48px;
             height: 48px;
-            background: linear-gradient(135deg, #007aff 0%, #5856d6 100%);
+            background: #333 !important;
+            color: #fff !important;
             border-radius: 12px;
             display: flex;
             align-items: center;
@@ -294,7 +299,7 @@
         .topic-name {
             font-size: 18px;
             font-weight: 600;
-            color: #1d1d1f;
+            color: #fff !important;
             margin-bottom: 8px;
         }
 
@@ -307,12 +312,13 @@
         /* Subtopic Selection */
         .subtopic-section {
             display: none;
-            background: white;
+            background: #181818 !important;
+            color: #fff !important;
             border-radius: 20px;
             padding: 40px;
             margin-bottom: 40px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: none !important;
+            border: 1px solid #333 !important;
             animation: slideDown 0.4s ease-out;
         }
 
@@ -327,8 +333,9 @@
         }
 
         .subtopic-card {
-            background: #fbfbfd;
-            border: 2px solid transparent;
+            background: #222 !important;
+            color: #fff !important;
+            border: 2px solid #333 !important;
             border-radius: 12px;
             padding: 20px;
             cursor: pointer;
@@ -339,18 +346,18 @@
         .subtopic-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-            border-color: #007aff;
+            border-color: #fff !important;
         }
 
         .subtopic-card.selected {
-            border-color: #007aff;
-            background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
+            border-color: #fff !important;
+            background: #333 !important;
         }
 
         .subtopic-name {
             font-size: 16px;
             font-weight: 600;
-            color: #1d1d1f;
+            color: #fff !important;
             margin-bottom: 8px;
         }
 
@@ -366,9 +373,9 @@
         }
 
         .btn {
-            background: #007aff;
-            color: white;
-            border: none;
+            background: #222 !important;
+            color: #fff !important;
+            border: 1px solid #fff !important;
             border-radius: 12px;
             padding: 16px 32px;
             font-size: 16px;
@@ -381,9 +388,11 @@
         }
 
         .btn:hover {
-            background: #0056cc;
+            background: #fff !important;
+            color: #000 !important;
+            border: 1px solid #fff !important;
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 122, 255, 0.3);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
         }
 
         .btn:disabled {
@@ -394,24 +403,25 @@
         }
 
         .btn-secondary {
-            background: transparent;
-            color: #007aff;
-            border: 2px solid #007aff;
+            background: transparent !important;
+            color: #fff !important;
+            border: 2px solid #fff !important;
         }
 
         .btn-secondary:hover {
-            background: #007aff;
-            color: white;
+            background: #fff !important;
+            color: #000 !important;
         }
 
         /* Question Area */
         .question-area {
             display: none;
-            background: white;
+            background: #181818 !important;
+            color: #fff !important;
             border-radius: 20px;
             padding: 40px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: none !important;
+            border: 1px solid #333 !important;
             animation: slideUp 0.4s ease-out;
         }
 
@@ -431,32 +441,34 @@
         .question-title {
             font-size: 24px;
             font-weight: 700;
-            color: #1d1d1f;
+            color: #fff !important;
         }
 
         .question-content {
-            background: #fbfbfd;
+            background: #222 !important;
+            color: #fff !important;
             border-radius: 16px;
             padding: 32px;
             margin-bottom: 24px;
-            border: 1px solid rgba(0, 0, 0, 0.05);
+            border: 1px solid #333 !important;
         }
 
         .question-passage {
-            background: white;
-            border: 1px solid #e5e5e7;
+            background: #222 !important;
+            color: #fff !important;
+            border: 1px solid #333 !important;
             border-radius: 12px;
             padding: 20px;
             margin-bottom: 24px;
             font-size: 16px;
             line-height: 1.6;
-            color: #1d1d1f;
-            border-left: 4px solid #007aff;
+            color: #fff !important;
+            border-left: 4px solid #fff !important;
         }
 
         .question-text {
             font-size: 18px;
-            color: #1d1d1f;
+            color: #fff !important;
             line-height: 1.6;
             margin-bottom: 24px;
         }
@@ -467,24 +479,25 @@
         }
 
         .option {
-            background: white;
-            border: 2px solid #e5e5e7;
+            background: #181818 !important;
+            color: #fff !important;
+            border: 2px solid #333 !important;
             border-radius: 12px;
             padding: 16px 20px;
             cursor: pointer;
             transition: all 0.2s ease;
             font-size: 16px;
-            color: #1d1d1f;
+            color: #fff !important;
         }
 
         .option:hover {
-            border-color: #007aff;
-            background: #f0f8ff;
+            border-color: #fff !important;
+            background: #333 !important;
         }
 
         .option.selected {
-            border-color: #007aff;
-            background: #e6f3ff;
+            border-color: #fff !important;
+            background: #333 !important;
         }
 
         .option.correct {
@@ -498,8 +511,9 @@
         }
 
         .solution {
-            background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
-            border: 1px solid #007aff;
+            background: #181818 !important;
+            color: #fff !important;
+            border: 1px solid #333 !important;
             border-radius: 16px;
             padding: 24px;
             margin-top: 24px;
@@ -514,13 +528,13 @@
         .solution-title {
             font-size: 18px;
             font-weight: 600;
-            color: #007aff;
+            color: #fff !important;
             margin-bottom: 16px;
         }
 
         .solution-text {
             font-size: 16px;
-            color: #1d1d1f;
+            color: #fff !important;
             line-height: 1.6;
         }
 
@@ -532,8 +546,8 @@
         .spinner {
             width: 40px;
             height: 40px;
-            border: 3px solid #e5e5e7;
-            border-top: 3px solid #007aff;
+            border: 3px solid #333 !important;
+            border-top: 3px solid #fff !important;
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin: 0 auto 16px;
@@ -608,6 +622,16 @@
                 display: none;
             }
         }
+
+        /* Scrollbar styling for dark mode */
+        ::-webkit-scrollbar {
+            width: 8px;
+            background: #111;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
@@ -650,29 +674,20 @@
                 <button class="nav-item settings" onclick="navigateTo('settings')">
                     <span class="nav-text">Settings</span>
                 </button>
-                <button class="nav-item appearance" onclick="navigateTo('appearance')">
-                    <span class="nav-text">Appearance</span>
-                </button>
+
             </div>
         </nav>
 
         <main class="main-content">
             <!-- Hero Section -->
-            <section class="hero">
-                <div class="hero-content">
-                    <span class="hero-icon">🧮</span>
-                    <h1 class="hero-title">QT AI Mentor</h1>
-                    <p class="hero-subtitle">Master Quantitative Techniques with AI-powered step-by-step solutions and expert guidance</p>
-                </div>
-            </section>
 
             <!-- Main Content -->
             <div class="main-content-inner">
                 <!-- Topic Selection -->
                 <section class="topic-section" id="topicSection">
                     <div class="section-header">
-                        <h2 class="section-title">Choose Your Topic</h2>
-                        <p class="section-subtitle">Select a topic to begin your quantitative practice journey</p>
+                        <h2 class="section-title">I am your QT mentor, Lets get to work. </h2>
+                        <p class="section-subtitle">Select a topic, you want to start mastering</p>
                     </div>
 
                     <div class="topic-grid">
@@ -792,7 +807,6 @@
                 'generate-tests': 'generate-tests.html',
                 'progress': 'progress.html',
                 'settings': 'settings.html',
-                'appearance': 'appearance.html',
             };
 
             if (pages[page]) {

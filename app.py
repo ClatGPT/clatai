@@ -1101,127 +1101,212 @@ def parse_answer_key(raw_text):
         return []
 
 def create_answer_key_pdf(questions, answer_key, test_metadata):
-    """Create answer key PDF with improved formatting and debug logging"""
+    """Create answer key PDF with watermark image and professional formatting using PyMuPDF only."""
     try:
-        print("[DEBUG] create_answer_key_pdf called")
-        print(f"[DEBUG] questions: {questions}")
-        print(f"[DEBUG] answer_key: {answer_key}")
-        print(f"[DEBUG] test_metadata: {test_metadata}")
-        pdf = FPDF()
-        pdf.add_page()
-        pdf.set_auto_page_break(auto=True, margin=15)
-        
-        try:
-            font_path = "DejaVuSans.ttf"
-            if os.path.exists(font_path):
-                pdf.add_font("DejaVu", "", font_path, uni=True)
-                pdf.set_font("DejaVu", size=12)
-            else:
-                pdf.set_font("Arial", size=12)
-        except Exception as font_exc:
-            print(f"[DEBUG] Font load error: {font_exc}")
-            pdf.set_font("Arial", size=12)
-        
+        if 'fitz' not in globals() or not PDF_PROCESSING_AVAILABLE:
+            raise RuntimeError("PyMuPDF is required for watermark-based PDF generation.")
+
+        import fitz
+        from io import BytesIO
+        import os
+
+        logo_path = os.path.join("images", "CLAT COMMUNITY ILLUSTRATED LOGO .png")
+        # Open the image and get its size
+        logo_img = fitz.Pixmap(logo_path)
+
+        # PDF page size (A4: 612x792 points)
+        page_width, page_height = 612, 792
+
+        # Calculate watermark size (scale to 60% of page width, keep aspect ratio)
+        max_logo_width = page_width * 0.6
+        scale = max_logo_width / logo_img.width
+        logo_width = int(logo_img.width * scale)
+        logo_height = int(logo_img.height * scale)
+        logo_x = (page_width - logo_width) // 2
+        logo_y = (page_height - logo_height) // 2
+
+        # Create new PDF
+        result_pdf = fitz.open()
+        page = result_pdf.new_page(width=page_width, height=page_height)
+
+        # Draw watermark (20% opacity)
+        page.insert_image(
+            fitz.Rect(logo_x, logo_y, logo_x + logo_width, logo_y + logo_height),
+            pixmap=logo_img,
+            overlay=False,
+            opacity=0.2
+        )
+        logo_img = None  # Free memory
+
+        # --- Layout constants ---
+        margin_x = 50
+        y = 60
+        line_height = 18
+        font = "helv"
+        font_bold = "helv"
+        font_size_title = 28
+        font_size_header = 16
+        font_size_table = 13
+        font_size_normal = 12
+        color_black = (0, 0, 0)
+
         # Title
-        pdf.set_font("Arial", 'B', 18)
-        pdf.cell(0, 15, 'CLAT Practice Test - Answer Key', ln=True, align='C')
-        pdf.ln(5)
-        
-        # Test info
-        pdf.set_font("Arial", 'B', 14)
-        test_info = f"{test_metadata.get('sectionName', 'Unknown')} - {test_metadata.get('subcategoryName', 'Unknown')}"
-        pdf.cell(0, 10, test_info, ln=True, align='C')
-        pdf.ln(5)
-        
-        # Test details
-        pdf.set_font("Arial", '', 12)
-        details = f"Total Questions: {len(questions)} • Passages: {test_metadata.get('passages', 1)}"
-        pdf.cell(0, 8, details, ln=True, align='C')
-        pdf.ln(10)
-        
-        # Answer key table header
-        pdf.set_font("Arial", 'B', 12)
-        pdf.cell(0, 10, 'Answer Key Summary:', ln=True)
-        pdf.ln(5)
-        
-        # Create answer key table
-        pdf.set_font("Arial", 'B', 11)
-        pdf.cell(40, 8, 'Question', 1, 0, 'C')
-        pdf.cell(30, 8, 'Answer', 1, 0, 'C')
-        pdf.cell(120, 8, 'Correct Option', 1, 1, 'C')
-        
-        pdf.set_font("Arial", '', 11)
+        page.insert_textbox(
+            fitz.Rect(margin_x, y, page_width - margin_x, y + 40),
+            "Answer Key",
+            fontname=font_bold,
+            fontsize=font_size_title,
+            align=1,  # center
+            color=color_black
+        )
+        y += 45
+
+        # Answer Key Summary Header
+        page.insert_textbox(
+            fitz.Rect(margin_x, y, page_width - margin_x, y + line_height),
+            "Answer Key Summary:",
+            fontname=font_bold,
+            fontsize=font_size_header,
+            color=color_black
+        )
+        y += line_height + 5
+
+        # Table headers
+        col1_x = margin_x
+        col2_x = margin_x + 70
+        col3_x = margin_x + 130
+        col1_w = 60
+        col2_w = 50
+        col3_w = page_width - margin_x - col3_x  # fill remaining width
+        table_y = y
+        page.insert_textbox(
+            fitz.Rect(col1_x, table_y, col1_x + col1_w, table_y + line_height),
+            "Question", fontsize=font_size_table, fontname=font_bold, color=color_black, align=1
+        )
+        page.insert_textbox(
+            fitz.Rect(col2_x, table_y, col2_x + col2_w, table_y + line_height),
+            "Answer", fontsize=font_size_table, fontname=font_bold, color=color_black, align=1
+        )
+        page.insert_textbox(
+            fitz.Rect(col3_x, table_y, col3_x + col3_w, table_y + line_height),
+            "Correct Option", fontsize=font_size_table, fontname=font_bold, color=color_black, align=1
+        )
+        y += line_height
+
+        # Table content
         for i, answer in enumerate(answer_key, 1):
             question_num = answer.get('question', str(i))
             answer_letter = answer.get('answer', 'N/A')
             answer_index = answer.get('answer_index', 0)
-            
-            # Get the correct option text
             correct_option = "N/A"
             if i <= len(questions):
                 question = questions[i-1]
                 if 'options' in question and answer_index < len(question['options']):
                     correct_option = question['options'][answer_index]
-            
-            pdf.cell(40, 8, f"Q{question_num}", 1, 0, 'C')
-            pdf.cell(30, 8, answer_letter, 1, 0, 'C')
-            pdf.cell(120, 8, correct_option[:50] + "..." if len(correct_option) > 50 else correct_option, 1, 1)
-        
-        pdf.ln(15)
-        
-        # Detailed explanations
-        pdf.set_font("Arial", 'B', 14)
-        pdf.cell(0, 10, 'Detailed Explanations:', ln=True)
-        pdf.ln(5)
-        
+            # Insert each cell as a textbox to wrap text
+            page.insert_textbox(
+                fitz.Rect(col1_x, y, col1_x + col1_w, y + line_height),
+                f"Q{question_num}", fontsize=font_size_table, fontname=font, color=color_black, align=1
+            )
+            page.insert_textbox(
+                fitz.Rect(col2_x, y, col2_x + col2_w, y + line_height),
+                answer_letter, fontsize=font_size_table, fontname=font, color=color_black, align=1
+            )
+            # Correct Option: wrap and allow up to 2 lines
+            bbox = fitz.Rect(col3_x, y, col3_x + col3_w, y + 2*line_height)
+            page.insert_textbox(
+                bbox,
+                correct_option,
+                fontsize=font_size_table,
+                fontname=font,
+                color=color_black,
+                align=0
+            )
+            y += 2*line_height  # allow for wrapping
+
+        y += 15
+
+        # Detailed Explanations Header
+        page.insert_textbox(
+            fitz.Rect(margin_x, y, page_width - margin_x, y + line_height),
+            "Detailed Explanations:",
+            fontname=font_bold,
+            fontsize=font_size_header,
+            color=color_black
+        )
+        y += line_height + 5
+
+        # Explanations
         for i, question in enumerate(questions, 1):
-            # Check if we need a new page
-            if pdf.get_y() > 250:
-                pdf.add_page()
-            
-            pdf.set_font("Arial", 'B', 12)
-            pdf.cell(0, 8, f"Question {i}:", ln=True)
-            
+            if y > page_height - 120:
+                # Add new page with watermark
+                page = result_pdf.new_page(width=page_width, height=page_height)
+                logo_img = fitz.Pixmap(logo_path)
+                page.insert_image(
+                    fitz.Rect(logo_x, logo_y, logo_x + logo_width, logo_y + logo_height),
+                    pixmap=logo_img,
+                    overlay=False,
+                    opacity=0.2
+                )
+                logo_img = None
+                y = 60
+            # Question number
+            page.insert_text((margin_x, y), f"Question {i}:", fontsize=font_size_table, fontname=font_bold, color=color_black)
+            y += line_height - 4
             # Question text
-            pdf.set_font("Arial", '', 11)
             question_text = question.get('question', 'Question text not available')
-            pdf.multi_cell(0, 6, f"Q: {question_text}")
-            
+            y = page.insert_textbox(
+                fitz.Rect(margin_x, y, page_width - margin_x, y + 3*line_height),
+                f"Q: {question_text}",
+                fontname=font,
+                fontsize=font_size_normal,
+                color=color_black
+            ).y1 + 2
             # Options
             options = question.get('options', [])
             for j, option in enumerate(options):
                 option_letter = chr(65 + j)
                 is_correct = j == question.get('correct', 0)
                 option_text = f"{option_letter}. {option}"
-                if is_correct:
-                    pdf.set_font("Arial", 'B', 11)
-                    option_text += " ✓"
-                else:
-                    pdf.set_font("Arial", '', 11)
-                pdf.multi_cell(0, 6, option_text)
-            
+                font_used = font_bold if is_correct else font
+                y = page.insert_textbox(
+                    fitz.Rect(margin_x + 10, y, page_width - margin_x, y + 2*line_height),
+                    option_text,
+                    fontname=font_used,
+                    fontsize=font_size_normal,
+                    color=color_black
+                ).y1 + 1
             # Correct answer
             correct_index = question.get('correct', 0)
             correct_letter = chr(65 + correct_index)
-            pdf.set_font("Arial", 'B', 11)
-            pdf.cell(0, 8, f"Correct Answer: {correct_letter}", ln=True)
-            
+            y = page.insert_textbox(
+                fitz.Rect(margin_x, y, page_width - margin_x, y + line_height),
+                f"Correct Answer: {correct_letter}",
+                fontname=font_bold,
+                fontsize=font_size_normal,
+                color=color_black
+            ).y1 + 2
             # Explanation
             explanation = question.get('explanation', 'No explanation available.')
-            pdf.set_font("Arial", '', 11)
-            pdf.multi_cell(0, 6, f"Explanation: {explanation}")
-            
-            pdf.ln(8)
-        
-        # Add footer
-        pdf.set_y(-30)
-        pdf.set_font("Arial", '', 8)
-        pdf.set_text_color(107, 114, 128)
-        pdf.cell(0, 5, 'Generated by CLAT.GPT.1 - For more material visit: https://discord.gg/9kFymfz7qN', ln=True, align='C')
-        pdf.cell(0, 5, 'Contact: 7702832727 | Telegram: https://t.me/CLAT_Community', ln=True, align='C')
-        
-        return BytesIO(pdf.output(dest='S'))
-        
+            y = page.insert_textbox(
+                fitz.Rect(margin_x, y, page_width - margin_x, y + 3*line_height),
+                f"Explanation: {explanation}",
+                fontname=font,
+                fontsize=font_size_normal,
+                color=color_black
+            ).y1 + 8
+        # Footer
+        page.insert_textbox(
+            fitz.Rect(margin_x, page_height - 40, page_width - margin_x, page_height - 10),
+            'Generated by CLAT.GPT.1 - For more material visit: https://discord.gg/9kFymfz7qN\nContact: 7702832727 | Telegram: https://t.me/CLAT_Community',
+            fontname=font,
+            fontsize=9,
+            color=(0.3, 0.3, 0.3),
+            align=1
+        )
+        output_bytes = result_pdf.write()
+        result_pdf.close()
+        return BytesIO(output_bytes)
     except Exception as e:
         print(f"[ERROR in create_answer_key_pdf]: {e}")
         import traceback

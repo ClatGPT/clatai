@@ -29,7 +29,7 @@
 
         .sidebar {
             width: 280px;
-            background: #1e293b !important;
+            background: #2d3748!important;
             color: white !important;
             padding: 24px 0;
             display: flex;
@@ -705,6 +705,32 @@
             background: #333;
             border-radius: 4px;
         }
+        .question-container.unattempted {
+            border: 2px dashed #f59e0b !important;
+        }
+        .unattempted-jump {
+            background: #f59e0b;
+            color: #000;
+            border: none;
+            border-radius: 4px;
+            margin: 0 2px;
+            padding: 2px 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .unattempted-jump:hover {
+            background: #d97706;
+            color: #fff;
+        }
+        .highlight-jump {
+            animation: highlightJump 1.2s;
+        }
+        @keyframes highlightJump {
+            0% { box-shadow: 0 0 0 0 #f59e0b; }
+            50% { box-shadow: 0 0 16px 6px #f59e0b; }
+            100% { box-shadow: 0 0 0 0 #f59e0b; }
+        }
     </style>
 </head>
 <body>
@@ -850,6 +876,7 @@
                 </div>
 
                 <div class="practice-navigation">
+                    <div id="unattemptedNav" style="margin-bottom: 10px;"></div>
                     <button class="nav-button submit-button" id="submitButton">Submit Answers</button>
                 </div>
 
@@ -1037,11 +1064,27 @@
 
         // Sample questions fallback
         function generateSampleQuestions(section, subcategory) {
+            // Generate a passage of ~650 words
+            function generateLongPassage(title) {
+                const baseSentence = `This is a sample sentence for the passage. It is used to fill up the passage to reach the required word count.`;
+                // Split title into words
+                const titleWords = title.trim().split(/\s+/);
+                const wordsNeeded = 650 - titleWords.length;
+                // Generate enough base sentences to fill the rest
+                let bodyWords = [];
+                while (bodyWords.length < wordsNeeded) {
+                    bodyWords = bodyWords.concat(baseSentence.split(/\s+/));
+                }
+                // Trim to exactly the number needed
+                bodyWords = bodyWords.slice(0, wordsNeeded);
+                // Combine title and body
+                return [...titleWords, ...bodyWords].join(' ');
+            }
             const subcategoryName = subcategory.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
             return [
                 {
                     id: "sample-1",
-                    passage: `This is a sample passage for ${section} - ${subcategoryName}. In a real scenario, this would contain relevant content for practicing ${subcategoryName} questions. The passage would provide context and information needed to answer the following questions. This sample demonstrates the format and structure of questions you would encounter in the actual CLAT examination.`,
+                    passage: generateLongPassage(`This is a sample passage for ${section} - ${subcategoryName}. In a real scenario, this would contain relevant content for practicing ${subcategoryName} questions. The passage would provide context and information needed to answer the following questions. This sample demonstrates the format and structure of questions you would encounter in the actual CLAT examination.`),
                     question: `Sample question for ${subcategoryName}: What is the main topic discussed in this passage?`,
                     options: [
                         `${subcategoryName} fundamentals and concepts`,
@@ -1055,7 +1098,7 @@
                 },
                 {
                     id: "sample-2", 
-                    passage: `This is a second sample passage for ${section} - ${subcategoryName}. This passage would contain different content to test various aspects of ${subcategoryName} knowledge and skills. It demonstrates how multiple questions can be based on a single passage, testing different cognitive abilities and understanding levels.`,
+                    passage: generateLongPassage(`This is a second sample passage for ${section} - ${subcategoryName}. This passage would contain different content to test various aspects of ${subcategoryName} knowledge and skills. It demonstrates how multiple questions can be based on a single passage, testing different cognitive abilities and understanding levels.`),
                     question: `Another sample question for ${subcategoryName}: Which approach is most effective for solving such problems?`,
                     options: [
                         `Systematic analysis and step-by-step reasoning`,
@@ -1241,8 +1284,9 @@
             let questionsHTML = '';
 
             currentPractice.forEach((question, index) => {
+                const isUnattempted = userAnswers[question.id] === undefined;
                 questionsHTML += `
-                    <div class="question-container" id="question-${question.id}">
+                    <div class="question-container${isUnattempted ? ' unattempted' : ''}" id="question-${question.id}">
                         <div class="question-number">Question ${index + 1} of ${currentPractice.length}</div>
                         <div class="passage">
                             <div class="passage-title">Passage:</div>
@@ -1283,6 +1327,9 @@
             const accuracy = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0;
             document.getElementById('accuracy').textContent = `${accuracy}%`;
             isAnswerChecked = false;
+
+            // Update unattempted questions list
+            updateUnattemptedList();
         }
 
         function selectOption(questionIndex, optionIndex) {
@@ -1306,26 +1353,13 @@
         }
 
         function checkAllQuestionsAnswered() {
-            const allAnswered = currentPractice.every(question => userAnswers[question.id] !== undefined);
             const submitButton = document.getElementById('submitButton');
-            
-            if (allAnswered) {
-                submitButton.disabled = false;
-                submitButton.textContent = 'Submit Answers';
-            } else {
-                submitButton.disabled = true;
-                submitButton.textContent = `Submit Answers (${Object.keys(userAnswers).length}/${currentPractice.length} answered)`;
-            }
+            const answeredCount = Object.keys(userAnswers).length;
+            submitButton.disabled = false;
+            submitButton.textContent = `Submit Answers (${answeredCount}/${currentPractice.length} answered)`;
         }
 
         function submitAllAnswers() {
-            const unansweredQuestions = currentPractice.filter(question => userAnswers[question.id] === undefined);
-            
-            if (unansweredQuestions.length > 0) {
-                showMessage(`Please answer all questions before submitting. You have ${unansweredQuestions.length} unanswered question(s).`, 'error');
-                return;
-            }
-
             stopTimer();
             isAnswerChecked = true;
             totalAnswered = currentPractice.length;
@@ -1351,7 +1385,9 @@
                 explanation.style.display = 'block';
 
                 // Update statistics
-                if (userAnswer === question.correct) {
+                if (userAnswer === undefined) {
+                    naCount++;
+                } else if (userAnswer === question.correct) {
                     correctCount++;
                 } else {
                     wrongCount++;
@@ -1361,12 +1397,15 @@
             // Update final statistics
             document.getElementById('correctAnswers').textContent = correctCount;
             document.getElementById('wrongAnswers').textContent = wrongCount;
-            document.getElementById('naAnswers').textContent = totalAnswered - correctCount - wrongCount;
-            const accuracy = Math.round((correctCount / totalAnswered) * 100);
+            document.getElementById('naAnswers').textContent = naCount;
+            const attempted = correctCount + wrongCount;
+            const accuracy = attempted > 0 ? Math.round((correctCount / attempted) * 100) : 0;
             document.getElementById('accuracy').textContent = `${accuracy}%`;
 
             // Show final message
-            if (correctCount === totalAnswered) {
+            if (attempted === 0) {
+                showMessage('No questions attempted. Try answering some questions next time!', 'error');
+            } else if (correctCount === attempted) {
                 showMessage('Perfect score! Excellent work!', 'success');
             } else if (accuracy >= 80) {
                 showMessage(`Great job! You scored ${accuracy}%`, 'success');
@@ -1591,6 +1630,35 @@ const passages = parseInt(document.getElementById('passages').value);
                 console.log('✅ Practice progress saved successfully');
             } else {
                 console.error('❌ Failed to save practice progress');
+            }
+        }
+
+        // Add a UI element for unattempted questions
+        function updateUnattemptedList() {
+            let unattempted = [];
+            if (currentPractice) {
+                currentPractice.forEach((q, idx) => {
+                    if (userAnswers[q.id] === undefined) {
+                        unattempted.push({ id: q.id, idx });
+                    }
+                });
+            }
+            const nav = document.getElementById('unattemptedNav');
+            if (!nav) return;
+            if (unattempted.length === 0) {
+                nav.innerHTML = '<span>All questions attempted!</span>';
+                return;
+            }
+            nav.innerHTML = 'Unattempted: ' + unattempted.map(q => `<button class="unattempted-jump" onclick="jumpToQuestion('${q.id}')">${q.idx + 1}</button>`).join(' ');
+        }
+
+        // Scroll to question
+        function jumpToQuestion(qid) {
+            const el = document.getElementById(`question-${qid}`);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                el.classList.add('highlight-jump');
+                setTimeout(() => el.classList.remove('highlight-jump'), 1200);
             }
         }
     </script>

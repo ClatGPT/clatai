@@ -29,7 +29,7 @@
 
         .sidebar {
             width: 280px;
-            background: #1e293b !important;
+            background: #2d3748 !important;
             color: white !important;
             padding: 24px 0;
             display: flex;
@@ -232,6 +232,7 @@
             margin-bottom: 40px;
             box-shadow: none !important;
             border: 1px solid #333 !important;
+            vertical-align: center;
         }
 
         .section-header {
@@ -245,6 +246,7 @@
             color: #fff !important;
             margin-bottom: 12px;
             letter-spacing: -0.02em;
+            align-self: center;
         }
 
         .section-subtitle {
@@ -254,13 +256,19 @@
         }
 
         .topic-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
             gap: 24px;
             margin-bottom: 40px;
         }
 
         .topic-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             background: #222 !important;
             color: #fff !important;
             border: 2px solid #333 !important;
@@ -327,12 +335,18 @@
         }
 
         .subtopic-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
             gap: 20px;
         }
 
         .subtopic-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             background: #222 !important;
             color: #fff !important;
             border: 2px solid #333 !important;
@@ -364,6 +378,11 @@
         .subtopic-description {
             font-size: 13px;
             color: #86868b;
+        }
+
+        /* Add margin below visuals for spacing */
+        .subtopic-visual {
+            margin-bottom: 12px;
         }
 
         /* Action Buttons */
@@ -717,7 +736,38 @@
                     </div>
 
                     <div class="subtopic-grid" id="subtopicGrid">
-                        <!-- Dynamic subtopics will be loaded here -->
+                        <div class="subtopic-card" data-subtopic="tables">
+                            <div class="subtopic-visual">
+                                <table style="border-collapse:collapse;width:120px;font-size:12px;background:#222;color:#fff;border:1px solid #444;">
+                                    <tr><th style="border:1px solid #444;padding:2px 4px;">A</th><th style="border:1px solid #444;padding:2px 4px;">B</th></tr>
+                                    <tr><td style="border:1px solid #444;padding:2px 4px;">10</td><td style="border:1px solid #444;padding:2px 4px;">20</td></tr>
+                                    <tr><td style="border:1px solid #444;padding:2px 4px;">15</td><td style="border:1px solid #444;padding:2px 4px;">25</td></tr>
+                                </table>
+                            </div>
+                            <h3 class="subtopic-name">Data Tables</h3>
+                            <p class="subtopic-description">Work with tabular data</p>
+                        </div>
+                        <div class="subtopic-card" data-subtopic="bar-charts">
+                            <div class="subtopic-visual">
+                                <canvas id="barChart" width="120" height="80"></canvas>
+                            </div>
+                            <h3 class="subtopic-name">Bar Charts</h3>
+                            <p class="subtopic-description">Analyze bar chart data and trends</p>
+                        </div>
+                        <div class="subtopic-card" data-subtopic="line-graphs">
+                            <div class="subtopic-visual">
+                                <canvas id="lineChart" width="120" height="80"></canvas>
+                            </div>
+                            <h3 class="subtopic-name">Line Graphs</h3>
+                            <p class="subtopic-description">Interpret line graph patterns</p>
+                        </div>
+                        <div class="subtopic-card" data-subtopic="pie-charts">
+                            <div class="subtopic-visual">
+                                <canvas id="pieChart" width="80" height="80"></canvas>
+                            </div>
+                            <h3 class="subtopic-name">Pie Charts</h3>
+                            <p class="subtopic-description">Understand pie chart proportion</p>
+                        </div>
                     </div>
 
                     <div class="action-section">
@@ -749,6 +799,7 @@
     </div>
 
     <script src="progress-tracker.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         // Topic and subtopic data
         const topicData = {
@@ -787,6 +838,56 @@
         // Initialize the page
         document.addEventListener('DOMContentLoaded', function() {
             setupEventListeners();
+            // Bar Chart
+            const barCtx = document.getElementById('barChart');
+            if (barCtx) {
+                new Chart(barCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['A', 'B', 'C', 'D'],
+                        datasets: [{
+                            label: 'Sample Data',
+                            data: [12, 19, 7, 14],
+                            backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444']
+                        }]
+                    },
+                    options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+                });
+            }
+            // Line Chart
+            const lineCtx = document.getElementById('lineChart');
+            if (lineCtx) {
+                new Chart(lineCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr'],
+                        datasets: [{
+                            label: 'Trend',
+                            data: [10, 15, 8, 20],
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59,130,246,0.2)',
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+                });
+            }
+            // Pie Chart
+            const pieCtx = document.getElementById('pieChart');
+            if (pieCtx) {
+                new Chart(pieCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['X', 'Y', 'Z'],
+                        datasets: [{
+                            data: [30, 45, 25],
+                            backgroundColor: ['#3b82f6', '#10b981', '#f59e0b']
+                        }]
+                    },
+                    options: { plugins: { legend: { display: true } } }
+                });
+            }
         });
 
         // Sidebar toggle functionality
@@ -857,24 +958,98 @@
         function loadSubtopics(topicId) {
             const topic = topicData[topicId];
             const subtopicGrid = document.getElementById('subtopicGrid');
-            
             subtopicGrid.innerHTML = '';
-            
+
             topic.subtopics.forEach(subtopic => {
                 const card = document.createElement('div');
                 card.className = 'subtopic-card';
                 card.dataset.subtopic = subtopic.id;
-                
+
+                let visual = '';
+                let chartId = '';
+                if (topicId === 'data-interpretation') {
+                    if (subtopic.id === 'tables') {
+                        visual = `<div class="subtopic-visual">
+                            <table style="border-collapse:collapse;width:120px;font-size:12px;background:#222;color:#fff;border:1px solid #444;">
+                                <tr><th style="border:1px solid #444;padding:2px 4px;">A</th><th style="border:1px solid #444;padding:2px 4px;">B</th></tr>
+                                <tr><td style="border:1px solid #444;padding:2px 4px;">10</td><td style="border:1px solid #444;padding:2px 4px;">20</td></tr>
+                                <tr><td style="border:1px solid #444;padding:2px 4px;">15</td><td style="border:1px solid #444;padding:2px 4px;">25</td></tr>
+                            </table>
+                        </div>`;
+                    } else if (subtopic.id === 'bar-charts') {
+                        chartId = 'barChartCanvas';
+                        visual = `<div class="subtopic-visual"><canvas id="${chartId}" width="120" height="80"></canvas></div>`;
+                    } else if (subtopic.id === 'line-graphs') {
+                        chartId = 'lineChartCanvas';
+                        visual = `<div class="subtopic-visual"><canvas id="${chartId}" width="120" height="80"></canvas></div>`;
+                    } else if (subtopic.id === 'pie-charts') {
+                        chartId = 'pieChartCanvas';
+                        visual = `<div class="subtopic-visual"><canvas id="${chartId}" width="80" height="80"></canvas></div>`;
+                    }
+                }
+
                 card.innerHTML = `
+                    ${visual || ''}
                     <h3 class="subtopic-name">${subtopic.name}</h3>
                     <p class="subtopic-description">${subtopic.description}</p>
                 `;
-                
+
                 card.addEventListener('click', function() {
                     selectSubtopic(subtopic.id);
                 });
-                
+
                 subtopicGrid.appendChild(card);
+
+                // Initialize Chart.js chart if needed
+                if (chartId) {
+                    setTimeout(() => { // Wait for DOM
+                        const ctx = document.getElementById(chartId);
+                        if (ctx) {
+                            if (subtopic.id === 'bar-charts') {
+                                new Chart(ctx, {
+                                    type: 'bar',
+                                    data: {
+                                        labels: ['A', 'B', 'C', 'D'],
+                                        datasets: [{
+                                            label: 'Sample Data',
+                                            data: [12, 19, 7, 14],
+                                            backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444']
+                                        }]
+                                    },
+                                    options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+                                });
+                            } else if (subtopic.id === 'line-graphs') {
+                                new Chart(ctx, {
+                                    type: 'line',
+                                    data: {
+                                        labels: ['Jan', 'Feb', 'Mar', 'Apr'],
+                                        datasets: [{
+                                            label: 'Trend',
+                                            data: [10, 15, 8, 20],
+                                            borderColor: '#3b82f6',
+                                            backgroundColor: 'rgba(59,130,246,0.2)',
+                                            fill: true,
+                                            tension: 0.4
+                                        }]
+                                    },
+                                    options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+                                });
+                            } else if (subtopic.id === 'pie-charts') {
+                                new Chart(ctx, {
+                                    type: 'pie',
+                                    data: {
+                                        labels: ['X', 'Y', 'Z'],
+                                        datasets: [{
+                                            data: [30, 45, 25],
+                                            backgroundColor: ['#3b82f6', '#10b981', '#f59e0b']
+                                        }]
+                                    },
+                                    options: { plugins: { legend: { display: true } } }
+                                });
+                            }
+                        }
+                    }, 0);
+                }
             });
         }
 
@@ -1034,51 +1209,42 @@
 
         function parseQTContent(rawContent) {
             try {
-                console.log('Parsing QT content:', rawContent.substring(0, 200) + '...');
-                
                 // Split content into passage and questions
                 const parts = rawContent.split('**MCQs**');
-                if (parts.length < 2) {
-                    console.error('No MCQs section found in content');
-                    // Try alternative parsing if MCQs marker is missing
-                    return parseAlternativeFormat(rawContent);
+                let passage = '';
+                let questionsText = '';
+                if (parts.length >= 2) {
+                    passage = parts[0].trim();
+                    questionsText = parts[1].trim();
+                } else {
+                    // fallback: try to extract passage as everything before 1.1
+                    const passageMatch = rawContent.match(/^(.+?)(?=\n1\.1|\Z)/s);
+                    passage = passageMatch ? passageMatch[1].trim() : '';
+                    questionsText = rawContent.substring(passage.length).trim();
                 }
 
-                const passage = parts[0].trim();
-                const questionsText = parts[1].trim();
+                // Try to extract visual data from passage
+                let visualData = extractVisualDataFromPassage(passage);
 
-                console.log('Passage:', passage.substring(0, 100) + '...');
-                console.log('Questions text:', questionsText.substring(0, 200) + '...');
-
-                // Extract questions using regex
+                // Extract questions using regex (existing logic)
                 const questionRegex = /(\d+\.\d+)\s*(.*?)(?=\n\(A\)|\nA\.)/gs;
                 const questions = [];
                 let match;
-
                 while ((match = questionRegex.exec(questionsText)) !== null) {
                     const questionId = match[1];
                     const questionText = match[2].trim();
-                    
-                    console.log(`Found question ${questionId}:`, questionText.substring(0, 50) + '...');
-                    
                     // Extract options for this question
-                    const optionsRegex = new RegExp(`${questionId.replace('.', '\\.')}\\s*.*?(?=\n\\(A\\)|\nA\\.)(.*?)(?=\n\\d+\\.\\d+|\\n\\*\\*ANSWER KEY\\*\\*|$)`, 'gs');
+                    const optionsRegex = new RegExp(`${questionId.replace('.', '\\.')}` +
+                        `\\s*.*?(?=\\n\\(A\\)|\\nA\\.)(.*?)(?=\\n\\d+\\.\\d+|\\n\\*\\*ANSWER KEY\\*\\*|$)`, 'gs');
                     const optionsMatch = optionsRegex.exec(questionsText);
-                    
                     if (optionsMatch) {
                         const optionsText = optionsMatch[1];
                         const options = [];
-                        
-                        // Extract A, B, C, D options
                         const optionRegex = /\(([A-D])\)\s*(.*?)(?=\n\([A-D]\)|\n\d+\.\d+|\n\*\*ANSWER KEY\*\*|$)/gs;
                         let optionMatch;
-                        
                         while ((optionMatch = optionRegex.exec(optionsText)) !== null) {
                             options.push(optionMatch[2].trim());
                         }
-                        
-                        console.log(`Options for ${questionId}:`, options);
-                        
                         if (options.length === 4) {
                             questions.push({
                                 id: questionId,
@@ -1088,26 +1254,18 @@
                         }
                     }
                 }
-
                 // Extract answer key
                 const answerKeyMatch = questionsText.match(/\*\*ANSWER KEY\*\*(.*)/s);
                 let answerKey = null;
                 let correctAnswer = 0;
-                
                 if (answerKeyMatch) {
                     answerKey = answerKeyMatch[1].trim();
-                    console.log('Answer key found:', answerKey.substring(0, 100) + '...');
-                    
-                    // Try to extract the correct answer for the first question
                     const firstAnswerMatch = answerKey.match(/1\.1\s*[–-]\s*\(([A-D])\)/);
                     if (firstAnswerMatch) {
                         const correctLetter = firstAnswerMatch[1];
-                        correctAnswer = correctLetter.charCodeAt(0) - 65; // Convert A=0, B=1, C=2, D=3
-                        console.log(`Correct answer for 1.1: ${correctLetter} (index ${correctAnswer})`);
+                        correctAnswer = correctLetter.charCodeAt(0) - 65;
                     }
                 }
-
-                // For now, return the first question with a simple structure
                 if (questions.length > 0) {
                     const firstQuestion = questions[0];
                     return {
@@ -1115,11 +1273,10 @@
                         options: firstQuestion.options,
                         correct: correctAnswer,
                         solution: answerKey || 'Solution will be provided after answering.',
-                        passage: passage
+                        passage: passage,
+                        visualData: visualData
                     };
                 }
-
-                console.error('No valid questions found');
                 return null;
             } catch (error) {
                 console.error('Error parsing QT content:', error);
@@ -1127,151 +1284,84 @@
             }
         }
 
-        function parseAlternativeFormat(rawContent) {
-            try {
-                console.log('Trying alternative parsing format...');
-                
-                // First, try to find the passage (everything before the first numbered question)
-                const passageMatch = rawContent.match(/^(.+?)(?=\n\d+\.\d+\s|$)/s);
-                const passage = passageMatch ? passageMatch[1].trim() : '';
-                
-                console.log('Extracted passage:', passage.substring(0, 100) + '...');
-                
-                // Look for questions with 1.1, 1.2 format
-                const questionRegex = /(\d+\.\d+)\s*(.*?)(?=\n\(A\)|\nA\.|\n\d+\.\d+|\Z)/gs;
-                const questions = [];
-                let match;
-
-                while ((match = questionRegex.exec(rawContent)) !== null) {
-                    const questionId = match[1];
-                    const questionText = match[2].trim();
-                    
-                    // Skip if this looks like an answer key entry or very short text
-                    if (questionText.match(/^[–-]\s*\([A-D]\)/) || questionText.length < 10) {
-                        console.log(`Skipping invalid entry: ${questionId} - ${questionText.substring(0, 30)}`);
-                        continue;
-                    }
-                    
-                    console.log(`Found question ${questionId}:`, questionText.substring(0, 50) + '...');
-                    
-                    // Extract options that follow this question
-                    const options = [];
-                    const afterQuestion = rawContent.substring(match.index + match[0].length);
-                    
-                    // Look for the next question number to determine where options end
-                    const nextQuestionMatch = afterQuestion.match(/\n\d+\.\d+\s/);
-                    const endIndex = nextQuestionMatch ? nextQuestionMatch.index : afterQuestion.length;
-                    const optionsText = afterQuestion.substring(0, endIndex);
-                    
-                    console.log(`Options text for ${questionId}:`, optionsText.substring(0, 100) + '...');
-                    
-                    // Extract A, B, C, D options - improved regex
-                    const optionRegex = /\(([A-D])\)\s*(.*?)(?=\n\([A-D]\)|\n\d+\.\d+|\Z)/gs;
-                    let optionMatch;
-                    
-                    while ((optionMatch = optionRegex.exec(optionsText)) !== null) {
-                        const optionText = optionMatch[2].trim();
-                        if (optionText.length > 0) {
-                            options.push(optionText);
-                        }
-                    }
-                    
-                    // If the above didn't work, try a simpler approach
-                    if (options.length === 0) {
-                        const simpleOptionRegex = /\(A\)\s*(.*?)(?=\n\(B\)|\n\d+\.\d+|\Z)/s;
-                        const optionAMatch = optionsText.match(simpleOptionRegex);
-                        if (optionAMatch) {
-                            options.push(optionAMatch[1].trim());
-                            
-                            const optionBRegex = /\(B\)\s*(.*?)(?=\n\(C\)|\n\d+\.\d+|\Z)/s;
-                            const optionBMatch = optionsText.match(optionBRegex);
-                            if (optionBMatch) {
-                                options.push(optionBMatch[1].trim());
-                                
-                                const optionCRegex = /\(C\)\s*(.*?)(?=\n\(D\)|\n\d+\.\d+|\Z)/s;
-                                const optionCMatch = optionsText.match(optionCRegex);
-                                if (optionCMatch) {
-                                    options.push(optionCMatch[1].trim());
-                                    
-                                    const optionDRegex = /\(D\)\s*(.*?)(?=\n\d+\.\d+|\Z)/s;
-                                    const optionDMatch = optionsText.match(optionDRegex);
-                                    if (optionDMatch) {
-                                        options.push(optionDMatch[1].trim());
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    
-                    console.log(`Options for ${questionId}:`, options);
-                    
-                    if (options.length === 4) {
-                        questions.push({
-                            id: questionId,
-                            text: questionText,
-                            options: options
-                        });
-                    }
+        // Extracts table/chart data from passage for data-interpretation subtopics
+        function extractVisualDataFromPassage(passage) {
+            // Try to find a markdown table
+            const tableMatch = passage.match(/((?:\|.+\|\n)+)/);
+            if (tableMatch) {
+                // Parse markdown table
+                const lines = tableMatch[0].trim().split('\n').filter(l => l.includes('|'));
+                if (lines.length >= 2) {
+                    const headers = lines[0].split('|').map(x => x.trim()).filter(Boolean);
+                    const rows = lines.slice(2).map(row => row.split('|').map(x => x.trim()).filter(Boolean));
+                    return { type: 'table', headers, rows };
                 }
-
-                // Extract answer key - look for patterns like "1.1 – (B)" or "1.1 - (B)"
-                const answerKeyRegex = /(\d+\.\d+)\s*[–-]\s*\(([A-D])\)(.*?)(?=\n\d+\.\d+\s*[–-]|\Z)/gs;
-                const answerKeyMatches = [];
-                let answerKey = null;
-                let correctAnswer = 0;
-                let solution = 'Solution will be provided after answering.';
-                
-                while ((answerKeyMatch = answerKeyRegex.exec(rawContent)) !== null) {
-                    answerKeyMatches.push({
-                        question: answerKeyMatch[1],
-                        answer: answerKeyMatch[2],
-                        solution: answerKeyMatch[3].trim()
-                    });
-                }
-                
-                if (answerKeyMatches.length > 0) {
-                    answerKey = answerKeyMatches.map(match => `${match.question} – (${match.answer})`).join('\n');
-                    console.log('Answer key found:', answerKey);
-                    
-                    // Find the correct answer and solution for the first question (1.1)
-                    const firstAnswer = answerKeyMatches.find(match => match.question === '1.1');
-                    if (firstAnswer) {
-                        correctAnswer = firstAnswer.answer.charCodeAt(0) - 65; // Convert A=0, B=1, C=2, D=3
-                        solution = firstAnswer.solution;
-                        console.log(`Correct answer for question 1.1: ${firstAnswer.answer} (index ${correctAnswer})`);
-                        console.log(`Solution for question 1.1:`, solution.substring(0, 100) + '...');
-                    }
-                }
-
-                if (questions.length > 0) {
-                    const firstQuestion = questions[0];
-                    return {
-                        text: firstQuestion.text,
-                        options: firstQuestion.options,
-                        correct: correctAnswer,
-                        solution: solution,
-                        passage: passage
-                    };
-                }
-
-                console.error('No valid questions found in alternative format');
-                return null;
-            } catch (error) {
-                console.error('Error in alternative parsing:', error);
-                return null;
             }
+            // Try to find a CSV block
+            const csvMatch = passage.match(/([A-Za-z0-9 ,]+\n(?:[A-Za-z0-9 ,]+\n)+)/);
+            if (csvMatch) {
+                const lines = csvMatch[0].trim().split('\n');
+                const headers = lines[0].split(',').map(x => x.trim());
+                const rows = lines.slice(1).map(row => row.split(',').map(x => x.trim()));
+                return { type: 'table', headers, rows };
+            }
+            // Try to find a bar/line/pie chart data block (e.g. "Data: A:12, B:19, C:7, D:14")
+            const dataMatch = passage.match(/Data\s*:\s*([A-Za-z0-9:,.% ]+)/);
+            if (dataMatch) {
+                const pairs = dataMatch[1].split(',').map(p => p.split(':').map(x => x.trim()));
+                const labels = pairs.map(p => p[0]);
+                const values = pairs.map(p => parseFloat(p[1]));
+                return { type: 'bar', labels, values };
+            }
+            return null;
         }
 
         function displayQuestion(question) {
             const questionContainer = document.getElementById('questionContainer');
-            
+            let visual = '';
+            let chartId = '';
+            // Add visual for the selected subtopic, but use dynamic data if available
+            if (selectedTopic === 'data-interpretation' && question.visualData) {
+                if (selectedSubtopic === 'tables' && question.visualData.type === 'table') {
+                    // Render HTML table
+                    visual = `<div class="subtopic-visual"><table style="border-collapse:collapse;width:100%;font-size:13px;background:#222;color:#fff;border:1px solid #444;">`;
+                    visual += '<tr>' + question.visualData.headers.map(h => `<th style="border:1px solid #444;padding:2px 4px;">${h}</th>`).join('') + '</tr>';
+                    for (const row of question.visualData.rows) {
+                        visual += '<tr>' + row.map(cell => `<td style="border:1px solid #444;padding:2px 4px;">${cell}</td>`).join('') + '</tr>';
+                    }
+                    visual += '</table></div>';
+                } else if ((selectedSubtopic === 'bar-charts' || selectedSubtopic === 'line-graphs' || selectedSubtopic === 'pie-charts') && (question.visualData.type === 'bar' || question.visualData.type === 'pie' || question.visualData.type === 'line')) {
+                    chartId = 'chartQuestion';
+                    visual = `<div class="subtopic-visual"><canvas id="${chartId}" width="180" height="100"></canvas></div>`;
+                }
+            } else {
+                // fallback: static visuals as before
+                if (selectedTopic === 'data-interpretation') {
+                    if (selectedSubtopic === 'tables') {
+                        visual = `<div class="subtopic-visual">
+                            <table style="border-collapse:collapse;width:120px;font-size:12px;background:#222;color:#fff;border:1px solid #444;">
+                                <tr><th style="border:1px solid #444;padding:2px 4px;">A</th><th style="border:1px solid #444;padding:2px 4px;">B</th></tr>
+                                <tr><td style="border:1px solid #444;padding:2px 4px;">10</td><td style="border:1px solid #444;padding:2px 4px;">20</td></tr>
+                                <tr><td style="border:1px solid #444;padding:2px 4px;">15</td><td style="border:1px solid #444;padding:2px 4px;">25</td></tr>
+                            </table>
+                        </div>`;
+                    } else if (selectedSubtopic === 'bar-charts') {
+                        chartId = 'barChartQuestion';
+                        visual = `<div class="subtopic-visual"><canvas id="${chartId}" width="120" height="80"></canvas></div>`;
+                    } else if (selectedSubtopic === 'line-graphs') {
+                        chartId = 'lineChartQuestion';
+                        visual = `<div class="subtopic-visual"><canvas id="${chartId}" width="120" height="80"></canvas></div>`;
+                    } else if (selectedSubtopic === 'pie-charts') {
+                        chartId = 'pieChartQuestion';
+                        visual = `<div class="subtopic-visual"><canvas id="${chartId}" width="80" height="80"></canvas></div>`;
+                    }
+                }
+            }
             let questionHTML = '';
-            
-            // Add passage if available
+            if (visual) questionHTML += visual;
             if (question.passage) {
                 questionHTML += `<div class="question-passage">${question.passage}</div>`;
             }
-            
             questionHTML += `
                 <div class="question-text">${question.text}</div>
                 <div class="options-grid">
@@ -1289,27 +1379,40 @@
                     <div class="solution-text">${question.solution}</div>
                 </div>
             `;
-            
             questionContainer.innerHTML = questionHTML;
-            
-            // Add event listeners
             document.querySelectorAll('.option').forEach(option => {
                 option.addEventListener('click', function() {
                     selectOption(this.dataset.index);
                 });
             });
-            
             document.getElementById('checkAnswer').addEventListener('click', function() {
                 checkAnswer();
             });
-            
-            // Debug: Log the question details
-            console.log('Displaying question:', {
-                text: question.text,
-                options: question.options,
-                correct: question.correct,
-                correctLetter: String.fromCharCode(65 + question.correct)
-            });
+            // Render chart if needed
+            if (chartId && question.visualData && (question.visualData.type === 'bar' || question.visualData.type === 'pie' || question.visualData.type === 'line')) {
+                setTimeout(() => {
+                    const ctx = document.getElementById(chartId);
+                    if (ctx) {
+                        let chartType = 'bar';
+                        if (selectedSubtopic === 'pie-charts') chartType = 'pie';
+                        if (selectedSubtopic === 'line-graphs') chartType = 'line';
+                        new Chart(ctx, {
+                            type: chartType,
+                            data: {
+                                labels: question.visualData.labels,
+                                datasets: [{
+                                    label: 'Data',
+                                    data: question.visualData.values,
+                                    backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#6366f1', '#f472b6'],
+                                    borderColor: '#fff',
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: { plugins: { legend: { display: chartType === 'pie' } }, scales: { y: { beginAtZero: true } } }
+                        });
+                    }
+                }, 0);
+            }
         }
 
         function selectOption(index) {

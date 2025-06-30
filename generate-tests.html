@@ -32,7 +32,7 @@
 
         .sidebar {
             width: 280px;
-            background: #1e293b !important;
+            background: #2d3748 !important;
             color: white !important;
             padding: 24px 0;
             display: flex;
@@ -586,15 +586,15 @@
                 </div>
 
                 <!-- Download Section -->
-                <div id="downloadSection" style="display: none;" class="download-section">
+                <div id="downloadSection" style="display: none; margin-top: 40px;" class="download-section">
                     <h3>📄 Test Generated Successfully!</h3>
                     <p>Your CLAT practice test with answer key is ready for download.</p>
-                    <div class="download-buttons">
-                        <button id="downloadButton" onclick="downloadTestPDF()" class="download-btn">
+                    <div class="download-buttons" style="margin-bottom: 32px; justify-content: center;">
+                        <button id="downloadButton" onclick="downloadTestPDF()" class="download-btn" style="margin: 0 auto; min-width: 260px; font-size: 17px;">
                             📄 Download Test PDF (with Answer Key)
                         </button>
                     </div>
-                    <button onclick="startNewTest()" class="secondary-btn">🔄 Generate New Test</button>
+                    <button onclick="startNewTest()" class="secondary-btn" style="margin-top: 12px;">🔄 Generate New Test</button>
                 </div>
             </div>
         </main>
@@ -781,54 +781,86 @@
         // PDF Download Function with Answer Key Included
         async function downloadTestPDF() {
             const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
+            const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const pageHeight = doc.internal.pageSize.getHeight();
+            let y = 40;
+            const margin = 40;
+            const lineHeight = 18;
+            const maxLineWidth = pageWidth - 2 * margin;
 
-            // Helper to add watermark and wait for image load
-            function addWatermarkAsync(doc) {
+            // Helper: Add watermark (centered, 20% opacity, not stretched, under text)
+            async function addWatermark(doc) {
                 return new Promise((resolve) => {
-                    const img = new Image();
+                    const img = new window.Image();
                     img.src = 'images/CLAT%20COMMUNITY%20ILLUSTRATED%20LOGO%20.png';
                     img.onload = function() {
-                        const pageWidth = doc.internal.pageSize.getWidth();
-                        const pageHeight = doc.internal.pageSize.getHeight();
-                        const imgWidth = 100;
-                        const imgHeight = 100;
-                        const x = (pageWidth - imgWidth) / 2;
-                        const y = (pageHeight - imgHeight) / 2;
-                        // Set opacity for watermark (if supported)
-                        if (doc.setGState) {
-                            const gState = doc.GState({ opacity: 0.15 });
-                            doc.setGState(gState);
-                            doc.addImage(img, 'PNG', x, y, imgWidth, imgHeight);
-                            doc.setGState(new doc.GState({ opacity: 1 }));
-                        } else {
-                            // Fallback: try addImage with opacity option (jsPDF >=2.5.0)
-                            try {
-                                doc.addImage(img, 'PNG', x, y, imgWidth, imgHeight, undefined, 'NONE', 0, { opacity: 0.15 });
-                            } catch (e) {
-                                // Fallback: just add image without opacity
-                                doc.addImage(img, 'PNG', x, y, imgWidth, imgHeight);
-                            }
-                        }
+                        const wmWidth = 220;
+                        const wmHeight = (img.height / img.width) * wmWidth;
+                        const x = (pageWidth - wmWidth) / 2;
+                        const y = (pageHeight - wmHeight) / 2;
+                        doc.addImage(img, 'PNG', x, y, wmWidth, wmHeight, undefined, 'NONE', 0, { opacity: 0.2 });
                         resolve();
                     };
-                    img.onerror = function() {
-                        // If image fails to load, just resolve without adding
-                        resolve();
-                    };
+                    img.onerror = function() { resolve(); };
                 });
-                doc.setFont(undefined, 'normal');
-currentTest.forEach((question, index) => {
-    const questionNum = index + 1;
-    const correctIndex = question.correct;
-    const correctLetter = String.fromCharCode(65 + correctIndex);
-    const correctOption = question.options[correctIndex];
+            }
 
-    doc.text(`Q${questionNum}`, margin, yPosition);
-    doc.text(correctLetter, margin + 60, yPosition);
-    doc.text(correctOption.substring(0, 40) + (correctOption.length > 40 ? '...' : ''), margin + 120, yPosition);
-    yPosition += 8;
-});
+            // Helper: Add header
+            function addHeader(doc, yPos) {
+                // Neat, multi-line header
+                const headerY = yPos - 28;
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(10);
+                doc.setTextColor(80, 80, 80);
+                doc.text('For more material: https://discord.gg/9kFymfz7qN', pageWidth / 2, headerY, { align: 'center' });
+                doc.text('Contact: 7702832727', pageWidth / 2, headerY + 12, { align: 'center' });
+                // Section title
+                doc.setFont('helvetica', 'bold');
+                doc.setFontSize(18);
+                doc.setTextColor(0, 0, 0);
+                doc.text(`${testMetadata.sectionName} - ${testMetadata.subcategoryName}`, pageWidth / 2, yPos, { align: 'center' });
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(12);
+                doc.text(`Passages: ${testMetadata.passages} | Questions: ${currentTest.length}`, pageWidth / 2, yPos + 18, { align: 'center' });
+            }
+
+            // Helper: Add footer
+            function addFooter(doc) {
+                const pageCount = doc.internal.getNumberOfPages();
+                for (let i = 1; i <= pageCount; i++) {
+                    doc.setPage(i);
+                    const footerY = pageHeight - 38;
+                    doc.setFont('helvetica', 'normal');
+                    doc.setFontSize(9);
+                    doc.setTextColor(80, 80, 80);
+                    doc.text('Discord: https://discord.gg/9kFymfz7qN', pageWidth / 2, footerY, { align: 'center' });
+                    doc.text('Telegram: https://t.me/CLAT_Community', pageWidth / 2, footerY + 12, { align: 'center' });
+                    doc.text('Instagram: https://www.instagram.com/clat_community/', pageWidth / 2, footerY + 24, { align: 'center' });
+                    // Page number (right, below links)
+                    doc.setFontSize(10);
+                    doc.setTextColor(0, 0, 0);
+                    doc.text(`Page ${i} of ${pageCount}`, pageWidth - margin, pageHeight - 12, { align: 'right' });
+                }
+            }
+
+            // Helper: Add wrapped text
+            function addWrappedText(text, x, y, maxWidth, fontSize = 12, fontStyle = 'normal') {
+                doc.setFont('helvetica', fontStyle);
+                doc.setFontSize(fontSize);
+                const lines = doc.splitTextToSize(text, maxWidth);
+                lines.forEach(line => {
+                    if (y > pageHeight - margin - lineHeight) {
+                        doc.addPage();
+                        // Add watermark before any text
+                        addWatermark(doc);
+                        addHeader(doc, margin);
+                        y = margin + 40;
+                    }
+                    doc.text(line, x, y);
+                    y += lineHeight;
+                });
+                return y;
             }
 
             if (!currentTest || currentTest.length === 0) {
@@ -841,235 +873,60 @@ currentTest.forEach((question, index) => {
             downloadButton.textContent = 'Generating PDF...';
 
             try {
-                await addWatermarkAsync(doc);
-
-                const pageWidth = doc.internal.pageSize.getWidth();
-                const pageHeight = doc.internal.pageSize.getHeight();
-                const margin = 20;
-                const lineHeight = 7;
-                let yPosition = margin;
-
-                function addWrappedText(text, x, y, maxWidth, fontSize = 12) {
-                    doc.setFontSize(fontSize);
-                    const lines = doc.splitTextToSize(text, maxWidth);
-                    doc.text(lines, x, y);
-                    return y + (lines.length * lineHeight);
-                }
-
-                function checkNewPage(requiredSpace) {
-                    if (yPosition + requiredSpace > pageHeight - margin - 30) { // Extra space for footer
-                        doc.addPage();
-                        // Add watermark to new page
-                        // Wait for watermark to be added before continuing
-                        // (sync here since image is likely cached after first load)
-                        // But for robustness, use await
-                        // Note: This is inside a non-async function, so we need to refactor if we want to await here.
-                        // For now, just call addWatermarkAsync and ignore the result (it will be fast if cached)
-                        addWatermarkAsync(doc);
-                        yPosition = margin + 40; // Extra space for header
-                        addHeader();
-                    }
-                }
-
-                function addHeader() {
-                    // Add header line
-                    doc.setDrawColor(59, 130, 246);
-                    doc.setLineWidth(2);
-                    doc.line(margin, margin + 20, pageWidth - margin, margin + 20);
-                    // Add header text
-                    doc.setFontSize(12);
-                    doc.setFont('Times New Roman', 'normal');
-                    doc.setTextColor(0, 0, 0); // Black color
-                    doc.text('For more material go to- https://discord.gg/9kFymfz7qN', margin, margin + 10);
-                    doc.text('CONTACT US:- 7702832727', pageWidth - margin, margin + 10, { align: 'right' });
-                    // Reset text color
-                    doc.setTextColor(0, 0, 0);
-                }
-
-                function addFooter() {
-                    const footerY = pageHeight - 15;
-                    // Add footer line
-                    doc.setDrawColor(59, 130, 246);
-                    doc.setLineWidth(1);
-                    doc.line(margin, footerY - 5, pageWidth - margin, footerY - 5);
-                    // Add footer text
-                    doc.setFontSize(12);
-                    doc.setFont('Times New Roman', 'normal');
-                    doc.setTextColor(0, 0, 0); // Black color
-                    doc.text('Also, find us on Discord: - https://discord.gg/9kFymfz7qN', pageWidth / 2, footerY, { align: 'center' });
-                    doc.text('Telegram: - https://t.me/CLAT_Community and Instagram: - https://www.instagram.com/clat_community/', pageWidth / 2, footerY + 8, { align: 'center' });
-                }
-
-                // Add header to first page
-                addHeader();
-                yPosition += 40; // Space after header
-
-                // Add main title
-                doc.setFontSize(24);
-                doc.setFont(undefined, 'bold');
-                doc.text('CLAT Practice Test', pageWidth / 2, yPosition, { align: 'center' });
-                yPosition += 20;
-
-                // Add test info
-                doc.setFontSize(16);
-                doc.setFont(undefined, 'normal');
-                const testInfoText = `${testMetadata.sectionName} - ${testMetadata.subcategoryName}`;
-                doc.text(testInfoText, pageWidth / 2, yPosition, { align: 'center' });
-                yPosition += 15;
-
-                doc.setFontSize(14);
-                const detailsText = `${testMetadata.passages} Passage${testMetadata.passages > 1 ? 's' : ''} • ${currentTest.length} Question${currentTest.length > 1 ? 's' : ''}`;
-                doc.text(detailsText, pageWidth / 2, yPosition, { align: 'center' });
-                yPosition += 25;
-
-                // Add instructions
-                doc.setFontSize(12);
-                doc.setFont(undefined, 'bold');
-                doc.text('Instructions:', margin, yPosition);
-                yPosition += 10;
-                doc.setFont(undefined, 'normal');
-                const instructions = [
-                    '1. Read each passage carefully before answering the questions.',
-                    '2. Choose the best answer from the given options.',
-                    '3. Each question has only one correct answer.',
-                    '4. Manage your time effectively during the test.',
-                    '5. Review your answers before submitting.'
-                ];
-                instructions.forEach(instruction => {
-                    yPosition = addWrappedText(instruction, margin, yPosition, pageWidth - 2 * margin, 11);
-                    yPosition += 3;
-                });
-                yPosition += 15;
-
+                // Add watermark to first page before any text
+                await addWatermark(doc);
+                // Add header
+                addHeader(doc, y);
+                y += 40;
                 // Add questions
-                let currentPassage = '';
-                let passageNumber = 1;
-                let questionNumber = 1;
-                currentTest.forEach((question, index) => {
-                    checkNewPage(80);
-                    if (question.passage !== currentPassage) {
-                        currentPassage = question.passage;
-                        doc.setFont(undefined, 'bold');
-                        doc.setFontSize(14);
-                        yPosition = addWrappedText(`Passage ${passageNumber}:`, margin, yPosition, pageWidth - 2 * margin);
-                        yPosition += 5;
-                        doc.setFont(undefined, 'normal');
-                        doc.setFontSize(11);
-                        yPosition = addWrappedText(question.passage, margin, yPosition, pageWidth - 2 * margin);
-                        yPosition += 10;
-                        passageNumber++;
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(13);
+                for (let i = 0; i < currentTest.length; i++) {
+                    const q = currentTest[i];
+                    // Passage (if first question or passage changes)
+                    if (i === 0 || q.passage !== currentTest[i - 1].passage) {
+                        y = addWrappedText(`Passage ${q.passageIndex + 1}:`, margin, y, maxLineWidth, 13, 'bold');
+                        y = addWrappedText(q.passage, margin, y, maxLineWidth, 12, 'normal');
+                        y += 5;
                     }
-                    checkNewPage(50);
-                    doc.setFont(undefined, 'bold');
-                    doc.setFontSize(12);
-                    yPosition = addWrappedText(`${questionNumber}. ${question.question}`, margin, yPosition, pageWidth - 2 * margin);
-                    yPosition += 5;
-                    doc.setFont(undefined, 'normal');
-                    doc.setFontSize(11);
-                    question.options.forEach((option, optionIndex) => {
-                        const optionLetter = String.fromCharCode(65 + optionIndex);
-                        yPosition = addWrappedText(`   ${optionLetter}. ${option}`, margin, yPosition, pageWidth - 2 * margin);
-                        yPosition += 3;
+                    // Question
+                    y = addWrappedText(`Q${i + 1}. ${q.question}`, margin, y, maxLineWidth, 13, 'bold');
+                    // Options
+                    q.options.forEach((opt, idx) => {
+                        y = addWrappedText(`   ${String.fromCharCode(65 + idx)}. ${opt}`, margin + 10, y, maxLineWidth - 10, 12, 'normal');
                     });
-                    yPosition += 8;
-                    questionNumber++;
-                });
-
-                // Add Answer Key Section
-                checkNewPage(100);
-                // Add page break for answer key
+                    y += 5;
+                    // Page break if needed
+                    if (y > pageHeight - margin - 60) {
+                        doc.addPage();
+                        await addWatermark(doc);
+                        addHeader(doc, margin);
+                        y = margin + 40;
+                    }
+                }
+                // Answer Key Section
                 doc.addPage();
-                await addWatermarkAsync(doc);
-                addHeader();
-                yPosition = margin + 40;
-                // Answer Key Title
-                doc.setFontSize(20);
-                doc.setFont(undefined, 'bold');
-                doc.text('Answer Key', pageWidth / 2, yPosition, { align: 'center' });
-                yPosition += 20;
-                // Answer Key Summary Table
-                doc.setFontSize(14);
-                doc.setFont(undefined, 'bold');
-                doc.text('Answer Key Summary:', margin, yPosition);
-                yPosition += 15;
-                // Table headers
+                await addWatermark(doc);
+                y = margin + 10;
+                addHeader(doc, y);
+                y += 40;
+                doc.setFont('helvetica', 'bold');
+                doc.setFontSize(15);
+                doc.text('Answer Key', pageWidth / 2, y, { align: 'center' });
+                y += 20;
+                doc.setFont('helvetica', 'normal');
                 doc.setFontSize(12);
-                doc.setFont(undefined, 'bold');
-                doc.text('Question', margin, yPosition);
-                doc.text('Answer', margin + 60, yPosition);
-                doc.text('Correct Option', margin + 120, yPosition);
-                yPosition += 10;
-                // Table content
-                doc.setFont(undefined, 'normal');
-                currentTest.forEach((question, index) => {
-    const questionNum = index + 1;
-    const correctIndex = question.correct;
-    const correctLetter = String.fromCharCode(65 + correctIndex);
-    const correctOption = question.options[correctIndex];
-
-    // Wrap the correct option text so it doesn’t overflow
-    const wrappedOption = doc.splitTextToSize(correctOption, pageWidth - (margin + 120) - margin);
-    const rowHeight = wrappedOption.length * 6;
-
-    doc.text(`Q${questionNum}`, margin, yPosition);
-    doc.text(correctLetter, margin + 60, yPosition);
-    doc.text(wrappedOption, margin + 120, yPosition);
-
-    yPosition += rowHeight + 4;
-    checkNewPage(30);
-});
-
-                yPosition += 20;
-                // Detailed Explanations
-                doc.setFontSize(16);
-                doc.setFont(undefined, 'bold');
-                doc.text('Detailed Explanations:', margin, yPosition);
-                yPosition += 15;
-                currentTest.forEach((question, index) => {
-                    checkNewPage(80);
-                    doc.setFontSize(14);
-                    doc.setFont(undefined, 'bold');
-                    yPosition = addWrappedText(`Question ${index + 1}:`, margin, yPosition, pageWidth - 2 * margin);
-                    yPosition += 5;
-                    // Question text
-                    doc.setFontSize(11);
-                    doc.setFont(undefined, 'normal');
-                    yPosition = addWrappedText(`Q: ${question.question}`, margin, yPosition, pageWidth - 2 * margin);
-                    yPosition += 5;
-                    // Options with correct answer marked
-                    question.options.forEach((option, optionIndex) => {
-                        const optionLetter = String.fromCharCode(65 + optionIndex);
-                        const isCorrect = optionIndex === question.correct;
-                        let optionText = `${optionLetter}. ${option}`;
-                        if (isCorrect) {
-                            doc.setFont(undefined, 'bold');
-                            optionText += ' ✓';
-                        } else {
-                            doc.setFont(undefined, 'normal');
-                        }
-                        yPosition = addWrappedText(optionText, margin, yPosition, pageWidth - 2 * margin);
-                        yPosition += 3;
-                    });
-                    // Correct answer
-                    const correctIndex = question.correct;
-                    const correctLetter = String.fromCharCode(65 + correctIndex);
-                    doc.setFont(undefined, 'bold');
-                    yPosition = addWrappedText(`Correct Answer: ${correctLetter}`, margin, yPosition, pageWidth - 2 * margin);
-                    yPosition += 5;
-                    // Explanation
-                    doc.setFont(undefined, 'normal');
-                    const explanation = question.explanation || 'No explanation available.';
-                    yPosition = addWrappedText(`Explanation: ${explanation}`, margin, yPosition, pageWidth - 2 * margin);
-                    yPosition += 10;
+                currentTest.forEach((q, idx) => {
+                    // Always use the 'correct' field from the question object
+                    const correctLetter = String.fromCharCode(65 + (typeof q.correct === 'number' ? q.correct : 0));
+                    y = addWrappedText(`Q${idx + 1}: ${correctLetter}`, margin, y, maxLineWidth, 12, 'normal');
                 });
-                // Add header, footer, and watermark to all pages
+                // Add watermark and footer to all pages
                 const totalPages = doc.internal.getNumberOfPages();
                 for (let i = 1; i <= totalPages; i++) {
                     doc.setPage(i);
-                    addHeader();
-                    addFooter();
-                    // Add watermark to each page (should be fast if cached)
-                    await addWatermarkAsync(doc);
+                    // Watermark already added at page creation
+                    addFooter(doc);
                 }
                 const fileName = `CLAT_${testMetadata.sectionName}_${testMetadata.subcategoryName}_${new Date().toISOString().split('T')[0]}.pdf`;
                 doc.save(fileName);
@@ -1137,7 +994,7 @@ currentTest.forEach((question, index) => {
                     body: JSON.stringify({
                         section: section,
                         subcategory: finalSubcategory,
-                        passages: passages
+                        count: passages
                     })
                 });
 

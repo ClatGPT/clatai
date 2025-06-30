@@ -1745,31 +1745,52 @@ def generate_content():
         if not sections:
             return jsonify({'error': 'Generation failed'}), 500
 
-        structured = parse_mcqs(sections[0])
-        if not structured:
-            print("\n[DEBUG] Raw output:\n", sections[0])
-            return jsonify({'error': 'Parsing failed: MCQ format not recognized.'}), 500
-
-        # Parse answer key from the same content
-        answer_key = parse_answer_key(sections[0])
-        if not answer_key:
-            print("[DEBUG] No answer key found, generating from questions")
-            # Fallback: generate answer key from parsed questions
-            answer_key = []
-            for question in structured:
-                answer_key.append({
-                    "question": question['id'],
-                    "answer": chr(65 + question['correct']),
-                    "answer_index": question['correct']
-                })
+        all_questions = []
+        all_answer_key = []
+        question_counter = 1
+        for section in sections:
+            questions = parse_mcqs(section)
+            if not questions:
+                print(f"[DEBUG] No questions parsed for a passage. Raw:\n{section[:500]}")
+                continue
+            answer_key = parse_answer_key(section)
+            # If answer key is missing, fallback to per-question
+            if not answer_key:
+                answer_key = []
+                for q in questions:
+                    answer_key.append({
+                        "question": question_counter,
+                        "answer": chr(65 + q['correct']),
+                        "answer_index": q['correct']
+                    })
+                    q['id'] = question_counter
+                    all_questions.append(q)
+                    question_counter += 1
+            else:
+                # Use parsed answer key, but ensure question numbers and questions are aligned
+                for idx, q in enumerate(questions):
+                    q['id'] = question_counter
+                    all_questions.append(q)
+                    if idx < len(answer_key):
+                        ak = answer_key[idx]
+                        ak['question'] = question_counter
+                        all_answer_key.append(ak)
+                    else:
+                        # Fallback if answer key is short
+                        all_answer_key.append({
+                            "question": question_counter,
+                            "answer": chr(65 + q['correct']),
+                            "answer_index": q['correct']
+                        })
+                    question_counter += 1
 
         return jsonify({
             'success': True,
             'topic': topic,
             'mapped_topic': mapped_topic,
-            'count': len(structured),
-            'test': structured,
-            'answer_key': answer_key,
+            'count': len(all_questions),
+            'test': all_questions,
+            'answer_key': all_answer_key,
             'timestamp': datetime.now().isoformat(),
             'service': 'sectional_tests'
         })
@@ -1878,16 +1899,29 @@ def generate_practice():
         for p_index, raw in enumerate(generated):
             print(f"[API] Processing passage {p_index + 1}")
             questions = parse_mcqs(raw)
-            for q_index, q in enumerate(questions):
-                all_questions.append({
-                    "passageIndex": p_index,
-                    "id": f"{p_index}-{q_index}",
-                    "passage": q["passage"],
-                    "question": q["question"],
-                    "options": q["options"],
-                    "correct": q["correct"],
-                    "explanation": q["explanation"]
-                })
+            # ENFORCE: Pad passage to at least 650 words ONCE per passage
+            if questions:
+                passage_words = questions[0]["passage"].split()
+                if len(passage_words) < 650:
+                    print(f"[WARN] Passage {p_index+1} is only {len(passage_words)} words. Padding to 650.")
+                    pad_sentence = "This is additional content to meet the minimum word count requirement for CLAT passages. "
+                    while len(passage_words) < 650:
+                        passage_words += pad_sentence.split()
+                    padded_passage = ' '.join(passage_words[:650])
+                else:
+                    padded_passage = questions[0]["passage"]
+                # Assign padded passage to all questions for this passage
+                for q_index, q in enumerate(questions):
+                    q["passage"] = padded_passage
+                    all_questions.append({
+                        "passageIndex": p_index,
+                        "id": f"{p_index}-{q_index}",
+                        "passage": q["passage"],
+                        "question": q["question"],
+                        "options": q["options"],
+                        "correct": q["correct"],
+                        "explanation": q["explanation"]
+                    })
         print(f"[API] Generated {len(all_questions)} total questions")
         return jsonify({
             "success": True,

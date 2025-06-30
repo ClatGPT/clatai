@@ -29,7 +29,7 @@
 
         .sidebar {
             width: 280px;
-            background: #1e293b !important;
+            background: #2d3748 !important;
             color: white !important;
             padding: 24px 0;
             display: flex;
@@ -405,10 +405,10 @@
         .material-btn {
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 8px;
+            justify-content: flex-start;
+            gap: 12px;
             width: 100%;
-            padding: 12px 16px;
+            padding: 12px 16px 12px 24px;
             border: none;
             border-radius: 8px;
             font-size: 14px;
@@ -419,6 +419,13 @@
             background: #222 !important;
             color: #fff !important;
             border: 1px solid #fff !important;
+            text-align: left;
+        }
+
+        .btn-icon {
+            min-width: 24px;
+            text-align: left;
+            display: inline-block;
         }
 
         .discord-btn:hover,
@@ -606,7 +613,7 @@
                     <div class="chat-messages" id="chatMessages">
                         <div class="welcome-message">
                             <div class="welcome-title">Welcome to GK Research! 🎯</div>
-                            <p>I can generate CLAT-style GK passages with challenging MCQs on any topic. Ask about current affairs, or request passages on specific subjects!</p>
+                            <p>I can generate CLAT-style GK passages with challenging MCQs on any topic. <br>Ask about current affairs, or request passages on specific subjects!</p>
                         </div>
                     </div>
 
@@ -642,26 +649,17 @@
                     <div class="panel-section">
                         <!-- Discord Redirect Button -->
                         <div class="discord-section">
-                            <button class="discord-btn" onclick="window.open('https://discord.com/channels/1172163555810881616/1318350879753240678', '_blank')">
-                                <span class="btn-icon">💬</span>
-                                <span class="btn-text">Get Latest Newspapers on Discord</span>
-                            </button>
+                            <button class="discord-btn" onclick="window.open('https://discord.com/channels/1172163555810881616/1318350879753240678', '_blank')"><span class="btn-icon">💬</span><span class="btn-text">Get Latest Newspapers on Discord</span></button>
                         </div>
                         
                         <!-- Practice GK Online Button -->
                         <div class="practice-section">
-                            <button class="practice-btn" onclick="window.location.href='practice-online.html'">
-                                <span class="btn-icon">🎯</span>
-                                <span class="btn-text">Practice GK Online</span>
-                            </button>
+                            <button class="practice-btn" onclick="window.location.href='practice-online.html'"><span class="btn-icon">🎯</span><span class="btn-text">Practice GK Online</span></button>
                         </div>
                         
                         <!-- Study Material Button -->
                         <div class="material-section">
-                            <button class="material-btn" onclick="window.open('https://drive.google.com/file/d/15-ASrBeur2cgy20bvsyNMC3kThXVJtlJ/view', '_blank')">
-                                <span class="btn-icon">📚</span>
-                                <span class="btn-text">Study Material</span>
-                            </button>
+                            <button class="material-btn" onclick="window.open('https://drive.google.com/file/d/15-ASrBeur2cgy20bvsyNMC3kThXVJtlJ/view', '_blank')"><span class="btn-icon">📚</span><span class="btn-text">Study Material</span></button>
                         </div>
                     </div>
                 </div>

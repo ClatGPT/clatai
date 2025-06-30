@@ -28,7 +28,7 @@
 
         .sidebar {
             width: 280px;
-            background: #1e293b !important;
+            background: #2d3748 !important;
             color: white !important;
             padding: 24px 0;
             display: flex;
@@ -725,7 +725,7 @@
                     <span class="section-icon">📥</span>
                     <h3 class="section-title" style="color: white;">Download Progress Report</h3>
                 </div>
-                <p style="margin-bottom: 0; opacity: 0.9;">Get a comprehensive PDF report of your CLAT preparation progress</p>
+                <p style="margin-bottom: 0; opacity: 0.9;">Get a comprehensive <b>PDF</b> report of your CLAT preparation progress (now downloads as PDF)</p>
                 <button class="download-button" onclick="downloadReport()">
                     <span>📥</span>
                     Download Report
@@ -754,6 +754,8 @@
     </div>
 
     <script src="progress-tracker.js"></script>
+    <!-- Add jsPDF from CDN for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
         // Username management - use shared function from progress-tracker.js
         // function getUsername() {
@@ -797,50 +799,58 @@
             const stats = getProgressStats();
             const username = getUsername();
             const streak = getCurrentStreak();
-            
-            // Create a comprehensive text report
-            const reportContent = `
-CLAT.GPT.1 Progress Report
-Generated on: ${new Date().toLocaleDateString()}
-Student: ${username}
-
-=== PROGRESS SUMMARY ===
-Tests Taken: ${stats.totalTests}
-Average Score: ${stats.averageScore}%
-Study Streak: ${streak} days
-
-=== SECTION-WISE PERFORMANCE ===
-${generateSectionReport(stats)}
-
-=== RECENT ACTIVITY ===
-${generateRecentActivityReport()}
-
-=== RECOMMENDATIONS ===
-${generateRecommendations(stats)}
-
-=== NEXT STEPS ===
-1. Continue daily practice
-2. Focus on weak areas
-3. Take more sectional tests
-4. Review progress weekly
-
-For detailed analytics and personalized recommendations, 
-continue using CLAT.GPT.1 platform.
-            `;
-
-            // Create and download the report
-            const blob = new Blob([reportContent], { type: 'text/plain' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `CLAT_Progress_Report_${username}_${new Date().toISOString().split('T')[0]}.txt`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-
-            // Show success message
-            alert('Progress report downloaded successfully!');
+            const doc = new window.jspdf.jsPDF();
+            let y = 15;
+            doc.setFontSize(18);
+            doc.text('CLAT.GPT.1 Progress Report', 105, y, { align: 'center' });
+            y += 10;
+            doc.setFontSize(12);
+            doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 15, y);
+            doc.text(`Student: ${username}`, 150, y);
+            y += 10;
+            doc.setFontSize(14);
+            doc.text('=== PROGRESS SUMMARY ===', 15, y);
+            y += 8;
+            doc.setFontSize(12);
+            doc.text(`Tests Taken: ${stats.totalTests}`, 15, y);
+            doc.text(`Average Score: ${stats.averageScore}%`, 80, y);
+            doc.text(`Study Streak: ${streak} days`, 150, y);
+            y += 10;
+            doc.setFontSize(14);
+            doc.text('=== SECTION-WISE PERFORMANCE ===', 15, y);
+            y += 8;
+            doc.setFontSize(12);
+            const sectionReport = generateSectionReport(stats).split('\n');
+            sectionReport.forEach(line => { doc.text(line, 15, y); y += 7; });
+            y += 3;
+            doc.setFontSize(14);
+            doc.text('=== RECENT ACTIVITY ===', 15, y);
+            y += 8;
+            doc.setFontSize(12);
+            const recentActivity = generateRecentActivityReport().split('\n');
+            recentActivity.forEach(line => { doc.text(line, 15, y); y += 7; });
+            y += 3;
+            doc.setFontSize(14);
+            doc.text('=== RECOMMENDATIONS ===', 15, y);
+            y += 8;
+            doc.setFontSize(12);
+            const recommendations = generateRecommendations(stats).split('\n');
+            recommendations.forEach(line => { doc.text(line, 15, y); y += 7; });
+            y += 3;
+            doc.setFontSize(14);
+            doc.text('=== NEXT STEPS ===', 15, y);
+            y += 8;
+            doc.setFontSize(12);
+            const nextSteps = [
+                '1. Continue daily practice',
+                '2. Focus on weak areas',
+                '3. Take more sectional tests',
+                '4. Review progress weekly',
+                'For detailed analytics and personalized recommendations, continue using CLAT.GPT.1 platform.'
+            ];
+            nextSteps.forEach(line => { doc.text(line, 15, y); y += 7; });
+            doc.save(`CLAT_Progress_Report_${username}_${new Date().toISOString().split('T')[0]}.pdf`);
+            alert('Progress report PDF downloaded successfully!');
         }
 
         // Generate section-wise report

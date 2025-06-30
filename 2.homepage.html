@@ -248,7 +248,7 @@
             outline: none;
             transition: all 0.2s;
             background: #1a202c;
-            color: white;
+            color: rgb(34, 33, 33);
         }
 
         .search-input:focus {
@@ -563,8 +563,7 @@
 
         .newspaper-icon {
             font-size: 18px;
-            animation: newspaperFloat 3s ease-in-out infinite;
-        }
+            animation: bounce 2s ease-in-out infinite;        }
 
         @keyframes newspaperFloat {
             0%, 100% { transform: translateY(0px) rotate(0deg); }
@@ -872,10 +871,16 @@
             border-bottom: 1px solid #4a5568;
             transition: all 0.2s;
             color: white;
+            margin-bottom: 12px; /* Added for vertical spacing */
+            background: #232b3a; /* Subtle background for card look */
+            border-radius: 10px; /* Rounded corners */
+            padding-left: 16px; /* Space from left edge */
+            box-shadow: 0 2px 8px rgba(30,41,59,0.04);
         }
 
         .todo-item:last-child {
             border-bottom: none;
+            margin-bottom: 0;
         }
 
         .todo-item.completed {
@@ -891,6 +896,7 @@
             display: flex;
             align-items: center;
             flex: 1;
+            padding-left: 8px; /* Added for spacing from left edge */
         }
 
         .todo-checkbox {
@@ -901,6 +907,7 @@
             background: #2d3748;
             cursor: pointer;
             transition: all 0.2s;
+            margin-right: 12px; /* Added for spacing between checkbox and text */
         }
 
         .todo-checkbox:checked {
@@ -2120,8 +2127,8 @@
         // Todo list functionality
         let todoIdCounter = 3;
         let todos = [
-            { id: 1, text: 'Daily Quiz Reminder', time: '9:00 AM', completed: false },
-            { id: 2, text: 'Revise IPC Sections', time: '76-100', completed: false }
+            { id: 1, text: ' Daily Quiz Reminder', time: '9:00', completed: false },
+            { id: 2, text: ' Revise IPC Sections', time: '76-100', completed: false }
         ];
 
         function initializeTodos() {
@@ -2164,8 +2171,8 @@
                 console.error('❌ Error loading todos from localStorage:', error);
                 // Fallback to default todos
                 todos = [
-                    { id: 1, text: 'Daily Quiz Reminder', time: '9:00 AM', completed: false },
-                    { id: 2, text: 'Revise IPC Sections', time: '76-100', completed: false }
+                    { id: 1, text: ' Daily Quiz Reminder', time: '9:00 AM', completed: false },
+                    { id: 2, text: ' Revise IPC Sections', time: '76-100', completed: false }
                 ];
                 todoIdCounter = 3;
                 renderTodos();

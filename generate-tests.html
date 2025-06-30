@@ -1002,15 +1002,23 @@ currentTest.forEach((question, index) => {
                 // Table content
                 doc.setFont(undefined, 'normal');
                 currentTest.forEach((question, index) => {
-                    const questionNum = index + 1;
-                    const correctIndex = question.correct;
-                    const correctLetter = String.fromCharCode(65 + correctIndex);
-                    const correctOption = question.options[correctIndex];
-                    doc.text(`Q${questionNum}`, margin, yPosition);
-                    doc.text(correctLetter, margin + 60, yPosition);
-                    doc.text(correctOption.substring(0, 40) + (correctOption.length > 40 ? '...' : ''), margin + 120, yPosition);
-                    yPosition += 8;
-                });
+    const questionNum = index + 1;
+    const correctIndex = question.correct;
+    const correctLetter = String.fromCharCode(65 + correctIndex);
+    const correctOption = question.options[correctIndex];
+
+    // Wrap the correct option text so it doesn’t overflow
+    const wrappedOption = doc.splitTextToSize(correctOption, pageWidth - (margin + 120) - margin);
+    const rowHeight = wrappedOption.length * 6;
+
+    doc.text(`Q${questionNum}`, margin, yPosition);
+    doc.text(correctLetter, margin + 60, yPosition);
+    doc.text(wrappedOption, margin + 120, yPosition);
+
+    yPosition += rowHeight + 4;
+    checkNewPage(30);
+});
+
                 yPosition += 20;
                 // Detailed Explanations
                 doc.setFontSize(16);

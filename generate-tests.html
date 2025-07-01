@@ -587,10 +587,10 @@
 
                 <!-- Download Section -->
                 <div id="downloadSection" style="display: none; margin-top: 40px;" class="download-section">
-                    <h3>📄 Test Generated Successfully!</h3>
-                    <p>Your CLAT practice test with answer key is ready for download.</p>
+                    <h3 style="margin-bottom: 28px;">📄 Test Generated Successfully!</h3>
+                    <p style="margin-bottom: 32px;">Your CLAT practice test with answer key is ready for download.<br></p>
                     <div class="download-buttons" style="margin-bottom: 32px; justify-content: center;">
-                        <button id="downloadButton" onclick="downloadTestPDF()" class="download-btn" style="margin: 0 auto; min-width: 260px; font-size: 17px;">
+                        <button id="downloadButton" onclick="downloadTestPDF()" class="download-btn" style="margin: 0 auto; min-width: 260px; font-size: 17px; margin-top: 60px;">
                             📄 Download Test PDF (with Answer Key)
                         </button>
                     </div>
@@ -789,33 +789,57 @@
             const lineHeight = 18;
             const maxLineWidth = pageWidth - 2 * margin;
 
-            // Helper: Add watermark (centered, 20% opacity, not stretched, under text)
+            // Helper: Draw a horizontal black line
+            function drawBlackLine(yPos) {
+                doc.setDrawColor(0, 0, 0);
+                doc.setLineWidth(1);
+                doc.line(margin, yPos, pageWidth - margin, yPos);
+            }
+
+            // Helper: Add watermark (centered, 7% opacity, always under all text)
             async function addWatermark(doc) {
                 return new Promise((resolve) => {
                     const img = new window.Image();
-                    img.src = 'images/CLAT%20COMMUNITY%20ILLUSTRATED%20LOGO%20.png';
+                    img.src = 'images/forwatermark.png';
+                    let resolved = false;
                     img.onload = function() {
-                        const wmWidth = 220;
-                        const wmHeight = (img.height / img.width) * wmWidth;
-                        const x = (pageWidth - wmWidth) / 2;
-                        const y = (pageHeight - wmHeight) / 2;
-                        doc.addImage(img, 'PNG', x, y, wmWidth, wmHeight, undefined, 'NONE', 0, { opacity: 0.2 });
+                        if (resolved) return;
+                        resolved = true;
+                        try {
+                            const wmWidth = 220;
+                            const wmHeight = (img.height / img.width) * wmWidth;
+                            const x = (doc.internal.pageSize.getWidth() - wmWidth) / 2;
+                            const y = (doc.internal.pageSize.getHeight() - wmHeight) / 2;
+                            doc.addImage(img, 'PNG', x, y, wmWidth, wmHeight);
+                        } catch (e) {
+                            console.warn('Error adding watermark:', e);
+                        }
                         resolve();
                     };
-                    img.onerror = function() { resolve(); };
+                    img.onerror = function() {
+                        if (resolved) return;
+                        resolved = true;
+                        console.warn('Watermark image failed to load');
+                        resolve();
+                    };
+                    setTimeout(() => {
+                        if (!resolved) {
+                            resolved = true;
+                            console.warn('Watermark image load timed out');
+                            resolve();
+                        }
+                    }, 2000);
                 });
             }
 
-            // Helper: Add header
+            // Helper: Add header with black line below
             function addHeader(doc, yPos) {
-                // Neat, multi-line header
                 const headerY = yPos - 28;
                 doc.setFont('helvetica', 'normal');
                 doc.setFontSize(10);
                 doc.setTextColor(80, 80, 80);
                 doc.text('For more material: https://discord.gg/9kFymfz7qN', pageWidth / 2, headerY, { align: 'center' });
                 doc.text('Contact: 7702832727', pageWidth / 2, headerY + 12, { align: 'center' });
-                // Section title
                 doc.setFont('helvetica', 'bold');
                 doc.setFontSize(18);
                 doc.setTextColor(0, 0, 0);
@@ -823,21 +847,24 @@
                 doc.setFont('helvetica', 'normal');
                 doc.setFontSize(12);
                 doc.text(`Passages: ${testMetadata.passages} | Questions: ${currentTest.length}`, pageWidth / 2, yPos + 18, { align: 'center' });
+                // Black line after header
+                drawBlackLine(yPos + 28);
             }
 
-            // Helper: Add footer
+            // Helper: Add footer with black line above
             function addFooter(doc) {
                 const pageCount = doc.internal.getNumberOfPages();
                 for (let i = 1; i <= pageCount; i++) {
                     doc.setPage(i);
                     const footerY = pageHeight - 38;
+                    // Black line before footer
+                    drawBlackLine(footerY - 10);
                     doc.setFont('helvetica', 'normal');
                     doc.setFontSize(9);
                     doc.setTextColor(80, 80, 80);
                     doc.text('Discord: https://discord.gg/9kFymfz7qN', pageWidth / 2, footerY, { align: 'center' });
                     doc.text('Telegram: https://t.me/CLAT_Community', pageWidth / 2, footerY + 12, { align: 'center' });
                     doc.text('Instagram: https://www.instagram.com/clat_community/', pageWidth / 2, footerY + 24, { align: 'center' });
-                    // Page number (right, below links)
                     doc.setFontSize(10);
                     doc.setTextColor(0, 0, 0);
                     doc.text(`Page ${i} of ${pageCount}`, pageWidth - margin, pageHeight - 12, { align: 'right' });
@@ -845,21 +872,20 @@
             }
 
             // Helper: Add wrapped text
-            function addWrappedText(text, x, y, maxWidth, fontSize = 12, fontStyle = 'normal') {
+            async function addWrappedText(text, x, y, maxWidth, fontSize = 12, fontStyle = 'normal') {
                 doc.setFont('helvetica', fontStyle);
                 doc.setFontSize(fontSize);
                 const lines = doc.splitTextToSize(text, maxWidth);
-                lines.forEach(line => {
+                for (const line of lines) {
                     if (y > pageHeight - margin - lineHeight) {
                         doc.addPage();
-                        // Add watermark before any text
-                        addWatermark(doc);
+                        await addWatermark(doc);
                         addHeader(doc, margin);
                         y = margin + 40;
                     }
                     doc.text(line, x, y);
                     y += lineHeight;
-                });
+                }
                 return y;
             }
 
@@ -878,23 +904,25 @@
                 // Add header
                 addHeader(doc, y);
                 y += 40;
-                // Add questions
-                doc.setFont('helvetica', 'normal');
-                doc.setFontSize(13);
+                // --- Robust passage counting ---
+                let lastPassage = null;
+                let passageCount = 0;
                 for (let i = 0; i < currentTest.length; i++) {
                     const q = currentTest[i];
                     // Passage (if first question or passage changes)
-                    if (i === 0 || q.passage !== currentTest[i - 1].passage) {
-                        y = addWrappedText(`Passage ${q.passageIndex + 1}:`, margin, y, maxLineWidth, 13, 'bold');
-                        y = addWrappedText(q.passage, margin, y, maxLineWidth, 12, 'normal');
+                    if (i === 0 || q.passage !== lastPassage) {
+                        passageCount++;
+                        lastPassage = q.passage;
+                        y = await addWrappedText(`Passage ${passageCount}:`, margin, y, maxLineWidth, 13, 'bold');
+                        y = await addWrappedText(q.passage, margin, y, maxLineWidth, 12, 'normal');
                         y += 5;
                     }
                     // Question
-                    y = addWrappedText(`Q${i + 1}. ${q.question}`, margin, y, maxLineWidth, 13, 'bold');
+                    y = await addWrappedText(`Q${i + 1}. ${q.question}`, margin, y, maxLineWidth, 13, 'bold');
                     // Options
-                    q.options.forEach((opt, idx) => {
-                        y = addWrappedText(`   ${String.fromCharCode(65 + idx)}. ${opt}`, margin + 10, y, maxLineWidth - 10, 12, 'normal');
-                    });
+                    for (let idx = 0; idx < q.options.length; idx++) {
+                        y = await addWrappedText(`   ${String.fromCharCode(65 + idx)}. ${q.options[idx]}`, margin + 10, y, maxLineWidth - 10, 12, 'normal');
+                    }
                     y += 5;
                     // Page break if needed
                     if (y > pageHeight - margin - 60) {
@@ -907,25 +935,23 @@
                 // Answer Key Section
                 doc.addPage();
                 await addWatermark(doc);
-                y = margin + 10;
-                addHeader(doc, y);
-                y += 40;
+                addHeader(doc, margin);
+                y = margin + 60;
                 doc.setFont('helvetica', 'bold');
                 doc.setFontSize(15);
                 doc.text('Answer Key', pageWidth / 2, y, { align: 'center' });
                 y += 20;
                 doc.setFont('helvetica', 'normal');
                 doc.setFontSize(12);
-                currentTest.forEach((q, idx) => {
-                    // Always use the 'correct' field from the question object
+                for (let idx = 0; idx < currentTest.length; idx++) {
+                    const q = currentTest[idx];
                     const correctLetter = String.fromCharCode(65 + (typeof q.correct === 'number' ? q.correct : 0));
-                    y = addWrappedText(`Q${idx + 1}: ${correctLetter}`, margin, y, maxLineWidth, 12, 'normal');
-                });
-                // Add watermark and footer to all pages
+                    y = await addWrappedText(`Q${idx + 1}: ${correctLetter}`, margin, y, maxLineWidth, 12, 'normal');
+                }
+                // Add footer to all pages (no watermark here)
                 const totalPages = doc.internal.getNumberOfPages();
                 for (let i = 1; i <= totalPages; i++) {
                     doc.setPage(i);
-                    // Watermark already added at page creation
                     addFooter(doc);
                 }
                 const fileName = `CLAT_${testMetadata.sectionName}_${testMetadata.subcategoryName}_${new Date().toISOString().split('T')[0]}.pdf`;

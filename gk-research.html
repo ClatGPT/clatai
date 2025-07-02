@@ -608,48 +608,25 @@
             </header>
 
             <div class="content-area">
-                <!-- Chat Section -->
-                <div class="chat-section">
-                    <div class="chat-messages" id="chatMessages">
-                        <div class="welcome-message">
-                            <div class="welcome-title">Welcome to GK Research! 🎯</div>
-                            <p>I can generate CLAT-style GK passages with challenging MCQs on any topic. <br>Ask about current affairs, or request passages on specific subjects!</p>
-                        </div>
-                    </div>
-
-                    <div class="typing-indicator" id="typingIndicator">
-                        <div class="typing-dots">
-                            <div class="typing-dot"></div>
-                            <div class="typing-dot"></div>
-                            <div class="typing-dot"></div>
-                        </div>
-                    </div>
-
-                    <div class="chat-input-container">
-                        <div class="chat-input-wrapper">
-                            <textarea 
-                                class="chat-input" 
-                                id="chatInput" 
-                                placeholder="Ask for GK passages, current affairs, or any topic..."
-                                rows="1"
-                            ></textarea>
-                            <button class="send-button" id="sendButton" onclick="sendMessage()">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <line x1="22" y1="2" x2="11" y2="13"></line>
-                                    <polygon points="22,2 15,22 11,13 2,9"></polygon>
-                                </svg>
-                            </button>
-                        </div>
+                <!-- Centered Google Search Bar in Main Area -->
+                <div class="google-search-center" style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; background: #181818;">
+                    <form action="https://www.google.com/search" method="GET" target="_blank" style="width: 100%; max-width: 500px; display: flex; align-items: center; gap: 12px;">
+                        <input type="text" name="q" placeholder="Search Google..." style="flex: 1; padding: 18px 24px; font-size: 20px; border-radius: 32px; border: none; outline: none; background: #222; color: #fff; box-shadow: 0 2px 16px rgba(0,0,0,0.2);" onkeydown="if(event.key==='Enter'){this.form.submit();}">
+                        <button type="submit" style="padding: 0 20px; height: 48px; border-radius: 50%; border: none; background: #4285f4; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>
+                        </button>
+                    </form>
+                    <div style="margin-top: 18px; color: #bbb; font-size: 16px; text-align: center; max-width: 420px;">
+                        <b>Our full GK feature is launching soon.</b><br>Until then, stay curious, keep learning, and explore using the search bar below.
                     </div>
                 </div>
-
                 <!-- Sidebar Panel -->
                 <div class="sidebar-panel">
                     <!-- Practice and Resources Section -->
                     <div class="panel-section">
                         <!-- Discord Redirect Button -->
                         <div class="discord-section">
-                            <button class="discord-btn" onclick="window.open('https://discord.com/channels/1172163555810881616/1318350879753240678', '_blank')"><span class="btn-icon">💬</span><span class="btn-text">Get Latest Newspapers on Discord</span></button>
+                            <button class="discord-btn" onclick="window.open('https://discord.gg/63WcH73DH2', '_blank')"><span class="btn-icon">💬</span><span class="btn-text">Get Latest Newspapers on Discord</span></button>
                         </div>
                         
                         <!-- Practice GK Online Button -->

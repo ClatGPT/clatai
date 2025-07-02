@@ -221,340 +221,257 @@ IMPORTANT: Output must be directly readable text, NOT code. Generate content tha
 
 # Fixed Sectional Test Generator Prompts with consistent formatting and answer key generation
 SECTIONAL_PROMPTS = {
-    "Reading Comprehension": """
-You are a CLAT Reading Comprehension test generator.
-Generate a passage of exactly 650 words in a formal academic tone.
-The passage should contain logical arguments, assumptions, and analytical content.
-DO NOT include any formatting symbols like #, *, or backslashes.
+    "Legal Reasoning": '''
+Write a 600–700 word CLAT-style legal passage (no facts), followed by six 300+ word MCQs with complex, layered fact-scenarios and only one correct answer per question, all based solely on the passage's principle(s). Include expert answer keys (150–200 words each), breaking down each option's logic as in a masterclass.
 
-Create 5 multiple-choice questions (numbered 1 to 5).
-Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
-
-After each question, include:
-Answer: (correct option)
-Explanation: detailed explanation of why it is correct (minimum 50 words).
-
-Structure:
-1. Question text here?
-(A) Option 1 text
-(B) Option 2 text
-(C) Option 3 text
-(D) Option 4 text
-Answer: (C)
-Explanation: Detailed explanation text here explaining the reasoning step by step.
-
-Follow this format exactly. Do not include any other headings or formatting symbols.
-
-IMPORTANT: After all 5 questions, add a clean answer key section:
-
-**ANSWER KEY**
-1. (C)
-2. (B)
-3. (A)
-4. (D)
-5. (C)
-""",
-    
-    "Grammar": """
-You are a CLAT English Grammar test generator.
-Generate a passage of EXACTLY 300-400 words with grammatical concepts and examples.
-DO NOT include any formatting symbols like #, *, or backslashes.
-
-Then add the heading: **MCQs**
-
-Create 5 multiple-choice questions (numbered 1 to 5) testing grammar rules.
-Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
-
-After each question, include:
-Answer: (correct option)
-Explanation: detailed explanation of the grammar rule (minimum 50 words).
-
-Structure:
-1. Question text here?
-(A) Option 1 text
-(B) Option 2 text
-(C) Option 3 text
-(D) Option 4 text
+STRICT OUTPUT FORMAT FOR EACH MCQ (MANDATORY):
+Each MCQ must be in the following format, with each option on its own line and labeled (A), (B), (C), (D). Do NOT put options inline or in parentheses. Do NOT use A. or (A) in the same line as the question. The answer must be on a separate line as Answer: (X). Example:
+Question 1:
+What is ...?
+(A) Option 1
+(B) Option 2
+(C) Option 3
+(D) Option 4
 Answer: (B)
-Explanation: Detailed explanation text here explaining the grammar rule step by step.
+Explanation: ...
 
-Follow this format exactly.
+Do not put the answer only in the explanation. Do not use 'Expert Explanation:' or other headings. Do not put the answer in prose. The answer must be on a separate line as shown above.
 
-IMPORTANT: After all 5 questions, add a clean answer key section:
+IMPORTANT: The passage must be at least 650 words. If it is less, continue writing until the word count is met. Do NOT summarize or cut short. Do NOT include the MCQs until the passage is complete. After the passage, print the word count in square brackets as [Word Count: NNN] before the MCQs.
+''',
+    "English RC – Main Idea": '''
+Write a 600–700 word CLAT-style English passage (literary/philosophical/reflective), followed by six 75–100 word MCQs testing only the central idea, each with 4 subtly distinct options and expert answer keys (150–200 words each) explaining all choices.
 
-**ANSWER KEY**
-1. (B)
-2. (A)
-3. (C)
-4. (D)
-5. (B)
-""",
-    
-    "Vocabulary": """
-You are a CLAT Vocabulary test generator.
-Generate a passage of EXACTLY 300-400 words with advanced vocabulary words in context.
-DO NOT include any formatting symbols like #, *, or backslashes.
-
-Then add the heading: **MCQs**
-
-Create 5 multiple-choice questions (numbered 1 to 5) testing vocabulary and word meanings.
-Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
-
-After each question, include:
-Answer: (correct option)
-Explanation: detailed explanation of the word meaning (minimum 50 words).
-
-Structure:
-1. Question text here?
-(A) Option 1 text
-(B) Option 2 text
-(C) Option 3 text
-(D) Option 4 text
-Answer: (A)
-Explanation: Detailed explanation text here explaining the word meaning step by step.
-
-Follow this format exactly.
-
-IMPORTANT: After all 5 questions, add a clean answer key section:
-
-**ANSWER KEY**
-1. (A)
-2. (C)
-3. (B)
-4. (D)
-5. (A)
-""",
-    
-    "Para Jumbles": """
-You are a CLAT Para Jumbles test generator.
-Generate a passage of EXACTLY 300-400 words explaining para jumble concepts and provide examples.
-DO NOT include any formatting symbols like #, *, or backslashes.
-
-Then add the heading: **MCQs**
-
-Create 5 multiple-choice questions (numbered 1 to 5) with para jumble exercises.
-Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
-
-After each question, include:
-Answer: (correct option)
-Explanation: detailed explanation of the correct sequence (minimum 50 words).
-
-Structure:
-1. Question text here?
-(A) Option 1 text
-(B) Option 2 text
-(C) Option 3 text
-(D) Option 4 text
-Answer: (D)
-Explanation: Detailed explanation text here explaining the correct sequence step by step.
-
-Follow this format exactly.
-
-IMPORTANT: After all 5 questions, add a clean answer key section:
-
-**ANSWER KEY**
-1. (D)
-2. (A)
-3. (C)
-4. (B)
-5. (D)
-""",
-    
-    "Critical Reasoning": """
-You are a CLAT Critical Reasoning test generator.
-Generate a passage of exactly 650 words with logical arguments and reasoning scenarios.
-DO NOT include any formatting symbols like #, *, or backslashes.
-
-Create 5 multiple-choice questions (numbered 1 to 5) testing critical reasoning skills.
-Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
-
-After each question, include:
-Answer: (correct option)
-Explanation: detailed explanation of the reasoning (minimum 50 words).
-
-Structure:
-1. Question text here?
-(A) Option 1 text
-(B) Option 2 text
-(C) Option 3 text
-(D) Option 4 text
-Answer: (C)
-Explanation: Detailed explanation text here explaining the reasoning step by step.
-
-Follow this format exactly.
-
-IMPORTANT: After all 5 questions, add a clean answer key section:
-
-**ANSWER KEY**
-1. (C)
-2. (A)
-3. (B)
-4. (D)
-5. (C)
-""",
-    
-    "Logical Reasoning": """
-You are a CLAT Logical Reasoning test generator.
-Generate a passage of exactly 650 words with logical scenarios and reasoning problems.
-DO NOT include any formatting symbols like #, *, or backslashes.
-
-Create 5 multiple-choice questions (numbered 1 to 5) testing logical reasoning.
-Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
-
-After each question, include:
-Answer: (correct option)
-Explanation: detailed explanation of the logic (minimum 50 words).
-
-Structure:
-1. Question text here?
-(A) Option 1 text
-(B) Option 2 text
-(C) Option 3 text
-(D) Option 4 text
-Answer: (A)
-Explanation: Detailed explanation text here explaining the logic step by step.
-
-Follow this format exactly.
-
-IMPORTANT: After all 5 questions, add a clean answer key section:
-
-**ANSWER KEY**
-1. (A)
-2. (B)
-3. (C)
-4. (D)
-5. (A)
-""",
-    
-    "Legal Reasoning": """
-You are a CLAT Legal Reasoning test generator.
-Generate a passage of exactly 650 words with legal scenarios and principles.
-DO NOT include any formatting symbols like #, *, or backslashes.
-
-Create 5 multiple-choice questions (numbered 1 to 5) testing legal reasoning.
-Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
-
-After each question, include:
-Answer: (correct option)
-Explanation: detailed explanation of the legal principle (minimum 50 words).
-
-Structure:
-1. Question text here?
-(A) Option 1 text
-(B) Option 2 text
-(C) Option 3 text
-(D) Option 4 text
+STRICT OUTPUT FORMAT FOR EACH MCQ (MANDATORY):
+Each MCQ must be in the following format, with each option on its own line and labeled (A), (B), (C), (D). Do NOT put options inline or in parentheses. Do NOT use A. or (A) in the same line as the question. The answer must be on a separate line as Answer: (X). Example:
+Question 1:
+What is ...?
+(A) Option 1
+(B) Option 2
+(C) Option 3
+(D) Option 4
 Answer: (B)
-Explanation: Detailed explanation text here explaining the legal principle step by step.
+Explanation: ...
 
-Follow this format exactly.
+Do not put the answer only in the explanation. Do not use 'Expert Explanation:' or other headings. Do not put the answer in prose. The answer must be on a separate line as shown above.
 
-IMPORTANT: After all 5 questions, add a clean answer key section:
+IMPORTANT: The passage must be at least 650 words. If it is less, continue writing until the word count is met. Do NOT summarize or cut short. Do NOT include the MCQs until the passage is complete. After the passage, print the word count in square brackets as [Word Count: NNN] before the MCQs.
+''',
+    "English RC – Vocabulary-in-Context": '''
+Generate a 600–700 word literary CLAT-style passage with rich, layered vocabulary, followed by six 75–100 word MCQs testing contextual meaning of specific words/phrases, each with 4 closely matched options and 150–200 word expert explanations.
 
-**ANSWER KEY**
-1. (B)
-2. (A)
-3. (C)
-4. (D)
-5. (B)
+STRICT OUTPUT FORMAT FOR EACH MCQ (MANDATORY):
+Each MCQ must be in the following format, with each option on its own line and labeled (A), (B), (C), (D). Do NOT put options inline or in parentheses. Do NOT use A. or (A) in the same line as the question. The answer must be on a separate line as Answer: (X). Example:
+Question 1:
+What is ...?
+(A) Option 1
+(B) Option 2
+(C) Option 3
+(D) Option 4
+Answer: (B)
+Explanation: ...
+
+Do not put the answer only in the explanation. Do not use 'Expert Explanation:' or other headings. Do not put the answer in prose. The answer must be on a separate line as shown above.
+
+IMPORTANT: The passage must be at least 650 words. If it is less, continue writing until the word count is met. Do NOT summarize or cut short. Do NOT include the MCQs until the passage is complete. After the passage, print the word count in square brackets as [Word Count: NNN] before the MCQs.
+''',
+    "English RC – Literary/Poetic Devices": '''
+Write a 600–700 word CLAT-style literary passage dense with at least 6 poetic/literary devices, followed by six 75–100 word MCQs identifying or interpreting these devices, with expert 150–200 word answer keys explaining all four options.
+
+STRICT OUTPUT FORMAT FOR EACH MCQ (MANDATORY):
+Each MCQ must be in the following format, with each option on its own line and labeled (A), (B), (C), (D). Do NOT put options inline or in parentheses. Do NOT use A. or (A) in the same line as the question. The answer must be on a separate line as Answer: (X). Example:
+Question 1:
+What is ...?
+(A) Option 1
+(B) Option 2
+(C) Option 3
+(D) Option 4
+Answer: (B)
+Explanation: ...
+
+Do not put the answer only in the explanation. Do not use 'Expert Explanation:' or other headings. Do not put the answer in prose. The answer must be on a separate line as shown above.
+
+IMPORTANT: The passage must be at least 650 words. If it is less, continue writing until the word count is met. Do NOT summarize or cut short. Do NOT include the MCQs until the passage is complete. After the passage, print the word count in square brackets as [Word Count: NNN] before the MCQs.
+''',
+    "English RC – Author-Based": '''
+Write a 600–700 word CLAT-style passage with a strong authorial voice, followed by six 75–100 word MCQs testing what the author would agree/disagree with, each with 4 nuanced options and expert 150–200 word explanations analyzing all choices.
+
+STRICT OUTPUT FORMAT FOR EACH MCQ (MANDATORY):
+Each MCQ must be in the following format, with each option on its own line and labeled (A), (B), (C), (D). Do NOT put options inline or in parentheses. Do NOT use A. or (A) in the same line as the question. The answer must be on a separate line as Answer: (X). Example:
+Question 1:
+What is ...?
+(A) Option 1
+(B) Option 2
+(C) Option 3
+(D) Option 4
+Answer: (B)
+Explanation: ...
+
+Do not put the answer only in the explanation. Do not use 'Expert Explanation:' or other headings. Do not put the answer in prose. The answer must be on a separate line as shown above.
+
+IMPORTANT: The passage must be at least 650 words. If it is less, continue writing until the word count is met. Do NOT summarize or cut short. Do NOT include the MCQs until the passage is complete. After the passage, print the word count in square brackets as [Word Count: NNN] before the MCQs.
+''',
+    "English RC – Source-Based": '''
+Write a 600–700 word CLAT-style passage with subtle genre markers, followed by six 75–100 word MCQs testing source identification through tone, style, and structure, each with 4 close options and expert 150–200 word explanations.
+
+STRICT OUTPUT FORMAT FOR EACH MCQ (MANDATORY):
+Each MCQ must be in the following format, with each option on its own line and labeled (A), (B), (C), (D). Do NOT put options inline or in parentheses. Do NOT use A. or (A) in the same line as the question. The answer must be on a separate line as Answer: (X). Example:
+Question 1:
+What is ...?
+(A) Option 1
+(B) Option 2
+(C) Option 3
+(D) Option 4
+Answer: (B)
+Explanation: ...
+
+Do not put the answer only in the explanation. Do not use 'Expert Explanation:' or other headings. Do not put the answer in prose. The answer must be on a separate line as shown above.
+
+IMPORTANT: The passage must be at least 650 words. If it is less, continue writing until the word count is met. Do NOT summarize or cut short. Do NOT include the MCQs until the passage is complete. After the passage, print the word count in square brackets as [Word Count: NNN] before the MCQs.
+''',
+    "English RC – Title & Theme": '''
+Write a 600–700 word CLAT-style reflective passage, followed by six 75–100 word MCQs testing best title or theme, each with 4 nuanced options and expert 150–200 word answer keys explaining why one fits and others fail tonally or conceptually.
+
+STRICT OUTPUT FORMAT FOR EACH MCQ (MANDATORY):
+Each MCQ must be in the following format, with each option on its own line and labeled (A), (B), (C), (D). Do NOT put options inline or in parentheses. Do NOT use A. or (A) in the same line as the question. The answer must be on a separate line as Answer: (X). Example:
+Question 1:
+What is ...?
+(A) Option 1
+(B) Option 2
+(C) Option 3
+(D) Option 4
+Answer: (B)
+Explanation: ...
+
+Do not put the answer only in the explanation. Do not use 'Expert Explanation:' or other headings. Do not put the answer in prose. The answer must be on a separate line as shown above.
+
+IMPORTANT: The passage must be at least 650 words. If it is less, continue writing until the word count is met. Do NOT summarize or cut short. Do NOT include the MCQs until the passage is complete. After the passage, print the word count in square brackets as [Word Count: NNN] before the MCQs.
+''',
+    "English RC – Direct Inference": '''
+Write a 600–700 word CLAT-style reflective passage, followed by six 75–100 word MCQs testing direct inference from specific lines or ideas, with 4 close options per question and expert 150–200 word answer keys dissecting all choices.
+
+STRICT OUTPUT FORMAT FOR EACH MCQ (MANDATORY):
+Each MCQ must be in the following format, with each option on its own line and labeled (A), (B), (C), (D). Do NOT put options inline or in parentheses. Do NOT use A. or (A) in the same line as the question. The answer must be on a separate line as Answer: (X). Example:
+Question 1:
+What is ...?
+(A) Option 1
+(B) Option 2
+(C) Option 3
+(D) Option 4
+Answer: (B)
+Explanation: ...
+
+Do not put the answer only in the explanation. Do not use 'Expert Explanation:' or other headings. Do not put the answer in prose. The answer must be on a separate line as shown above.
+
+IMPORTANT: The passage must be at least 650 words. If it is less, continue writing until the word count is met. Do NOT summarize or cut short. Do NOT include the MCQs until the passage is complete. After the passage, print the word count in square brackets as [Word Count: NNN] before the MCQs.
+''',
+    "English RC – Assumption & Inference": '''
+Write a 600–700 word CLAT-style interpretive passage, followed by six 75–100 word MCQs testing unstated assumptions and logical inferences, each with 4 subtle options and 150–200 word expert answer keys breaking down all answer choices.
+
+STRICT OUTPUT FORMAT FOR EACH MCQ (MANDATORY):
+Each MCQ must be in the following format, with each option on its own line and labeled (A), (B), (C), (D). Do NOT put options inline or in parentheses. Do NOT use A. or (A) in the same line as the question. The answer must be on a separate line as Answer: (X). Example:
+Question 1:
+What is ...?
+(A) Option 1
+(B) Option 2
+(C) Option 3
+(D) Option 4
+Answer: (B)
+Explanation: ...
+
+Do not put the answer only in the explanation. Do not use 'Expert Explanation:' or other headings. Do not put the answer in prose. The answer must be on a separate line as shown above.
+
+IMPORTANT: The passage must be at least 650 words. If it is less, continue writing until the word count is met. Do NOT summarize or cut short. Do NOT include the MCQs until the passage is complete. After the passage, print the word count in square brackets as [Word Count: NNN] before the MCQs.
+''',
+    "English RC – Idioms & Miscellaneous": '''
+Write a 600–700 word CLAT-style narrative or figurative passage with at least 6 idioms or expressive phrases, followed by six 75–100 word MCQs testing idiom meaning in context, with expert 150–200 word answer keys explaining all four options.
+
+STRICT OUTPUT FORMAT FOR EACH MCQ (MANDATORY):
+Each MCQ must be in the following format, with each option on its own line and labeled (A), (B), (C), (D). Do NOT put options inline or in parentheses. Do NOT use A. or (A) in the same line as the question. The answer must be on a separate line as Answer: (X). Example:
+Question 1:
+What is ...?
+(A) Option 1
+(B) Option 2
+(C) Option 3
+(D) Option 4
+Answer: (B)
+Explanation: ...
+
+Do not put the answer only in the explanation. Do not use 'Expert Explanation:' or other headings. Do not put the answer in prose. The answer must be on a separate line as shown above.
+
+IMPORTANT: The passage must be at least 650 words. If it is less, continue writing until the word count is met. Do NOT summarize or cut short. Do NOT include the MCQs until the passage is complete. After the passage, print the word count in square brackets as [Word Count: NNN] before the MCQs.
+''',
+    "Quantitative Techniques (QT)": '''
+Write a 7–10 sentence CLAT-style Quantitative Aptitude passage with accurate, relevant data, followed by six data-based MCQs (1 correct option each), and a detailed solution-based answer key with clear calculations and reasoning for every question.
+
+STRICT OUTPUT FORMAT FOR EACH MCQ (MANDATORY):
+Each MCQ must be in the following format, with each option on its own line and labeled (A), (B), (C), (D). Do NOT put options inline or in parentheses. Do NOT use A. or (A) in the same line as the question. The answer must be on a separate line as Answer: (X). Example:
+Question 1:
+What is ...?
+(A) Option 1
+(B) Option 2
+(C) Option 3
+(D) Option 4
+Answer: (B)
+Explanation: ...
+
+Do not put the answer only in the explanation. Do not use 'Expert Explanation:' or other headings. Do not put the answer in prose. The answer must be on a separate line as shown above.
+''',
+    "GK & Current Affairs": '''
+Write a 600–750 word CLAT-style GK passage offering only background context (no answers), followed by five factual MCQs testing external GK memory, with close options and a clean numbered answer key (no explanations).
+Generate one 600–750 word background-only GK passage (numbered inline, formal tone like Indian Express Explained) followed by five ultra-difficult, purely fact-based MCQs (1.1–1.5) with only one correct option each. Questions must not be directly answerable from the passage but use it as conceptual context. End with a clean answer key — no explanations.
+
+STRICT OUTPUT FORMAT FOR EACH MCQ (MANDATORY):
+Each MCQ must be in the following format, with each option on its own line and labeled (A), (B), (C), (D). Do NOT put options inline or in parentheses. Do NOT use A. or (A) in the same line as the question. The answer must be on a separate line as Answer: (X). Example:
+Question 1:
+What is ...?
+(A) Option 1
+(B) Option 2
+(C) Option 3
+(D) Option 4
+Answer: (B)
+Explanation: ...
+
+Do not put the answer only in the explanation. Do not use 'Expert Explanation:' or other headings. Do not put the answer in prose. The answer must be on a separate line as shown above.
+
+IMPORTANT: The passage must be at least 650 words. If it is less, continue writing until the word count is met. Do NOT summarize or cut short. Do NOT include the MCQs until the passage is complete. After the passage, print the word count in square brackets as [Word Count: NNN] before the MCQs.
+''',
+    "Logical Reasoning – General Prompt": """
+Write a 500–650 word CLAT-style Logical Reasoning passage on a complex public issue, followed by six 75–100 word ultra-difficult MCQs (A–D) testing logical analysis, and a 150–200 word expert answer key per question explaining all options.
 """,
-    
-    "Quantitative Analysis": """
-You are a CLAT Quantitative Analysis test generator.
-Generate a passage of EXACTLY 300-400 words with mathematical concepts and problems.
-DO NOT include any formatting symbols like #, *, or backslashes.
-
-Then add the heading: **MCQs**
-
-Create 5 multiple-choice questions (numbered 1 to 5) testing quantitative skills.
-Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
-
-After each question, include:
-Answer: (correct option)
-Explanation: detailed explanation of the calculation (minimum 50 words).
-
-Structure:
-1. Question text here?
-(A) Option 1 text
-(B) Option 2 text
-(C) Option 3 text
-(D) Option 4 text
-Answer: (C)
-Explanation: Detailed explanation text here explaining the calculation step by step.
-
-Follow this format exactly.
-
-IMPORTANT: After all 5 questions, add a clean answer key section:
-
-**ANSWER KEY**
-1. (C)
-2. (A)
-3. (B)
-4. (D)
-5. (C)
+    "Logical Reasoning – Assumptions": """
+Write a 500–650 word CLAT-style Logical Reasoning passage with multiple unstated assumptions, followed by six 75–100 word MCQs testing only implicit premises, each with 4 close options and 150–200 word expert answer keys explaining the logic behind all choices.
 """,
-    
-    "General Knowledge": """
-You are a CLAT General Knowledge test generator.
-Generate a passage of exactly 650 words with current affairs and static GK topics.
-DO NOT include any formatting symbols like #, *, or backslashes.
-
-Create 5 multiple-choice questions (numbered 1 to 5) testing general knowledge.
-Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
-
-After each question, include:
-Answer: (correct option)
-Explanation: detailed explanation of the fact or concept (minimum 50 words).
-
-Structure:
-1. Question text here?
-(A) Option 1 text
-(B) Option 2 text
-(C) Option 3 text
-(D) Option 4 text
-Answer: (A)
-Explanation: Detailed explanation text here explaining the fact or concept step by step.
-
-Follow this format exactly.
-
-IMPORTANT: After all 5 questions, add a clean answer key section:
-
-**ANSWER KEY**
-1. (A)
-2. (B)
-3. (C)
-4. (D)
-5. (A)
+    "Logical Reasoning – Inferences": """
+Write a 500–650 word CLAT-style Logical Reasoning passage with multiple inferable statements, followed by six 75–100 word MCQs testing only what logically follows, each with 4 close options and 150–200 word expert answer keys showing why only one is entailed.
 """,
-    
-    # Add specific topic prompts for quantitative
+    "Logical Reasoning – Agree/Disagree": """
+Write a 500–650 word CLAT-style Logical Reasoning passage with a clear but nuanced authorial stance, followed by six 75–100 word MCQs testing alignment or contradiction with the author's view, and 150–200 word expert answer keys explaining all options.
+""",
+    "Logical Reasoning – Argument-Based": """
+Write a 500–650 word CLAT-style Logical Reasoning passage presenting a nuanced argument, followed by six 75–100 word MCQs testing argument structure, flaws, and reasoning logic, each with 4 close options and 150–200 word expert answer keys explaining all choices.
+""",
+    "Logical Reasoning – Strengthen & Weaken": """
+Write a 500–650 word CLAT-style Logical Reasoning passage with a central argument and support structure, followed by six 75–100 word MCQs testing the logical effect of new info on the argument, and 150–200 word expert answer keys for all options.
+""",
+    "Logical Reasoning – Direct Inference": """
+Write a 500–650 word CLAT-style Logical Reasoning passage with dense, precise factual and value statements, followed by six 75–100 word MCQs testing only what is explicitly supported by the text, with 150–200 word expert explanations for all four options.
+""",
+    "Logical Reasoning – Analogy & Sequence": """
+Write a 500–650 word CLAT-style Logical Reasoning passage using conceptual patterns or models, followed by six 75–100 word MCQs testing logical sequences or structural analogies, with 150–200 word expert explanations comparing all answer choices.
+""",
+    "Logical Reasoning – Paradox & Contradictions": """
+Write a 500–650 word CLAT-style Logical Reasoning passage presenting a deep contradiction or paradox, followed by six 75–100 word MCQs each asking for a resolution, with 150–200 word expert answer keys explaining the logic and flaws in all options.
+""",
     "Percentages": """
-You are a CLAT Percentages test generator.
-Generate a passage of EXACTLY 300-400 words with percentage-based problems and concepts.
-DO NOT include any formatting symbols like #, *, or backslashes.
-
-Then add the heading: **MCQs**
-
-Create 5 multiple-choice questions (numbered 1 to 5) testing percentage calculations.
-Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
-
-After each question, include:
-Answer: (correct option)
-Explanation: detailed explanation of the percentage calculation (minimum 50 words).
-
-Structure:
-1. Question text here?
-(A) Option 1 text
-(B) Option 2 text
-(C) Option 3 text
-(D) Option 4 text
+Write a 7–10 sentence CLAT-style Quantitative Aptitude passage focused on percentage calculations, followed by 5 MCQs (numbered 1 to 5), each with 4 options (A)-(D), only one correct. After all questions, provide a clean answer key (no explanations). Format:
+1. Question text?
+(A) Option 1
+(B) Option 2
+(C) Option 3
+(D) Option 4
 Answer: (B)
-Explanation: Detailed explanation text here explaining the percentage calculation step by step.
-
-Follow this format exactly.
-
-IMPORTANT: After all 5 questions, add a clean answer key section:
-
+... (repeat for 5 questions)
 **ANSWER KEY**
 1. (B)
 2. (A)
@@ -562,34 +479,15 @@ IMPORTANT: After all 5 questions, add a clean answer key section:
 4. (D)
 5. (B)
 """,
-    
     "Arithmetic": """
-You are a CLAT Arithmetic test generator.
-Generate a passage of EXACTLY 300-400 words with arithmetic problems and concepts.
-DO NOT include any formatting symbols like #, *, or backslashes.
-
-Then add the heading: **MCQs**
-
-Create 5 multiple-choice questions (numbered 1 to 5) testing arithmetic skills.
-Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
-
-After each question, include:
-Answer: (correct option)
-Explanation: detailed explanation of the arithmetic calculation (minimum 50 words).
-
-Structure:
-1. Question text here?
-(A) Option 1 text
-(B) Option 2 text
-(C) Option 3 text
-(D) Option 4 text
+Write a 7–10 sentence CLAT-style Quantitative Aptitude passage focused on arithmetic concepts, followed by 5 MCQs (numbered 1 to 5), each with 4 options (A)-(D), only one correct. After all questions, provide a clean answer key (no explanations). Format:
+1. Question text?
+(A) Option 1
+(B) Option 2
+(C) Option 3
+(D) Option 4
 Answer: (C)
-Explanation: Detailed explanation text here explaining the arithmetic calculation step by step.
-
-Follow this format exactly.
-
-IMPORTANT: After all 5 questions, add a clean answer key section:
-
+... (repeat for 5 questions)
 **ANSWER KEY**
 1. (C)
 2. (A)
@@ -597,34 +495,15 @@ IMPORTANT: After all 5 questions, add a clean answer key section:
 4. (D)
 5. (C)
 """,
-    
     "Profit & Loss": """
-You are a CLAT Profit & Loss test generator.
-Generate a passage of EXACTLY 300-400 words with profit and loss problems and concepts.
-DO NOT include any formatting symbols like #, *, or backslashes.
-
-Then add the heading: **MCQs**
-
-Create 5 multiple-choice questions (numbered 1 to 5) testing profit and loss calculations.
-Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
-
-After each question, include:
-Answer: (correct option)
-Explanation: detailed explanation of the profit/loss calculation (minimum 50 words).
-
-Structure:
-1. Question text here?
-(A) Option 1 text
-(B) Option 2 text
-(C) Option 3 text
-(D) Option 4 text
+Write a 7–10 sentence CLAT-style Quantitative Aptitude passage focused on profit and loss, followed by 5 MCQs (numbered 1 to 5), each with 4 options (A)-(D), only one correct. After all questions, provide a clean answer key (no explanations). Format:
+1. Question text?
+(A) Option 1
+(B) Option 2
+(C) Option 3
+(D) Option 4
 Answer: (A)
-Explanation: Detailed explanation text here explaining the profit/loss calculation step by step.
-
-Follow this format exactly.
-
-IMPORTANT: After all 5 questions, add a clean answer key section:
-
+... (repeat for 5 questions)
 **ANSWER KEY**
 1. (A)
 2. (B)
@@ -632,34 +511,15 @@ IMPORTANT: After all 5 questions, add a clean answer key section:
 4. (D)
 5. (A)
 """,
-    
     "Geometry": """
-You are a CLAT Geometry test generator.
-Generate a passage of EXACTLY 300-400 words with geometry problems and concepts.
-DO NOT include any formatting symbols like #, *, or backslashes.
-
-Then add the heading: **MCQs**
-
-Create 5 multiple-choice questions (numbered 1 to 5) testing geometry skills.
-Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
-
-After each question, include:
-Answer: (correct option)
-Explanation: detailed explanation of the geometry calculation (minimum 50 words).
-
-Structure:
-1. Question text here?
-(A) Option 1 text
-(B) Option 2 text
-(C) Option 3 text
-(D) Option 4 text
+Write a 7–10 sentence CLAT-style Quantitative Aptitude passage focused on geometry, followed by 5 MCQs (numbered 1 to 5), each with 4 options (A)-(D), only one correct. After all questions, provide a clean answer key (no explanations). Format:
+1. Question text?
+(A) Option 1
+(B) Option 2
+(C) Option 3
+(D) Option 4
 Answer: (B)
-Explanation: Detailed explanation text here explaining the geometry calculation step by step.
-
-Follow this format exactly.
-
-IMPORTANT: After all 5 questions, add a clean answer key section:
-
+... (repeat for 5 questions)
 **ANSWER KEY**
 1. (B)
 2. (A)
@@ -668,52 +528,38 @@ IMPORTANT: After all 5 questions, add a clean answer key section:
 5. (B)
 """,
     "Averages": """
-You are a CLAT Averages test generator.
-Generate a passage of EXACTLY 300-400 words with average-based problems and concepts.
-DO NOT include any formatting symbols like #, *, or backslashes.
-
-Then add the heading: **MCQs**
-
-Create 5 multiple-choice questions (numbered 1 to 5) testing average calculations.
-Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
-
-After each question, include:
-Answer: (correct option)
-Explanation: detailed explanation of the average calculation (minimum 50 words).
-
-Structure:
-1. Question text here?
-(A) Option 1 text
-(B) Option 2 text
-(C) Option 3 text
-(D) Option 4 text
+Write a 7–10 sentence CLAT-style Quantitative Aptitude passage focused on averages, followed by 5 MCQs (numbered 1 to 5), each with 4 options (A)-(D), only one correct. After all questions, provide a clean answer key (no explanations). Format:
+1. Question text?
+(A) Option 1
+(B) Option 2
+(C) Option 3
+(D) Option 4
 Answer: (B)
-Explanation: Detailed explanation text here explaining the average calculation step by step.
-
-Follow this format exactly.
-
-IMPORTANT: After all 5 questions, add a clean answer key section:
-
+... (repeat for 5 questions)
 **ANSWER KEY**
 1. (B)
 2. (A)
 3. (C)
 4. (D)
 5. (B)
-"""
+""",
+    "Data Interpretation": """
+Write a 7–10 sentence CLAT-style Quantitative Aptitude passage focused on data interpretation (tables, charts, graphs), followed by 5 MCQs (numbered 1 to 5), each with 4 options (A)-(D), only one correct. After all questions, provide a clean answer key (no explanations). Format:
+1. Question text?
+(A) Option 1
+(B) Option 2
+(C) Option 3
+(D) Option 4
+Answer: (A)
+... (repeat for 5 questions)
+**ANSWER KEY**
+1. (A)
+2. (B)
+3. (C)
+4. (D)
+5. (A)
+""",
 }
-
-# Ensure SECTIONAL_PROMPTS has all mapped topics (add stubs if missing)
-if "Data Interpretation" not in SECTIONAL_PROMPTS:
-    SECTIONAL_PROMPTS["Data Interpretation"] = """You are a CLAT Data Interpretation test generator. Generate a passage of 300-400 words with tables, charts, or graphs, and 5 MCQs. Each question should have 4 options. Provide a clean answer key at the end."""
-if "Arithmetic" not in SECTIONAL_PROMPTS:
-    SECTIONAL_PROMPTS["Arithmetic"] = SECTIONAL_PROMPTS["Percentages"]
-if "Profit & Loss" not in SECTIONAL_PROMPTS:
-    SECTIONAL_PROMPTS["Profit & Loss"] = SECTIONAL_PROMPTS["Percentages"]
-if "Geometry" not in SECTIONAL_PROMPTS:
-    SECTIONAL_PROMPTS["Geometry"] = SECTIONAL_PROMPTS["Percentages"]
-if "Averages" not in SECTIONAL_PROMPTS:
-    SECTIONAL_PROMPTS["Averages"] = SECTIONAL_PROMPTS["Percentages"]
 
 # =============================================================================
 # TOPIC CONTEXTS FOR GK RESEARCH ENGINE
@@ -735,26 +581,29 @@ TOPIC_CONTEXTS = {
 
 SUBCATEGORY_MAPPINGS = {
     # English
-    "main-idea": "Reading Comprehension",
-    "author-s-tone": "Reading Comprehension",
-    "vocab": "Vocabulary",
-    "literary-and-poetic-devices": "Reading Comprehension",
-    "author-based": "Reading Comprehension",
-    "source-based": "Reading Comprehension",
-    "title-theme": "Reading Comprehension",
-    "direct-inference-questions": "Reading Comprehension",
-    "assumptions-inferences": "Critical Reasoning",
-    "idioms-mics": "Vocabulary",
+    "main-idea": "English RC – Main Idea",
+    "vocab": "English RC – Vocabulary-in-Context",
+    "literary-and-poetic-devices": "English RC – Literary/Poetic Devices",
+    "author-based": "English RC – Author-Based",
+    "source-based": "English RC – Source-Based",
+    "title-theme": "English RC – Title & Theme",
+    "direct-inference-questions": "English RC – Direct Inference",
+    "assumptions-inferences": "English RC – Assumption & Inference",
+    "idioms-mics": "English RC – Idioms & Miscellaneous",
     # Logical
-    "assumptions": "Critical Reasoning",
-    "inferences": "Critical Reasoning",
-    "argument-based": "Critical Reasoning",
-    "agree-disagree": "Critical Reasoning",
-    "strengthen-weaken": "Critical Reasoning",
-    "direct-inference": "Logical Reasoning",
-    "analogy-and-sequences": "Logical Reasoning",
-    "paradox-contradiction-resolution": "Logical Reasoning",
-    # Quantitative (ensure all variants are mapped)
+    "assumptions": "Logical Reasoning – Assumptions",
+    "inferences": "Logical Reasoning – Inferences",
+    "argument-based": "Logical Reasoning – Argument-Based",
+    "agree-disagree": "Logical Reasoning – Agree/Disagree",
+    "strengthen-weaken": "Logical Reasoning – Strengthen & Weaken",
+    "direct-inference": "Logical Reasoning – Direct Inference",
+    "analogy-and-sequences": "Logical Reasoning – Analogy & Sequence",
+    "paradox-contradiction-resolution": "Logical Reasoning – Paradox & Contradictions",
+    "logical-reasoning-general": "Logical Reasoning – General Prompt",
+    # Legal
+    "general-legal": "Legal Reasoning",
+    # Quantitative
+    "quantitative-techniques": "Quantitative Techniques (QT)",
     "percentage-comparison": "Percentages",
     "what-percentage-more-less": "Percentages",
     "percentage-change": "Percentages",
@@ -766,25 +615,20 @@ SUBCATEGORY_MAPPINGS = {
     "discount-profit-loss": "Profit & Loss",
     "basic-formula-applications-of-simple-and-compound-interest": "Arithmetic",
     "area-perimeter-volume-and-surface-area": "Geometry",
-    # Direct mappings for single-subcategory cases
-    "general-legal": "Legal Reasoning",
-    "general-gk": "General Knowledge",
-    # Quantitative subcategories for practice-online
     "percentages": "Percentages",
     "ratios": "Arithmetic",
     "averages": "Arithmetic",
     "profit-loss": "Profit & Loss",
     "compound-interest": "Arithmetic",
     "geometry": "Geometry",
-    # Data interpretation subtopics for QT Mentor
     "tables": "Data Interpretation",
     "bar-charts": "Data Interpretation",
     "line-graphs": "Data Interpretation",
     "pie-charts": "Data Interpretation",
-    # Advanced topics for QT Mentor
     "time-work": "Arithmetic",
     "speed-distance": "Arithmetic",
-    # GK topics
+    # GK
+    "general-gk": "GK & Current Affairs",
     "awards-honours": "General Knowledge",
     "science-tech": "General Knowledge",
 }
@@ -890,22 +734,12 @@ def generate_study_material(topic, count):
         mapped_topic = SUBCATEGORY_MAPPINGS.get(topic or "", topic or "")
         prompt = SECTIONAL_PROMPTS.get(mapped_topic, f"Generate a CLAT-level {mapped_topic} test with passage, questions, and answer key.")
 
-        # Add more explicit instructions to ensure format compliance
+        # Remove strict word count rules from enhanced_prompt
         enhanced_prompt = f"""
 {prompt}
 
-🚨 ABSOLUTE RULES – DO NOT BREAK:
-1. Your passage must be **at least 650 words**. This is NOT optional.
-2. If you generate less than 650 words, the output will be rejected.
-3. Use detailed context, historical background, multiple examples, stats, real-world references to reach the length.
-4. You may go up to 8000 tokens. DO NOT end early. Do not summarize or conclude unless required.
-5. Include full 5 questions and detailed answer explanations.
-
-⚠️ Repeat: If word count < 650, this will be discarded and considered invalid.
 Start now.
 """
-
-
 
         messages = [
             {"role": "system", "content": "You are an expert CLAT study material generator. You MUST follow the exact format specified in the prompt."},
@@ -918,137 +752,62 @@ Start now.
             print(f"[DEBUG] Raw AI response length: {len(result)}")
             print(f"[DEBUG] Cleaned response length: {len(cleaned_result)}")
             print(f"[DEBUG] Response preview: {cleaned_result[:300]}...")
-            
-            # Check if response contains MCQs section
             if "**MCQs**" in cleaned_result:
                 print(f"[DEBUG] ✅ MCQs section found")
             else:
                 print(f"[DEBUG] ❌ MCQs section NOT found")
                 print(f"[DEBUG] Full response: {cleaned_result}")
-            
             all_sections.append(f"Topic: {topic}\n\n{cleaned_result.strip()}")
         else:
             print(f"❌ Failed to generate section {i+1}")
     return all_sections
 
 def parse_mcqs(raw_text):
-    """Parse MCQs from raw text - IMPROVED ROBUST VERSION"""
+    """Parse MCQs from raw text – robust for 'Question X', 'Question X:', 'QX', etc., and options (A)-(D)."""
+    import re
     try:
-        # First try to find the **MCQs** section
-        parts = re.split(r'\*\*MCQs\*\*', raw_text)
-        if len(parts) < 2:
-            print("[DEBUG] No **MCQs** section found, trying alternative parsing")
-            # If no **MCQs** section, try to find questions directly
-            mcqs_text = raw_text
-            # Try to extract passage from the beginning before any numbered questions
-            passage_match = re.search(r'^(.+?)(?=\n\d+\.|\nQuestion|\n[A-D]\.|\n\([A-D]\)|\Z)', raw_text, re.DOTALL)
-            passage = passage_match.group(1).strip() if passage_match else "Passage not found"
-        else:
-            passage = parts[0].strip()
-            mcqs_text = parts[1].strip()
-
-        # Remove the answer key section from MCQs text to avoid parsing it as questions
-        mcqs_text = re.sub(r'\*\*ANSWER KEY\*\*.*', '', mcqs_text, flags=re.DOTALL)
-        mcqs_text = mcqs_text.strip()
-
-        # Try multiple patterns to find questions
-        question_patterns = [
-            r'(\d+\..*?)(?=\n\d+\.|\Z)',  # Standard numbered questions
-            r'(\d+\)\s*.*?)(?=\n\d+\)|\Z)',  # Questions with parentheses
-            r'(Question\s*\d+.*?)(?=Question\s*\d+|\Z)',  # "Question X" format
-        ]
-        
-        question_blocks = []
-        for pattern in question_patterns:
-            question_blocks = re.findall(pattern, mcqs_text, re.DOTALL)
-            if question_blocks:
-                print(f"[DEBUG] Found {len(question_blocks)} question blocks using pattern: {pattern}")
-                break
-        
+        print("[DEBUG] Parsing MCQs...")
+        # Find all question blocks (match 'Question 1', 'Question 1:', 'Q1', etc.)
+        question_blocks = re.findall(
+            r'(Q(?:uestion)?\s*\d+[:\.]?(?:\n|\s).*?)(?=Q(?:uestion)?\s*\d+[:\.]?(?:\n|\s)|\Z)',
+            raw_text, re.DOTALL | re.IGNORECASE
+        )
         if not question_blocks:
-            print("[DEBUG] No question blocks found with any pattern")
-            print(f"[DEBUG] Raw text preview: {raw_text[:500]}...")
+            print("[DEBUG] ❌ No questions found in 'Question X' format")
             return []
-
+        # Try to extract passage (before first Question)
+        passage_match = re.split(
+            r'Q(?:uestion)?\s*\d+[:\.]?(?:\n|\s)', raw_text, maxsplit=1, flags=re.IGNORECASE
+        )
+        passage = passage_match[0].strip() if passage_match else "Passage not found"
         structured_questions = []
-
         for idx, block in enumerate(question_blocks, start=1):
             try:
-                # Skip blocks that are just answer key entries (like "1. (A)")
-                if re.match(r'^\d+\.\s*\([A-D]\)\s*$', block.strip()) or re.match(r'^\d+\)\s*\([A-D]\)\s*$', block.strip()):
-                    print(f"[DEBUG] Skipping answer key block: {block.strip()}")
-                    continue
-                
-                # Look for question text before first option (A)
-                q_patterns = [
-                    r'\d+\.\s*(.+?)\n\(A\)',  # Standard format with (A)
-                    r'\d+\)\s*(.+?)\n\(A\)',  # Parentheses format with (A)
-                    r'Question\s*\d+.*?\n(.+?)\n\(A\)',  # Question format with (A)
-                    r'\d+\.\s*(.+?)\nA\.',  # Standard format with A.
-                    r'\d+\)\s*(.+?)\nA\.',  # Parentheses format with A.
-                    r'Question\s*\d+.*?\n(.+?)\nA\.',  # Question format with A.
-                ]
-                
-                question = "Unknown question"
-                for q_pattern in q_patterns:
-                    q_match = re.search(q_pattern, block, re.DOTALL)
-                    if q_match:
-                        question = q_match.group(1).strip()
-                        break
-
-                # Skip if this doesn't look like a real question
-                if question == "Unknown question" or len(question) < 10:
+                # Extract question text (up to first option marker)
+                q_text_match = re.match(r'Q(?:uestion)?\s*\d+[:\.]?(?:\n|\s)+(.*?)(?=\(A\)|A\))', block, re.DOTALL | re.IGNORECASE)
+                if q_text_match:
+                    question = q_text_match.group(1).strip()
+                else:
+                    # Fallback: first non-empty line after 'Question X'
+                    after_q = re.split(r'Q(?:uestion)?\s*\d+[:\.]?(?:\n|\s)+', block, maxsplit=1, flags=re.IGNORECASE)[-1]
+                    lines = [l.strip() for l in after_q.split('\n') if l.strip()]
+                    question = lines[0] if lines else "Unknown question"
+                if question == "Unknown question" or len(question) < 5:
                     print(f"[DEBUG] Skipping invalid question block: {block[:100]}...")
                     continue
-
+                # Extract options (A)-(D)
                 options = []
                 for opt in ['A', 'B', 'C', 'D']:
-                    # Match: (A) Option text until the next (B)/(C)/(D)/Answer/End
-                    opt_patterns = [
-                        rf'\({opt}\)\s*(.+?)(?=\n\([A-D]\)|\nAnswer:|\Z)',  # (A) format
-                        rf'{opt}\)\s*(.+?)(?=\n[A-D]\)|\nAnswer:|\Z)',  # A) format
-                        rf'{opt}\.\s*(.+?)(?=\n[A-D]\.|\nAnswer:|\Z)',  # A. format
-                    ]
-                    
-                    option_text = f"Option ({opt}) text missing"
-                    for opt_pattern in opt_patterns:
-                        opt_match = re.search(opt_pattern, block, re.DOTALL)
-                        if opt_match:
-                            option_text = opt_match.group(1).strip()
-                            break
-                    options.append(option_text)
-
-                # Look for answer in multiple formats
-                ans_patterns = [
-                    r'Answer:\s*\(([A-D])\)',
-                    r'Answer:\s*([A-D])',
-                    r'Correct Answer:\s*\(([A-D])\)',
-                    r'Correct Answer:\s*([A-D])',
-                ]
-                
-                correct_letter = 'A'
-                for ans_pattern in ans_patterns:
-                    ans_match = re.search(ans_pattern, block)
-                    if ans_match:
-                        correct_letter = ans_match.group(1)
-                        break
-                
+                    pattern = rf'\({opt}\)\s*(.+?)(?=\n\([A-D]\)|\nAnswer:|\nExplanation:|\n\Z)'
+                    match = re.search(pattern, block, re.DOTALL)
+                    options.append(match.group(1).strip() if match else f"Option {opt} missing")
+                # Extract answer
+                ans_match = re.search(r'Answer:\s*\(([A-D])\)', block)
+                correct_letter = ans_match.group(1).strip().upper() if ans_match else 'A'
+                # Extract explanation
+                exp_match = re.search(r'Explanation:\s*(.*)', block, re.DOTALL)
+                explanation = exp_match.group(1).strip() if exp_match else "Explanation not available"
                 correct_index = ord(correct_letter) - ord('A')
-
-                # Look for explanation
-                exp_patterns = [
-                    r'Explanation:\s*(.+)',
-                    r'Solution:\s*(.+)',
-                    r'Reasoning:\s*(.+)',
-                ]
-                
-                explanation = "Explanation not available"
-                for exp_pattern in exp_patterns:
-                    exp_match = re.search(exp_pattern, block, re.DOTALL)
-                    if exp_match:
-                        explanation = exp_match.group(1).strip()
-                        break
-
                 structured_questions.append({
                     "id": idx,
                     "passage": passage,
@@ -1057,17 +816,12 @@ def parse_mcqs(raw_text):
                     "correct": correct_index,
                     "explanation": explanation
                 })
-                
-                print(f"[DEBUG] Successfully parsed Q{idx}: {question[:50]}...")
-                
+                print(f"[DEBUG] ✅ Parsed Q{idx}: {question[:40]}... (Correct: {correct_letter})")
             except Exception as e:
                 print(f"[ERROR PARSING Q{idx}]: {e}")
-                print(f"[DEBUG BLOCK]: {block[:200]}...")
                 continue
-
-        print(f"[DEBUG] Successfully parsed {len(structured_questions)} questions")
+        print(f"[DEBUG] Total questions parsed: {len(structured_questions)}")
         return structured_questions
-        
     except Exception as e:
         print(f"[ERROR in parse_mcqs]: {e}")
         return []
@@ -1200,7 +954,7 @@ def create_answer_key_pdf(questions, answer_key, test_metadata):
         y += line_height
 
         # Table content
-        for i, answer in enumerate(answer_key, 1):
+        for i,answer in enumerate(answer_key, 1):
             question_num = answer.get('question', str(i))
             answer_letter = answer.get('answer', 'N/A')
             answer_index = answer.get('answer_index', 0)
@@ -1304,7 +1058,7 @@ def create_answer_key_pdf(questions, answer_key, test_metadata):
         # Footer
         page.insert_textbox(
             fitz.Rect(margin_x, page_height - 40, page_width - margin_x, page_height - 10),
-            'Generated by CLAT.GPT.1 - For more material visit: https://discord.gg/9kFymfz7qN\nContact: 7702832727 | Telegram: https://t.me/CLAT_Community',
+            'Generated by CLAT.GPT.1 - For more material visit: https://discord.gg/63WcH73DH2\nContact: 7702832727 | Telegram: https://t.me/CLAT_Community',
             fontname=font,
             fontsize=9,
             color=(0.3, 0.3, 0.3),
@@ -1354,7 +1108,7 @@ def create_pdf(contents, title):
     pdf.set_y(-30)
     pdf.set_font("Arial", '', 8)
     pdf.set_text_color(107, 114, 128)
-    pdf.cell(0, 5, 'Generated by CLAT.GPT.1 - For more material visit: https://discord.gg/9kFymfz7qN', ln=True, align='C')
+    pdf.cell(0, 5, 'Generated by CLAT.GPT.1 - For more material visit: https://discord.gg/63WcH73DH2', ln=True, align='C')
     pdf.cell(0, 5, 'Contact: 7702832727 | Telegram: https://t.me/CLAT_Community', ln=True, align='C')
     
     return BytesIO(pdf.output(dest='S'))
@@ -1891,33 +1645,28 @@ def generate_practice():
         passages = data.get("passages", 1)
         if not section or not subcategory:
             return jsonify({"error": "Section and subcategory are required"}), 400
-        # Use the mapping to convert frontend subcategory to backend topic
         topic_name = SUBCATEGORY_MAPPINGS.get(subcategory)
         if not topic_name:
+            print(f"[ERROR] Subcategory '{subcategory}' not found in SUBCATEGORY_MAPPINGS")
             return jsonify({"error": f"Unsupported subcategory: {subcategory}"}), 400
         if topic_name not in SECTIONAL_PROMPTS:
+            print(f"[ERROR] Mapped topic '{topic_name}' not found in SECTIONAL_PROMPTS")
             return jsonify({"error": f"Unsupported topic: {topic_name}"}), 400
         print(f"[API] Generating practice for {topic_name} (subcategory: {subcategory}) with {passages} passages")
         generated = generate_study_material(topic_name, passages)
         if not generated:
+            print(f"[ERROR] Content generation failed for topic '{topic_name}'")
             return jsonify({"error": "Content generation failed"}), 500
         all_questions = []
         for p_index, raw in enumerate(generated):
             print(f"[API] Processing passage {p_index + 1}")
             questions = parse_mcqs(raw)
-            # ENFORCE: Passage must be at least 650 words, do NOT pad, just error if too short
+            # REMOVE strict 650-word check
             if questions:
-                passage_words = questions[0]["passage"].split()
-                if len(passage_words) < 650:
-                    print(f"[ERROR] Passage {p_index+1} is only {len(passage_words)} words. Rejecting.")
-                    return jsonify({"error": f"Passage {p_index+1} is only {len(passage_words)} words. Please regenerate."}), 500
-                # Validate each question for 4 non-empty options and only one correct answer
                 for q_index, q in enumerate(questions):
-                    # Check options
                     if not isinstance(q["options"], list) or len(q["options"]) != 4 or any(not opt.strip() for opt in q["options"]):
                         print(f"[ERROR] Question {q_index+1} in passage {p_index+1} does not have 4 valid options.")
                         return jsonify({"error": f"Question {q_index+1} in passage {p_index+1} does not have 4 valid options. Please regenerate."}), 500
-                    # Check correct answer index
                     if not (0 <= q["correct"] < 4):
                         print(f"[ERROR] Question {q_index+1} in passage {p_index+1} has an invalid correct answer index.")
                         return jsonify({"error": f"Question {q_index+1} in passage {p_index+1} has an invalid correct answer index. Please regenerate."}), 500

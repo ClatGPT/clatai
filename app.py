@@ -666,8 +666,54 @@ IMPORTANT: After all 5 questions, add a clean answer key section:
 3. (C)
 4. (D)
 5. (B)
+""",
+    "Averages": """
+You are a CLAT Averages test generator.
+Generate a passage of EXACTLY 300-400 words with average-based problems and concepts.
+DO NOT include any formatting symbols like #, *, or backslashes.
+
+Then add the heading: **MCQs**
+
+Create 5 multiple-choice questions (numbered 1 to 5) testing average calculations.
+Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
+
+After each question, include:
+Answer: (correct option)
+Explanation: detailed explanation of the average calculation (minimum 50 words).
+
+Structure:
+1. Question text here?
+(A) Option 1 text
+(B) Option 2 text
+(C) Option 3 text
+(D) Option 4 text
+Answer: (B)
+Explanation: Detailed explanation text here explaining the average calculation step by step.
+
+Follow this format exactly.
+
+IMPORTANT: After all 5 questions, add a clean answer key section:
+
+**ANSWER KEY**
+1. (B)
+2. (A)
+3. (C)
+4. (D)
+5. (B)
 """
 }
+
+# Ensure SECTIONAL_PROMPTS has all mapped topics (add stubs if missing)
+if "Data Interpretation" not in SECTIONAL_PROMPTS:
+    SECTIONAL_PROMPTS["Data Interpretation"] = """You are a CLAT Data Interpretation test generator. Generate a passage of 300-400 words with tables, charts, or graphs, and 5 MCQs. Each question should have 4 options. Provide a clean answer key at the end."""
+if "Arithmetic" not in SECTIONAL_PROMPTS:
+    SECTIONAL_PROMPTS["Arithmetic"] = SECTIONAL_PROMPTS["Percentages"]
+if "Profit & Loss" not in SECTIONAL_PROMPTS:
+    SECTIONAL_PROMPTS["Profit & Loss"] = SECTIONAL_PROMPTS["Percentages"]
+if "Geometry" not in SECTIONAL_PROMPTS:
+    SECTIONAL_PROMPTS["Geometry"] = SECTIONAL_PROMPTS["Percentages"]
+if "Averages" not in SECTIONAL_PROMPTS:
+    SECTIONAL_PROMPTS["Averages"] = SECTIONAL_PROMPTS["Percentages"]
 
 # =============================================================================
 # TOPIC CONTEXTS FOR GK RESEARCH ENGINE
@@ -699,13 +745,6 @@ SUBCATEGORY_MAPPINGS = {
     "direct-inference-questions": "Reading Comprehension",
     "assumptions-inferences": "Critical Reasoning",
     "idioms-mics": "Vocabulary",
-    # Ensure all possible variants from frontend are mapped
-    "title-theme": "Reading Comprehension",
-    "literary-and-poetic-devices": "Reading Comprehension",
-    "direct-inference-questions": "Reading Comprehension",
-    "assumptions-inferences": "Critical Reasoning",
-    "idioms-mics": "Vocabulary",
-
     # Logical
     "assumptions": "Critical Reasoning",
     "inferences": "Critical Reasoning",
@@ -715,15 +754,7 @@ SUBCATEGORY_MAPPINGS = {
     "direct-inference": "Logical Reasoning",
     "analogy-and-sequences": "Logical Reasoning",
     "paradox-contradiction-resolution": "Logical Reasoning",
-    # Ensure all possible variants from frontend are mapped
-    "argument-based": "Critical Reasoning",
-    "agree-disagree": "Critical Reasoning",
-    "strengthen-weaken": "Critical Reasoning",
-    "direct-inference": "Logical Reasoning",
-    "analogy-and-sequences": "Logical Reasoning",
-    "paradox-contradiction-resolution": "Logical Reasoning",
-
-    # Quantitative
+    # Quantitative (ensure all variants are mapped)
     "percentage-comparison": "Percentages",
     "what-percentage-more-less": "Percentages",
     "percentage-change": "Percentages",
@@ -735,59 +766,27 @@ SUBCATEGORY_MAPPINGS = {
     "discount-profit-loss": "Profit & Loss",
     "basic-formula-applications-of-simple-and-compound-interest": "Arithmetic",
     "area-perimeter-volume-and-surface-area": "Geometry",
-    # Ensure all possible variants from frontend are mapped
-    "simple-and-weighted-averages": "Arithmetic",
-    "cost-price-selling-price-and-marked-price-calculations": "Profit & Loss",
-    "discount-profit-loss": "Profit & Loss",
-    "basic-formula-applications-of-simple-and-compound-interest": "Arithmetic",
-    "area-perimeter-volume-and-surface-area": "Geometry",
-    
-    # Add direct mappings for single-subcategory cases
+    # Direct mappings for single-subcategory cases
     "general-legal": "Legal Reasoning",
     "general-gk": "General Knowledge",
-    
-    # Add missing mappings for quantitative topics
+    # Quantitative subcategories for practice-online
     "percentages": "Percentages",
     "ratios": "Arithmetic",
     "averages": "Arithmetic",
     "profit-loss": "Profit & Loss",
     "compound-interest": "Arithmetic",
     "geometry": "Geometry",
-    
-    # Add mappings for GK topics
+    # Data interpretation subtopics for QT Mentor
+    "tables": "Data Interpretation",
+    "bar-charts": "Data Interpretation",
+    "line-graphs": "Data Interpretation",
+    "pie-charts": "Data Interpretation",
+    # Advanced topics for QT Mentor
+    "time-work": "Arithmetic",
+    "speed-distance": "Arithmetic",
+    # GK topics
     "awards-honours": "General Knowledge",
     "science-tech": "General Knowledge",
-    
-    # Add missing mappings for practice-online
-    "main-idea": "Reading Comprehension",
-    "author-s-tone": "Reading Comprehension",
-    "vocab": "Vocabulary",
-    "literary-and-poetic-devices": "Reading Comprehension",
-    "author-based": "Reading Comprehension",
-    "source-based": "Reading Comprehension",
-    "title-theme": "Reading Comprehension",
-    "direct-inference-questions": "Reading Comprehension",
-    "assumptions-inferences": "Critical Reasoning",
-    "idioms-mics": "Vocabulary",
-    "assumptions": "Critical Reasoning",
-    "inferences": "Critical Reasoning",
-    "argument-based": "Critical Reasoning",
-    "agree-disagree": "Critical Reasoning",
-    "strengthen-weaken": "Critical Reasoning",
-    "direct-inference": "Logical Reasoning",
-    "analogy-and-sequences": "Logical Reasoning",
-    "paradox-contradiction-resolution": "Logical Reasoning",
-    "percentage-comparison": "Percentages",
-    "what-percentage-more-less": "Percentages",
-    "percentage-change": "Percentages",
-    "dividing-quantities-in-given-ratios": "Arithmetic",
-    "missing-values-based-on-ratios": "Arithmetic",
-    "simplification-of-numbers-to-derive-simplest-ratio": "Arithmetic",
-    "simple-and-weighted-averages": "Arithmetic",
-    "cost-price-selling-price-and-marked-price-calculations": "Profit & Loss",
-    "discount-profit-loss": "Profit & Loss",
-    "basic-formula-applications-of-simple-and-compound-interest": "Arithmetic",
-    "area-perimeter-volume-and-surface-area": "Geometry",
 }
 
 # =============================================================================
@@ -796,7 +795,7 @@ SUBCATEGORY_MAPPINGS = {
 
 QT_TOPIC_MAPPING = {
     "tables": "data interpretation using tables with numerical data including sales figures, population data, or financial statements",
-    "bar-charts": "data interpretation using bar charts showing comparative analysis of multiple categories over time", 
+    "bar-charts": "data interpretation using bar charts showing comparative analysis of multiple categories over time",
     "line-graphs": "data interpretation using line graphs showing trend analysis over multiple years",
     "pie-charts": "data interpretation using pie charts showing percentage distribution of categories",
     "percentages": "percentage calculations including profit/loss, percentage changes, and percentage-based word problems",
@@ -805,7 +804,11 @@ QT_TOPIC_MAPPING = {
     "profit-loss": "profit and loss calculations including cost price, selling price, discount, and markup problems",
     "compound-interest": "compound interest, simple interest, and banking calculations with time-based scenarios",
     "time-work": "time and work problems including work rates, efficiency, and collaborative work scenarios",
-    "speed-distance": "speed, distance, time problems including relative motion and average speed calculations"
+    "speed-distance": "speed, distance, time problems including relative motion and average speed calculations",
+    # Add aliases for compatibility with frontend
+    "data-interpretation": "data interpretation using tables, bar charts, line graphs, or pie charts with real-world data",
+    "mathematics": "mixed quantitative aptitude including arithmetic, algebra, geometry, and number systems",
+    "advanced-topics": "advanced quantitative aptitude including time & work, speed & distance, and complex calculations"
 }
 
 # =============================================================================
@@ -895,7 +898,7 @@ def generate_study_material(topic, count):
 1. Your passage must be **at least 650 words**. This is NOT optional.
 2. If you generate less than 650 words, the output will be rejected.
 3. Use detailed context, historical background, multiple examples, stats, real-world references to reach the length.
-4. You may go up to 10000 tokens. DO NOT end early. Do not summarize or conclude unless required.
+4. You may go up to 8000 tokens. DO NOT end early. Do not summarize or conclude unless required.
 5. Include full 5 questions and detailed answer explanations.
 
 ⚠️ Repeat: If word count < 650, this will be discarded and considered invalid.

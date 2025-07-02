@@ -74,7 +74,7 @@ Start the passage *inline, with a single numeral on the **same line* as the pass
 ❌ Incorrect: Numbering on a separate line or paragraph.
 
 *Length Requirement (NON-NEGOTIABLE):*
-The passage must be *minimum 600 words* and can go up to *750 words* if needed.
+The passage must be *exactly 650 words*.
 
 *Tone & Style:*
 
@@ -148,7 +148,7 @@ Example:
 
 ### 🔚 STRUCTURE SUMMARY:
 
-* *Passage:* Numbered inline, 600–750 words, strictly *background/contextual only*
+* *Passage:* Numbered inline, exactly 650 words, strictly *background/contextual only*
 * *Questions:* 5 memory/GK-based MCQs, not directly answerable from passage
 * *Options:* Close, confusing, must require real GK knowledge
 * *Answer Key:* Clean, numbered, no reasoning"""
@@ -184,6 +184,14 @@ QUESTIONS FORMAT:
 - Only one correct answer per question
 - Questions should test analytical and calculation skills
 
+VISUAL DATA REQUIREMENT:
+- For any passage or question involving data-interpretation, bar-charts, line-graphs, or pie-charts, you MUST include a JSON block called 'visualData' with:
+  - type: 'bar', 'line', or 'pie'
+  - labels: array of category names
+  - values: array of numbers
+- Example: visualData: { "type": "bar", "labels": ["A", "B", "C"], "values": [10, 20, 15] }
+- Place this block after the passage and before the questions if relevant.
+
 ANSWER KEY FORMAT:
 - Provide extremely detailed, step-by-step explanations
 - Format: "1.1 – (B) [VERY DETAILED EXPLANATION]"
@@ -215,11 +223,9 @@ IMPORTANT: Output must be directly readable text, NOT code. Generate content tha
 SECTIONAL_PROMPTS = {
     "Reading Comprehension": """
 You are a CLAT Reading Comprehension test generator.
-Generate a passage of EXACTLY 500-600 words in a formal academic tone.
+Generate a passage of exactly 650 words in a formal academic tone.
 The passage should contain logical arguments, assumptions, and analytical content.
 DO NOT include any formatting symbols like #, *, or backslashes.
-
-Then add the heading: **MCQs**
 
 Create 5 multiple-choice questions (numbered 1 to 5).
 Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
@@ -356,10 +362,8 @@ IMPORTANT: After all 5 questions, add a clean answer key section:
     
     "Critical Reasoning": """
 You are a CLAT Critical Reasoning test generator.
-Generate a passage of EXACTLY 400-500 words with logical arguments and reasoning scenarios.
+Generate a passage of exactly 650 words with logical arguments and reasoning scenarios.
 DO NOT include any formatting symbols like #, *, or backslashes.
-
-Then add the heading: **MCQs**
 
 Create 5 multiple-choice questions (numbered 1 to 5) testing critical reasoning skills.
 Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
@@ -391,10 +395,8 @@ IMPORTANT: After all 5 questions, add a clean answer key section:
     
     "Logical Reasoning": """
 You are a CLAT Logical Reasoning test generator.
-Generate a passage of EXACTLY 400-500 words with logical scenarios and reasoning problems.
+Generate a passage of exactly 650 words with logical scenarios and reasoning problems.
 DO NOT include any formatting symbols like #, *, or backslashes.
-
-Then add the heading: **MCQs**
 
 Create 5 multiple-choice questions (numbered 1 to 5) testing logical reasoning.
 Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
@@ -426,10 +428,8 @@ IMPORTANT: After all 5 questions, add a clean answer key section:
     
     "Legal Reasoning": """
 You are a CLAT Legal Reasoning test generator.
-Generate a passage of EXACTLY 400-500 words with legal scenarios and principles.
+Generate a passage of exactly 650 words with legal scenarios and principles.
 DO NOT include any formatting symbols like #, *, or backslashes.
-
-Then add the heading: **MCQs**
 
 Create 5 multiple-choice questions (numbered 1 to 5) testing legal reasoning.
 Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
@@ -496,10 +496,8 @@ IMPORTANT: After all 5 questions, add a clean answer key section:
     
     "General Knowledge": """
 You are a CLAT General Knowledge test generator.
-Generate a passage of EXACTLY 400-500 words with current affairs and static GK topics.
+Generate a passage of exactly 650 words with current affairs and static GK topics.
 DO NOT include any formatting symbols like #, *, or backslashes.
-
-Then add the heading: **MCQs**
 
 Create 5 multiple-choice questions (numbered 1 to 5) testing general knowledge.
 Each question should have 4 options labeled (A), (B), (C), (D). Only one correct.
@@ -814,7 +812,7 @@ QT_TOPIC_MAPPING = {
 # UTILITY FUNCTIONS
 # =============================================================================
                                                               
-def call_groq_api(messages, temperature=0.7, max_tokens=4000):
+def call_groq_api(messages, temperature=0.7, max_tokens=7000):
     """Generic function to call Groq API"""
     if not GROQ_API_KEY:
         print("[ERROR] GROQ_API_KEY is not set. Cannot call Groq API.")
@@ -828,7 +826,10 @@ def call_groq_api(messages, temperature=0.7, max_tokens=4000):
     }
                                                               
     try:
-        response = requests.post(GROQ_API_URL, headers=headers, json=payload, timeout=60)
+        print(f"[DEBUG] Sending payload with max_tokens={payload['max_tokens']}")
+        print(f"[DEBUG] Payload preview: {json.dumps(payload)[:500]}...")
+        response = requests.post(GROQ_API_URL, headers=headers, json=payload, timeout=120)
+
         response.raise_for_status()
         
         data = response.json()
@@ -890,16 +891,18 @@ def generate_study_material(topic, count):
         enhanced_prompt = f"""
 {prompt}
 
-CRITICAL: You MUST follow this exact format:
-1. Write a passage first
-2. Then add the line: **MCQs**
-3. Then write 5 numbered questions (1. 2. 3. 4. 5.)
-4. Each question must have options (A) (B) (C) (D)
-5. Each question must have "Answer: (X)" and "Explanation: ..."
-6. Finally add: **ANSWER KEY** followed by numbered answers
+🚨 ABSOLUTE RULES – DO NOT BREAK:
+1. Your passage must be **at least 650 words**. This is NOT optional.
+2. If you generate less than 650 words, the output will be rejected.
+3. Use detailed context, historical background, multiple examples, stats, real-world references to reach the length.
+4. You may go up to 10000 tokens. DO NOT end early. Do not summarize or conclude unless required.
+5. Include full 5 questions and detailed answer explanations.
 
-DO NOT deviate from this format. The **MCQs** marker is essential for parsing.
+⚠️ Repeat: If word count < 650, this will be discarded and considered invalid.
+Start now.
 """
+
+
 
         messages = [
             {"role": "system", "content": "You are an expert CLAT study material generator. You MUST follow the exact format specified in the prompt."},
@@ -1106,7 +1109,7 @@ def create_answer_key_pdf(questions, answer_key, test_metadata):
         if 'fitz' not in globals() or not PDF_PROCESSING_AVAILABLE:
             raise RuntimeError("PyMuPDF is required for watermark-based PDF generation.")
 
-        import fitz
+
         from io import BytesIO
         import os
 
@@ -1666,7 +1669,7 @@ def qt_generate_question():
         if not GROQ_API_KEY:
             return jsonify({"success": False, "error": "GROQ_API_KEY is not set on the server. Please contact admin.", "service": "qt_mentor"}), 500
         # Enhanced user prompt for better quality
-        user_prompt = f"""Generate a CLAT-style Quantitative Aptitude passage and exactly 6 questions on the topic: '{detailed_topic}'. \n\nRequirements:\n1. Create a realistic business/economic scenario with specific numerical data\n2. Passage should be 7-10 sentences with concrete numbers\n3. Questions should progressively increase in difficulty\n4. Each question must test different aspects of the topic\n5. Ensure calculations are accurate and explanations are detailed\n6. Use realistic Indian context (₹ currency, Indian companies/cities)\n\nTopic focus: {detailed_topic}\n\nPlease follow the exact format specified in the system prompt."""
+        user_prompt = f"""Generate a CLAT-style Quantitative Aptitude passage and exactly 6 questions on the topic: '{detailed_topic}'. \n\nRequirements:\n1. Create a realistic business/economic scenario with specific numerical data\n2. Passage should be 7-10 sentences with concrete numbers\n3. Questions should progressively increase in difficulty\n4. Each question must test different aspects of the topic\n5. Ensure calculations are accurate and explanations are detailed\n6. Use realistic Indian context (₹ currency, Indian companies/cities)\n7. If the topic involves data-interpretation, bar-charts, line-graphs, or pie-charts, you MUST include a JSON block called 'visualData' with type, labels, and values as described in the system prompt.\n\nTopic focus: {detailed_topic}\n\nPlease follow the exact format specified in the system prompt."""
         messages = [
             {"role": "system", "content": QT_SYSTEM_PROMPT},
             {"role": "user", "content": user_prompt}
@@ -1899,20 +1902,23 @@ def generate_practice():
         for p_index, raw in enumerate(generated):
             print(f"[API] Processing passage {p_index + 1}")
             questions = parse_mcqs(raw)
-            # ENFORCE: Pad passage to at least 650 words ONCE per passage
+            # ENFORCE: Passage must be at least 650 words, do NOT pad, just error if too short
             if questions:
                 passage_words = questions[0]["passage"].split()
                 if len(passage_words) < 650:
-                    print(f"[WARN] Passage {p_index+1} is only {len(passage_words)} words. Padding to 650.")
-                    pad_sentence = "This is additional content to meet the minimum word count requirement for CLAT passages. "
-                    while len(passage_words) < 650:
-                        passage_words += pad_sentence.split()
-                    padded_passage = ' '.join(passage_words[:650])
-                else:
-                    padded_passage = questions[0]["passage"]
-                # Assign padded passage to all questions for this passage
+                    print(f"[ERROR] Passage {p_index+1} is only {len(passage_words)} words. Rejecting.")
+                    return jsonify({"error": f"Passage {p_index+1} is only {len(passage_words)} words. Please regenerate."}), 500
+                # Validate each question for 4 non-empty options and only one correct answer
                 for q_index, q in enumerate(questions):
-                    q["passage"] = padded_passage
+                    # Check options
+                    if not isinstance(q["options"], list) or len(q["options"]) != 4 or any(not opt.strip() for opt in q["options"]):
+                        print(f"[ERROR] Question {q_index+1} in passage {p_index+1} does not have 4 valid options.")
+                        return jsonify({"error": f"Question {q_index+1} in passage {p_index+1} does not have 4 valid options. Please regenerate."}), 500
+                    # Check correct answer index
+                    if not (0 <= q["correct"] < 4):
+                        print(f"[ERROR] Question {q_index+1} in passage {p_index+1} has an invalid correct answer index.")
+                        return jsonify({"error": f"Question {q_index+1} in passage {p_index+1} has an invalid correct answer index. Please regenerate."}), 500
+                    q["passage"] = questions[0]["passage"]
                     all_questions.append({
                         "passageIndex": p_index,
                         "id": f"{p_index}-{q_index}",

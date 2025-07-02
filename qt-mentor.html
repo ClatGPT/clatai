@@ -1223,8 +1223,22 @@
                     questionsText = rawContent.substring(passage.length).trim();
                 }
 
-                // Try to extract visual data from passage
-                let visualData = extractVisualDataFromPassage(passage);
+                // Try to extract visualData JSON block from the passage
+                let visualData = null;
+                const visualDataMatch = rawContent.match(/visualData\s*:\s*\{[^}]+\}/i);
+                if (visualDataMatch) {
+                    try {
+                        // Extract the JSON part
+                        const jsonStr = visualDataMatch[0].replace(/visualData\s*:/i, '').trim();
+                        visualData = JSON.parse(jsonStr);
+                    } catch (e) {
+                        console.warn('Failed to parse visualData JSON:', e);
+                    }
+                }
+                // Fallback: Try to extract from passage text if not found
+                if (!visualData) {
+                    visualData = extractVisualDataFromPassage(passage);
+                }
 
                 // Extract questions using regex (existing logic)
                 const questionRegex = /(\d+\.\d+)\s*(.*?)(?=\n\(A\)|\nA\.)/gs;
@@ -1254,17 +1268,15 @@
                         }
                     }
                 }
-                // Extract answer key
-                const answerKeyMatch = questionsText.match(/\*\*ANSWER KEY\*\*(.*)/s);
-                let answerKey = null;
+                // Extract answer key and solution for 1.1
                 let correctAnswer = 0;
-                if (answerKeyMatch) {
-                    answerKey = answerKeyMatch[1].trim();
-                    const firstAnswerMatch = answerKey.match(/1\.1\s*[–-]\s*\(([A-D])\)/);
-                    if (firstAnswerMatch) {
-                        const correctLetter = firstAnswerMatch[1];
-                        correctAnswer = correctLetter.charCodeAt(0) - 65;
-                    }
+                let solution = 'Solution will be provided after answering.';
+                // Find the answer and solution for 1.1
+                const solutionMatch = rawContent.match(/1\.1\s*[–-]\s*\(([A-D])\)([\s\S]*?)(?=\n1\.2\s*[–-]\s*\([A-D]\)|$)/);
+                if (solutionMatch) {
+                    const correctLetter = solutionMatch[1];
+                    correctAnswer = correctLetter.charCodeAt(0) - 65;
+                    solution = solutionMatch[2].trim();
                 }
                 if (questions.length > 0) {
                     const firstQuestion = questions[0];
@@ -1272,7 +1284,7 @@
                         text: firstQuestion.text,
                         options: firstQuestion.options,
                         correct: correctAnswer,
-                        solution: answerKey || 'Solution will be provided after answering.',
+                        solution: solution,
                         passage: passage,
                         visualData: visualData
                     };
@@ -1469,7 +1481,9 @@
                 testType: 'qt-mentor',
                 topic: selectedTopic,
                 subtopic: selectedSubtopic,
-                questionText: currentQuestion.text.substring(0, 100) + '...'
+                questionText: currentQuestion.text.substring(0, 100) + '...',
+                selectedOption: selectedIndex,
+                correctOption: correctIndex
             });
             
             if (success) {

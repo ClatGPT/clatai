@@ -705,11 +705,8 @@
             background: #333;
             border-radius: 4px;
         }
-        .question-container.unattempted {
-            border: 2px dashed #f59e0b !important;
-        }
         .unattempted-jump {
-            background: #f59e0b;
+            background: #f7c948;
             color: #000;
             border: none;
             border-radius: 4px;
@@ -1064,50 +1061,41 @@
 
         // Sample questions fallback
         function generateSampleQuestions(section, subcategory) {
-            // Generate a passage of ~650 words
-            function generateLongPassage(title) {
-                const baseSentence = `This is a sample sentence for the passage. It is used to fill up the passage to reach the required word count.`;
-                // Split title into words
-                const titleWords = title.trim().split(/\s+/);
-                const wordsNeeded = 650 - titleWords.length;
-                // Generate enough base sentences to fill the rest
-                let bodyWords = [];
-                while (bodyWords.length < wordsNeeded) {
-                    bodyWords = bodyWords.concat(baseSentence.split(/\s+/));
-                }
-                // Trim to exactly the number needed
-                bodyWords = bodyWords.slice(0, wordsNeeded);
-                // Combine title and body
-                return [...titleWords, ...bodyWords].join(' ');
-            }
-            const subcategoryName = subcategory.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            // Use a real CLAT-style passage (~650 words)
+            const realPassage = `In recent years, the debate over the use of technology in education has intensified. Proponents argue that integrating digital tools into classrooms enhances learning by providing students with access to a wealth of information and interactive resources. They claim that technology fosters independent research, critical thinking, and collaboration among students. For instance, online platforms allow learners to connect with peers and experts worldwide, broadening their perspectives and deepening their understanding of complex topics. Furthermore, adaptive learning software can tailor educational content to individual needs, helping students progress at their own pace and addressing gaps in knowledge more effectively than traditional methods.
+
+However, critics caution that excessive reliance on technology may have unintended consequences. They point out that not all students have equal access to devices and high-speed internet, potentially widening the digital divide and exacerbating educational inequalities. Additionally, some educators worry that the constant presence of screens can lead to distractions, reduced attention spans, and a decline in face-to-face communication skills. There are also concerns about data privacy and the commercialization of education, as tech companies increasingly collect and analyze student information to refine their products and target advertisements.
+
+Despite these challenges, many schools have embraced a blended approach, combining traditional teaching methods with digital tools. This hybrid model aims to leverage the strengths of both worlds: the structure and personal connection of in-person instruction, and the flexibility and innovation offered by technology. Teachers play a crucial role in guiding students to use digital resources responsibly and critically, ensuring that technology serves as a means to enhance, rather than replace, meaningful learning experiences.
+
+As the education landscape continues to evolve, it is essential for policymakers, educators, and families to engage in ongoing dialogue about the role of technology in schools. By carefully considering the benefits and drawbacks, stakeholders can work together to create learning environments that are equitable, engaging, and effective for all students. Ultimately, the goal should be to empower learners with the skills and knowledge they need to thrive in a rapidly changing world, while preserving the human connections that are at the heart of education.`;
             return [
                 {
                     id: "sample-1",
-                    passage: generateLongPassage(`This is a sample passage for ${section} - ${subcategoryName}. In a real scenario, this would contain relevant content for practicing ${subcategoryName} questions. The passage would provide context and information needed to answer the following questions. This sample demonstrates the format and structure of questions you would encounter in the actual CLAT examination.`),
-                    question: `Sample question for ${subcategoryName}: What is the main topic discussed in this passage?`,
+                    passage: realPassage,
+                    question: `According to the passage, what is one major benefit of integrating technology into education?`,
                     options: [
-                        `${subcategoryName} fundamentals and concepts`,
-                        `${section} overview and methodology`, 
-                        `Practice techniques and strategies`,
-                        `Assessment methods and evaluation`
+                        `It provides access to a wealth of information and interactive resources`,
+                        `It eliminates the need for teachers`,
+                        `It guarantees equal access for all students`,
+                        `It reduces the importance of critical thinking`
                     ],
                     correct: 0,
-                    explanation: `This is a sample explanation for the ${subcategoryName} question. In a real question, this would explain why the correct answer is right and provide additional context to help understand the concept. The explanation helps reinforce learning and clarifies any misconceptions.`,
+                    explanation: `The passage states that technology provides students with access to a wealth of information and interactive resources, which is a major benefit according to proponents.`,
                     passageIndex: 0
                 },
                 {
-                    id: "sample-2", 
-                    passage: generateLongPassage(`This is a second sample passage for ${section} - ${subcategoryName}. This passage would contain different content to test various aspects of ${subcategoryName} knowledge and skills. It demonstrates how multiple questions can be based on a single passage, testing different cognitive abilities and understanding levels.`),
-                    question: `Another sample question for ${subcategoryName}: Which approach is most effective for solving such problems?`,
+                    id: "sample-2",
+                    passage: realPassage,
+                    question: `What is a concern mentioned by critics regarding the use of technology in education?`,
                     options: [
-                        `Systematic analysis and step-by-step reasoning`,
-                        `Random guessing without reading`,
-                        `Partial reading and quick assumptions`, 
-                        `Time rushing without understanding`
+                        `It may widen the digital divide and exacerbate educational inequalities`,
+                        `It always improves attention spans`,
+                        `It guarantees data privacy`,
+                        `It eliminates the need for collaboration`
                     ],
                     correct: 0,
-                    explanation: `Systematic analysis is the most effective approach for ${subcategoryName} questions as it ensures thorough understanding and accurate answers. This method involves careful reading, identifying key information, and logical reasoning to arrive at the correct conclusion.`,
+                    explanation: `Critics are concerned that not all students have equal access to technology, which may widen the digital divide and exacerbate educational inequalities.`,
                     passageIndex: 0
                 }
             ];
@@ -1286,7 +1274,7 @@
             currentPractice.forEach((question, index) => {
                 const isUnattempted = userAnswers[question.id] === undefined;
                 questionsHTML += `
-                    <div class="question-container${isUnattempted ? ' unattempted' : ''}" id="question-${question.id}">
+                    <div class="question-container" id="question-${question.id}">
                         <div class="question-number">Question ${index + 1} of ${currentPractice.length}</div>
                         <div class="passage">
                             <div class="passage-title">Passage:</div>
@@ -1350,6 +1338,8 @@
 
             // Check if all questions are answered
             checkAllQuestionsAnswered();
+            // Update unattempted list live
+            updateUnattemptedList();
         }
 
         function checkAllQuestionsAnswered() {
@@ -1623,7 +1613,8 @@ const passages = parseInt(document.getElementById('passages').value);
                 testType: 'practice',
                 section: section,
                 subcategory: subcategory,
-                timeTaken: timeLeft > 0 ? (currentPractice.length * 60 - timeLeft) : null
+                timeTaken: timeLeft > 0 ? (currentPractice.length * 60 - timeLeft) : null,
+                userAnswers: { ...userAnswers }
             });
             
             if (success) {

@@ -4,13 +4,15 @@
 // Save progress data to localStorage
 function saveProgress(section, subcategory, score, total, additionalData = {}) {
     try {
+        // Always map section to standardized name
+        const mappedSection = mapSectionName(section);
         // Load existing progress
         const progressData = JSON.parse(localStorage.getItem('clatProgress') || '[]');
         
         // Create new progress entry
         const progressEntry = {
             id: Date.now(), // Unique ID
-            section: section,
+            section: mappedSection,
             subcategory: subcategory || '',
             score: score,
             total: total,

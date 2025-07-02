@@ -677,30 +677,32 @@
                 </div>
 
                 <!-- Skill Development Over Time -->
-                <div class="progress-section">
+                <div class="progress-section" id="skillDevelopmentSection">
                     <div class="section-header">
                         <span class="section-icon">🎯</span>
                         <h3 class="section-title">Skill Development Over Time</h3>
                     </div>
-                    
-                    <div class="empty-state">
-                        <div class="empty-icon">📈</div>
-                        <div class="empty-title">Track Your Growth</div>
-                        <div class="empty-description">Complete more practice sessions to see skill development</div>
+                    <div id="skillDevelopmentContent">
+                        <div class="empty-state">
+                            <div class="empty-icon">📈</div>
+                            <div class="empty-title">Track Your Growth</div>
+                            <div class="empty-description">Complete more practice sessions to see skill development</div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Areas Needing Improvement -->
-                <div class="progress-section">
+                <div class="progress-section" id="areasImprovementSection">
                     <div class="section-header">
                         <span class="section-icon">🔍</span>
                         <h3 class="section-title">Areas Needing Improvement</h3>
                     </div>
-                    
-                    <div class="empty-state">
-                        <div class="empty-icon">🎯</div>
-                        <div class="empty-title">Identify Weak Areas</div>
-                        <div class="empty-description">Complete more practice sessions to identify weak skills</div>
+                    <div id="areasImprovementContent">
+                        <div class="empty-state">
+                            <div class="empty-icon">🎯</div>
+                            <div class="empty-title">Identify Weak Areas</div>
+                            <div class="empty-description">Complete more practice sessions to identify weak skills</div>
+                        </div>
                     </div>
                 </div>
 
@@ -1226,6 +1228,79 @@ ${recent.map(test =>
         const stats = getProgressStats();
         console.log('Total tests:', stats.totalTests);
         console.log('Average score:', stats.averageScore);
+
+        function updateSkillDevelopment(stats) {
+            const container = document.getElementById('skillDevelopmentContent');
+            const progressData = JSON.parse(localStorage.getItem('clatProgress') || '[]');
+            if (progressData.length < 2) {
+                container.innerHTML = `<div class="empty-state"><div class="empty-icon">📈</div><div class="empty-title">Track Your Growth</div><div class="empty-description">Complete more practice sessions to see skill development</div></div>`;
+                return;
+            }
+            // Get last 10 tests, sorted by date
+            const sorted = progressData.sort((a, b) => new Date(a.date) - new Date(b.date));
+            const last10 = sorted.slice(-10);
+            const labels = last10.map((t, i) => `Test ${sorted.length - last10.length + i + 1}`);
+            const scores = last10.map(t => t.percentage);
+            // Render a simple line chart using canvas
+            container.innerHTML = `<canvas id="skillDevChart" width="320" height="120" style="background:#181818;border-radius:8px;"></canvas>`;
+            setTimeout(() => {
+                const canvas = document.getElementById('skillDevChart');
+                if (!canvas) return;
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                // Draw axes
+                ctx.strokeStyle = '#444';
+                ctx.beginPath(); ctx.moveTo(40, 10); ctx.lineTo(40, 100); ctx.lineTo(310, 100); ctx.stroke();
+                // Draw line
+                ctx.strokeStyle = '#3b82f6';
+                ctx.beginPath();
+                scores.forEach((score, i) => {
+                    const x = 40 + (i * (270 / (scores.length - 1)));
+                    const y = 100 - (score * 0.8);
+                    if (i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                });
+                ctx.stroke();
+                // Draw points
+                ctx.fillStyle = '#3b82f6';
+                scores.forEach((score, i) => {
+                    const x = 40 + (i * (270 / (scores.length - 1)));
+                    const y = 100 - (score * 0.8);
+                    ctx.beginPath(); ctx.arc(x, y, 3, 0, 2 * Math.PI); ctx.fill();
+                });
+                // Draw labels
+                ctx.fillStyle = '#aaa'; ctx.font = '10px sans-serif';
+                labels.forEach((label, i) => {
+                    const x = 40 + (i * (270 / (scores.length - 1)));
+                    ctx.fillText(label, x - 12, 115);
+                });
+                // Draw y-axis labels
+                for (let p = 0; p <= 100; p += 20) {
+                    ctx.fillText(`${p}%`, 5, 100 - (p * 0.8) + 3);
+                }
+            }, 0);
+        }
+
+        function updateAreasImprovement(stats) {
+            const container = document.getElementById('areasImprovementContent');
+            const weakAreas = Object.entries(stats.sectionStats)
+                .filter(([section, data]) => data.count > 0 && data.percentage < 70)
+                .sort((a, b) => a[1].percentage - b[1].percentage);
+            if (weakAreas.length === 0) {
+                container.innerHTML = `<div class="empty-state"><div class="empty-icon">🎯</div><div class="empty-title">Identify Weak Areas</div><div class="empty-description">Complete more practice sessions to identify weak skills</div></div>`;
+                return;
+            }
+            container.innerHTML = `<ul style='padding-left:0;list-style:none;'>${weakAreas.map(([section, data]) => `<li style='margin-bottom:8px;'><b>${section}:</b> <span style='color:#ef4444;'>${data.percentage}%</span> (${data.count} tests)</li>`).join('')}</ul>`;
+        }
+
+        // Patch loadProgressData to call these
+        const origLoadProgressData = loadProgressData;
+        loadProgressData = function() {
+            origLoadProgressData();
+            const stats = getProgressStats();
+            updateSkillDevelopment(stats);
+            updateAreasImprovement(stats);
+        };
     </script>
 </body>
 </html>

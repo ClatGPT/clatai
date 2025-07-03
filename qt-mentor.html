@@ -1095,13 +1095,11 @@
             generateQuestion();
         }
 
-        async function generateQuestion() {
+        async function generateQuestion(retryCount = 0) {
             const loadingContent = document.getElementById('loadingContent');
             const questionContainer = document.getElementById('questionContainer');
-            
             loadingContent.style.display = 'block';
             questionContainer.style.display = 'none';
-            
             try {
                 // Call the backend API
                 const response = await fetch('/qt/generate-question', {
@@ -1113,16 +1111,13 @@
                         topic: selectedSubtopic
                     })
                 });
-
                 const data = await response.json();
-                
                 if (data.success) {
                     // Debug: Log the raw content to understand the format
                     console.log('=== RAW CONTENT DEBUG ===');
                     console.log('Full raw content:', data.rawOutput);
                     console.log('Content length:', data.rawOutput.length);
                     console.log('=== END DEBUG ===');
-                    
                     // Parse the generated content
                     const parsedQuestion = parseQTContent(data.rawOutput);
                     if (parsedQuestion) {
@@ -1139,6 +1134,15 @@
                             throw new Error('Failed to parse generated content and fallback failed');
                         }
                     }
+                } else if (
+                    data.error &&
+                    data.error.includes('visualData') &&
+                    retryCount < 3
+                ) {
+                    // If visualData is missing/invalid, retry up to 3 times
+                    console.warn('Missing/invalid visualData, retrying... (attempt ' + (retryCount + 2) + ')');
+                    await generateQuestion(retryCount + 1);
+                    return;
                 } else {
                     throw new Error(data.error || 'Failed to generate question');
                 }
@@ -1332,6 +1336,10 @@
             const questionContainer = document.getElementById('questionContainer');
             let visual = '';
             let chartId = '';
+            // Remove visualData block from passage before displaying
+            if (question.passage) {
+                question.passage = question.passage.replace(/visualData\s*:\s*\{[^}]+\}\s*/i, '');
+            }
             // Add visual for the selected subtopic, but use dynamic data if available
             if (selectedTopic === 'data-interpretation' && question.visualData) {
                 if (selectedSubtopic === 'tables' && question.visualData.type === 'table') {

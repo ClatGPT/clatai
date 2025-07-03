@@ -173,7 +173,7 @@ You are a Quantitative Aptitude generator trained on the CLAT (Common Law Admiss
 DO NOT say "this is the generated" or any similar phrases.
 
 FORMAT REQUIREMENTS:
-- Start passage with: "1 In recent years..." (number inline)
+- Start passage with: "In recent years..." (number inline)
 - Write 7-10 neutral tone sentences for the passage with realistic numerical data
 - NO title for the passage
 - DO NOT include any formatting symbols like #, *, or backslashes
@@ -201,6 +201,9 @@ ANSWER KEY FORMAT:
 - Use analogies and simple examples where helpful
 - Explain WHY each step is taken, not just HOW
 - Make it so simple that even someone with no math background can understand
+- **IMPORTANT: The explanation for each question must be directly relevant to that question, using the same numbers, context, and logic. Do NOT give generic math explanations. If the explanation does not match the question, your answer will be rejected.**
+- **IMPORTANT: Do NOT use the same company, brand, or city in every question. Vary the context and use a wide range of Indian companies, cities, or use generic placeholders (e.g., Company A, City X) if needed. Avoid repeating the same names in consecutive questions or passages.**
+- **IMPORTANT: After calculating the answer, you MUST clearly state which option (A, B, C, or D) matches your calculated answer, and your explanation must not contradict the answer key or the options. Double-check that your explanation, answer key, and options are all consistent and refer to the same value and option letter. Any contradiction or mismatch will result in rejection.**
 
 EXAMPLE EXPLANATION STYLE:
 "1.1 – (B) Let me explain this step by step, like I'm teaching a little kid! First, we need to understand what a percentage increase means. Think of it like this: if you had 10 candies yesterday and 13 candies today, how much more do you have? Well, you have 3 more candies, right? But we want to know what percentage that is. 
@@ -706,8 +709,10 @@ def clean_formatting_artifacts(text):
     if not text:
         return text
     
-    # Remove common formatting artifacts
     cleaned = text
+
+    # Remove XML/HTML-like tags such as <lend_header_idl>
+    cleaned = re.sub(r'<[^>]+>', '', cleaned)
     
     # Remove backslashes that are not part of valid escape sequences
     cleaned = re.sub(r'\\(?!n|t|r|\\|"|\')', '', cleaned)
@@ -1411,6 +1416,30 @@ def qt_test_connection():
         "available_topics": list(QT_TOPIC_MAPPING.keys())
     })
 
+def has_valid_visual_data(text, subtopic):
+    # Only enforce for relevant subtopics
+    if subtopic not in ["tables", "bar-charts", "line-graphs", "pie-charts"]:
+        return True
+    # Look for visualData JSON block
+    match = re.search(r'visualData\s*:\s*\{[^}]+\}', text)
+    if not match:
+        return False
+    try:
+        json_str = match.group(0).split(":", 1)[1].strip()
+        data = json.loads(json_str)
+        return (
+            isinstance(data, dict) and
+            "type" in data and
+            "labels" in data and
+            "values" in data and
+            isinstance(data["labels"], list) and
+            isinstance(data["values"], list) and
+            len(data["labels"]) > 0 and
+            len(data["values"]) > 0
+        )
+    except Exception:
+        return False
+
 @app.route("/qt/generate-question", methods=["POST"])
 def qt_generate_question():
     """Generate QT questions based on topic"""
@@ -1443,6 +1472,15 @@ def qt_generate_question():
         
         # Clean up formatting artifacts
         cleaned_response = clean_formatting_artifacts(response)
+        
+        # Strict validation for visualData for relevant subtopics
+        if not has_valid_visual_data(cleaned_response, topic):
+            print("QT Content missing or invalid visualData, retrying...")
+            return jsonify({
+                "success": False,
+                "error": "Generated content missing or invalid visualData. Please try again.",
+                "service": "qt_mentor"
+            }), 400
         
         # Basic validation of generated content
         if not validate_qt_content(cleaned_response):

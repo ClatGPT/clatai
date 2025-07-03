@@ -651,6 +651,66 @@
             background: #333;
             border-radius: 4px;
         }
+
+        /* Google Search Bar Fixed at Bottom, ChatGPT Style */
+        .google-search-bar-chatgpt {
+            position: fixed;
+            left: 280px;
+            right: 0;
+            bottom: 0;
+            z-index: 1000;
+            background: rgba(24,24,24,0.98);
+            box-shadow: 0 -2px 24px rgba(0,0,0,0.12);
+            padding: 16px 0 12px 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            border-top: 1px solid #222;
+        }
+        .google-search-bar-chatgpt form {
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            align-items: center;
+            background: #232323;
+            border-radius: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 4px 8px 4px 16px;
+            border: 1px solid #333;
+        }
+        .google-search-bar-chatgpt input[type="text"] {
+            border: none;
+            outline: none;
+            background: transparent;
+            color: #fff;
+            font-size: 16px;
+            padding: 10px 8px;
+            width: 100%;
+        }
+        .google-search-bar-chatgpt button {
+            background: #3b82f6;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.10);
+        }
+        .google-search-bar-chatgpt button:hover {
+            background: #2563eb;
+        }
+        @media (max-width: 900px) {
+            .google-search-bar-chatgpt {
+                left: 0;
+            }
+        }
     </style>
 </head>
 <body>
@@ -796,6 +856,18 @@
                 </section>
             </div>
         </main>
+    </div>
+
+    <!-- Google Search Bar Fixed at Bottom, ChatGPT Style -->
+    <div class="google-search-bar-chatgpt">
+        <form id="googleSearchForm" autocomplete="off">
+            <input type="text" id="googleSearchInput" placeholder="Search Google..." aria-label="Google Search" />
+            <button type="submit" title="Search">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 20L21 12L3 4V10L17 12L3 14V20Z" fill="currentColor"/>
+                </svg>
+            </button>
+        </form>
     </div>
 
     <script src="progress-tracker.js"></script>
@@ -1500,6 +1572,14 @@
                 console.error('❌ Failed to save QT Mentor progress');
             }
         }
+
+        document.getElementById('googleSearchForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const query = document.getElementById('googleSearchInput').value.trim();
+            if (query) {
+                window.open('https://www.google.com/search?q=' + encodeURIComponent(query), '_blank');
+            }
+        });
     </script>
 </body>
 </html>

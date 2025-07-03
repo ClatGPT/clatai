@@ -609,17 +609,36 @@
 
             <div class="content-area">
                 <!-- Centered Google Search Bar in Main Area -->
-                <div class="google-search-center" style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; background: #181818;">
-                    <form action="https://www.google.com/search" method="GET" target="_blank" style="width: 100%; max-width: 500px; display: flex; align-items: center; gap: 12px;">
-                        <input type="text" name="q" placeholder="Search Google..." style="flex: 1; padding: 18px 24px; font-size: 20px; border-radius: 32px; border: none; outline: none; background: #222; color: #fff; box-shadow: 0 2px 16px rgba(0,0,0,0.2);" onkeydown="if(event.key==='Enter'){this.form.submit();}">
-                        <button type="submit" style="padding: 0 20px; height: 48px; border-radius: 50%; border: none; background: #4285f4; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;">
-                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>
-                        </button>
-                    </form>
-                    <div style="margin-top: 18px; color: #bbb; font-size: 16px; text-align: center; max-width: 420px;">
-                        <b>Our full GK feature is launching soon.</b><br>Until then, stay curious, keep learning, and explore using the search bar below.
-                    </div>
-                </div>
+                <div class="chat-section">
+    <div style="flex: 1; display: flex; justify-content: center; align-items: center;">
+        <h2 style="font-size: 36px; font-weight: 600; color: white; text-align: center;">
+            what do u wanna learn today?
+        </h2>
+    </div>
+
+    <div style="padding: 20px 24px; background: #111;">
+        <form action="https://www.google.com/search" method="GET" target="_blank"
+              style="width: 100%; max-width: 540px; margin: 0 auto; display: flex; align-items: center; background: #222; border-radius: 32px; padding: 6px 8px; box-shadow: 0 0 12px rgba(0,0,0,0.2);">
+            <input type="text" name="q" placeholder="What do you wanna know?"
+                   style="flex: 1; padding: 14px 20px; font-size: 16px; border: none; outline: none; background: transparent; color: #fff;">
+            <button type="submit"
+                    style="width: 42px; height: 42px; border-radius: 50%; background: #4285f4; color: white; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14"></path>
+                    <path d="M12 5l7 7-7 7"></path>
+                </svg>
+            </button>
+        </form>
+
+        <div style="margin-top: 12px; color: #aaa; font-size: 14px; text-align: center;">
+            <b>Our full GK feature is launching soon.</b><br>
+            Until then, stay curious, keep learning, and explore using the search bar below.
+        </div>
+    </div>
+</div>
+
+
                 <!-- Sidebar Panel -->
                 <div class="sidebar-panel">
                     <!-- Practice and Resources Section -->
